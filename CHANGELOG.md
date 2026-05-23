@@ -3,9 +3,14 @@
 ---
 
 ## May 22, 2026
+- Fine tuned Lukas speaking photo position to center 15% on about.html
+- Fixed Lukas speaking photo to show top of image using object-position: top on about.html
 - Fixed Hospital Recovery image filename to Hospital Recovery.JPG on about.html
-- Re-added local image files to git tracking after revert
-- Reverted recent image changes that caused display issues
+- Re-added local image files (Hospital Recovery.JPG, Lukas speaking.JPG, Lukas and Mary with Dr Kwasnica.jpeg) to git tracking
+- Reverted recent image changes that caused display issues on about.html
+- Updated Claude Code to version 2.1.150 using native installer
+- Fixed PATH for Claude Code native installation
+- Created CHANGELOG.md to track all website updates going forward
 
 ## May 4, 2026
 - Added "The Doctor Who Helped Rebuild a Life" section to about.html featuring photo of Lukas, Mary, and Dr. Christina Kwasnica at Cardinals Climb
