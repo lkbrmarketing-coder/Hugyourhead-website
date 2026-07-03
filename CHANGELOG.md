@@ -2,6 +2,13 @@
 
 ---
 
+## May 23, 2026
+- Fixed logo to use local file Hug Your Head.png across all pages
+- Fixed NDP Lacrosse photo to use local file across all pages
+- Fixed hero background image on index.html
+- Downloaded all remote images as local files to prevent future breakage
+- Updated all HTML pages to reference local image files only
+
 ## May 22, 2026
 - Fine tuned Lukas speaking photo position to center 15% on about.html
 - Fixed Lukas speaking photo to show top of image using object-position: top on about.html
