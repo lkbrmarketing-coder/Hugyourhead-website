@@ -2,6 +2,10 @@
 
 ---
 
+## August 23, 2026
+- Updated Dr. Mary Riordan-Karlsson advisory card — replaced McGraw Hill with Karlsson Consulting, updated expertise to education with specialty in neurodiversity
+- Added Dr. Penny Dyer to Advisory Team on about.html
+
 ## May 23, 2026
 - Fixed logo to use local file Hug Your Head.png across all pages
 - Fixed NDP Lacrosse photo to use local file across all pages
