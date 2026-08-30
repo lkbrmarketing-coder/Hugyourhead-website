@@ -51,7 +51,7 @@
     <p style="color: var(--blue); font-family: var(--font-heading); font-size: 1.3rem; font-style: italic; opacity: 1; margin-bottom: 20px;">Adaptive Financial Education for Individuals with Special Needs</p>
     <p style="color: var(--white);">Empowering individuals with IDD, autism, neurodiversity, and learning differences to build real-world financial skills and independence.</p>
     <div class="hero__buttons">
-      <a href="#signup" class="btn btn-primary btn-lg">Schedule a Meeting</a>
+      <a href="#signup" class="btn btn-primary btn-lg">Sign Up</a>
       <a href="#program" class="btn btn-outline btn-lg">Learn About the Program</a>
     </div>
   </div>
@@ -186,75 +186,61 @@
   </div>
 </section>
 
-<!-- SCHEDULE A MEETING -->
+<!-- SIGN UP -->
 <section class="section bg-white" id="signup">
   <div class="container">
     <div class="section-header text-center fade-in">
       <span class="accent-line accent-line--center"></span>
-      <h2>Schedule a Meeting</h2>
-      <p style="max-width: 640px; margin: 16px auto 0; color: #374151; line-height: 1.8;">We are currently scheduling introductory meetings with schools, transition programs, and disability service organizations for September and October 2026. Fill out the form below and we will be in touch within 48 hours to find a time that works for your organization.</p>
-      <p style="max-width: 640px; margin: 12px auto 0; color: var(--blue-dark); font-style: italic; font-size: .9rem;">Workshops are planned to begin in late 2026. Scheduling a meeting now ensures your organization is prioritized.</p>
+      <h2>Sign Up for the Program</h2>
+      <p style="max-width: 640px; margin: 16px auto 0; color: #374151; line-height: 1.8;">Interested in joining our Financial Literacy for Life workshops? Sign up below and we will reach out with details on upcoming sessions in your area. Spots are limited — sign up today to secure your place.</p>
+      <p style="max-width: 640px; margin: 12px auto 0; color: var(--blue-dark); font-style: italic; font-size: .9rem;">Workshops are scheduled to begin in late 2026. Sign up now to be notified when dates are confirmed and to reserve your spot.</p>
     </div>
 
     <div class="fade-in" style="max-width: 640px; margin: 48px auto 0;">
       <form class="form" action="https://formspree.io/f/xkokwgbg" method="POST" data-formspree>
-        <input type="hidden" name="_subject" value="Financial Literacy for Life — Meeting Request" />
-        <div class="form-group">
-          <label for="fl-org">Organization Name *</label>
-          <input type="text" id="fl-org" name="organization_name" required placeholder="Your organization's name" />
-        </div>
-        <div class="form-group">
-          <label for="fl-contact">Contact Person Name *</label>
-          <input type="text" id="fl-contact" name="contact_name" required placeholder="Your full name" />
+        <input type="hidden" name="_subject" value="Financial Literacy for Life — Individual Sign Up" />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fl-first">First Name *</label>
+            <input type="text" id="fl-first" name="first_name" required placeholder="First name" />
+          </div>
+          <div class="form-group">
+            <label for="fl-last">Last Name *</label>
+            <input type="text" id="fl-last" name="last_name" required placeholder="Last name" />
+          </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label for="fl-email">Email *</label>
+            <label for="fl-email">Email Address *</label>
             <input type="email" id="fl-email" name="email" required placeholder="your@email.com" />
           </div>
           <div class="form-group">
-            <label for="fl-phone">Phone</label>
+            <label for="fl-phone">Phone Number</label>
             <input type="tel" id="fl-phone" name="phone" placeholder="(555) 000-0000" />
           </div>
         </div>
         <div class="form-group">
-          <label for="fl-org-type">Organization Type</label>
-          <select id="fl-org-type" name="organization_type">
-            <option value="" disabled selected>Select organization type</option>
-            <option value="Public School">Public School</option>
-            <option value="Private School">Private School</option>
-            <option value="Transition Program">Transition Program</option>
-            <option value="Disability Service Organization">Disability Service Organization</option>
-            <option value="Community Organization">Community Organization</option>
+          <label for="fl-role">I am signing up as: *</label>
+          <select id="fl-role" name="signup_role" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="Individual with Special Needs">Individual with Special Needs</option>
+            <option value="Parent or Guardian">Parent or Guardian</option>
+            <option value="Caregiver or Support Person">Caregiver or Support Person</option>
+            <option value="Teacher or Educator">Teacher or Educator</option>
             <option value="Other">Other</option>
           </select>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="fl-participants">Number of Participants (estimated)</label>
-            <input type="text" id="fl-participants" name="participants_estimate" placeholder="e.g. 15" />
-          </div>
-          <div class="form-group">
-            <label for="fl-timing">Best time to meet</label>
-            <select id="fl-timing" name="best_time">
-              <option value="" disabled selected>Select a timeframe</option>
-              <option value="September 2026">September 2026</option>
-              <option value="October 2026">October 2026</option>
-              <option value="Either">Either</option>
-            </select>
-          </div>
-        </div>
         <div class="form-group">
-          <label for="fl-notes">Additional Notes</label>
-          <textarea id="fl-notes" name="notes" placeholder="Tell us more about your organization or participants"></textarea>
+          <label for="fl-notes">Tell us a little about yourself and why you are interested in this program</label>
+          <textarea id="fl-notes" name="notes" placeholder="Share anything you'd like us to know"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; justify-content: center;">Request a Meeting</button>
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; justify-content: center;">Sign Me Up</button>
       </form>
 
       <div class="form-success">
         <div style="font-size: 2.5rem; margin-bottom: 16px;">💙</div>
-        <h3>Thank You!</h3>
-        <p style="margin-top: 8px; color: #374151; line-height: 1.7;">We will reach out within 48 hours to schedule your meeting. We look forward to bringing Financial Literacy for Life to your organization.</p>
+        <h3>You're Signed Up!</h3>
+        <p style="margin-top: 8px; color: #374151; line-height: 1.7;">We will be in touch with details on upcoming workshops. We look forward to seeing you there.</p>
       </div>
     </div>
   </div>

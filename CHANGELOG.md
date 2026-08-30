@@ -2,6 +2,11 @@
 
 ---
 
+## August 29, 2026 — Update 4
+- Updated financial-literacy.html signup form from organization meeting request to individual participant signup
+- Changed hero button text to "Sign Up"
+- Updated section headline and subtext to reflect individual enrollment
+
 ## August 29, 2026 — Update 3
 - Removed Financial Literacy for Life from main navigation on all 8 pages (desktop and mobile nav)
 - Financial Literacy page remains accessible only via Sign Up button on programs.html
