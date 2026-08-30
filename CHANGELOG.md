@@ -2,6 +2,11 @@
 
 ---
 
+## August 29, 2026 — Update 3
+- Removed Financial Literacy for Life from main navigation on all 8 pages (desktop and mobile nav)
+- Financial Literacy page remains accessible only via Sign Up button on programs.html
+- Verified Sign Up button on programs.html correctly links to financial-literacy.html
+
 ## August 29, 2026
 - Created financial-literacy.html — full standalone page for Financial Literacy for Life program
 - Added Financial Literacy nav link to all pages
