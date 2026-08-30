@@ -2,6 +2,11 @@
 
 ---
 
+## August 29, 2026
+- Created financial-literacy.html — full standalone page for Financial Literacy for Life program
+- Added Financial Literacy nav link to all pages
+- Program includes: overview, core skills, how it works, who it serves, Cardinals partnership section, meeting scheduling form for Sept/Oct 2026
+
 ## August 23, 2026
 - Updated Dr. Mary Riordan-Karlsson advisory card — replaced McGraw Hill with Karlsson Consulting, updated expertise to education with specialty in neurodiversity
 - Added Dr. Penny Dyer to Advisory Team on about.html

@@ -494,6 +494,12 @@ p  { font-size: 1rem; }
 .timeline-step h4 { margin-bottom: 8px; }
 .timeline-step p  { font-size: .85rem; opacity: .75; }
 
+.timeline--3 { grid-template-columns: repeat(3, 1fr); }
+.timeline--dark::before { background: transparent; border-top: 2px dashed rgba(149,212,226,.5); height: 0; }
+.timeline--dark .timeline-step__dot { background: var(--blue); box-shadow: 0 0 0 6px var(--dark); }
+.timeline--dark .timeline-step h4 { color: var(--white); }
+.timeline--dark .timeline-step p  { color: var(--white); opacity: .7; }
+
 /* =========================================================
    FAQ ACCORDION
    ========================================================= */
