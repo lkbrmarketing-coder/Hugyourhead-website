@@ -8,6 +8,7 @@
 - Added optional contact preference, availability, and accommodations fields
 - Rewrote "How the Program Works" for individual sign-up
 - Fixed programs.html Program 07 to say in-person only
+- Sign-up page: added hero background image, removed hero subtext and the "Please note" box (the Photo & Video Release already states recording is required)
 
 ## August 29, 2026 — Update 4
 - Updated financial-literacy.html signup form from organization meeting request to individual participant signup
