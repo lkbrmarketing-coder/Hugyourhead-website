@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | Financial Literacy for Life | Hug Your Head Foundation</title>
+  <meta name="description" content="Sign up for Hug Your Head Foundation's Financial Literacy for Life workshops for individuals with special needs." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="Hug Your Head.png" type="image/png" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">
+      <img src="Hug Your Head.png" alt="Hug Your Head Foundation Logo" class="nav__logo" />
+      <span class="nav__brand-text">Hug Your Head Foundation, INC.</span>
+    </a>
+    <div class="nav__links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="tbi.html">TBI Info</a>
+      <a href="programs.html">Programs</a>
+      <a href="speaking.html">Speaking</a>
+      <a href="get-involved.html">Get Involved</a>
+      <a href="contact.html">Contact</a>
+      <a href="get-involved.html" class="nav__cta">Donate Now</a>
+    </div>
+    <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="nav__overlay" role="dialog" aria-modal="true" aria-label="Mobile menu">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="tbi.html">TBI Info</a>
+  <a href="programs.html">Programs</a>
+  <a href="speaking.html">Speaking</a>
+  <a href="get-involved.html">Get Involved</a>
+  <a href="contact.html">Contact</a>
+  <a href="get-involved.html" class="nav__cta">Donate Now</a>
+</div>
+
+<!-- HERO -->
+<section class="hero hero--sm" style="background: var(--dark);">
+  <div class="hero__content fade-in">
+    <h1>Sign Up for Financial Literacy for Life</h1>
+    <p>It takes about five minutes.</p>
+  </div>
+</section>
+
+<!-- SIGN UP FORM -->
+<section class="section bg-light fl-page">
+  <div class="container">
+    <div class="fl-wrap">
+
+      <a href="financial-literacy.html" class="fl-back"><span aria-hidden="true">←</span> Back to program details</a>
+
+      <p class="fl-intro">Interested in joining our Financial Literacy for Life workshops? Fill out the form below and we will reach out with details on upcoming sessions. Workshops are scheduled to begin in late 2026.</p>
+
+      <div class="fl-notice" role="note">
+        <p><strong>Please note:</strong> Financial Literacy for Life workshops are video recorded and photographed in full. Agreeing to the Photo &amp; Video Release below is required to participate.</p>
+      </div>
+
+      <div class="fl-panel">
+        <noscript>
+          <p class="fl-note">This form needs JavaScript turned on. To sign up, please email <a href="mailto:HugYourHead@Gmail.com">HugYourHead@Gmail.com</a>.</p>
+        </noscript>
+
+        <form class="form fl-form" id="fl-signup-form" method="post" novalidate>
+          <p class="fl-help">Questions marked with <span aria-hidden="true">*</span><span class="fl-sr-only">a star</span> are required.</p>
+
+          <!-- Hidden fields (filled in by script.js when you submit) -->
+          <input type="hidden" name="_subject" value="New Financial Literacy Sign-Up" />
+          <input type="hidden" name="release_timestamp" id="fl-release-timestamp" value="" />
+          <input type="hidden" name="release_version" id="fl-release-version" value="v2-2026-11" />
+          <input type="hidden" name="release_text" id="fl-release-text-field" value="" />
+          <input type="hidden" name="page_url" id="fl-page-url" value="" />
+
+          <!-- Spam trap: people never see this field -->
+          <div class="fl-hp" aria-hidden="true">
+            <label for="fl-gotcha">Leave this field empty</label>
+            <input type="text" id="fl-gotcha" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          </div>
+
+          <!-- 1. Your name -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fl-first-name">First Name <span aria-hidden="true">*</span></label>
+              <input type="text" id="fl-first-name" name="first_name" autocomplete="given-name" required />
+              <p class="fl-error" id="fl-err-first_name" hidden></p>
+            </div>
+            <div class="form-group">
+              <label for="fl-last-name">Last Name <span aria-hidden="true">*</span></label>
+              <input type="text" id="fl-last-name" name="last_name" autocomplete="family-name" required />
+              <p class="fl-error" id="fl-err-last_name" hidden></p>
+            </div>
+          </div>
+
+          <!-- 2 & 3. Email and phone -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fl-email">Email Address <span aria-hidden="true">*</span></label>
+              <input type="email" id="fl-email" name="email" autocomplete="email" inputmode="email" required />
+              <p class="fl-error" id="fl-err-email" hidden></p>
+            </div>
+            <div class="form-group">
+              <label for="fl-phone">Phone Number <span class="fl-optional">(optional)</span></label>
+              <input type="tel" id="fl-phone" name="phone" autocomplete="tel" inputmode="tel" />
+            </div>
+          </div>
+
+          <!-- 4. Signing up as -->
+          <div class="form-group">
+            <label for="fl-signing-up-as">I am signing up as: <span aria-hidden="true">*</span></label>
+            <select id="fl-signing-up-as" name="signing_up_as" required>
+              <option value="" selected>Choose one</option>
+              <option value="Individual with Special Needs">Individual with Special Needs</option>
+              <option value="Parent or Guardian">Parent or Guardian</option>
+              <option value="Caregiver or Support Person">Caregiver or Support Person</option>
+              <option value="Teacher or Educator">Teacher or Educator</option>
+              <option value="Other">Other</option>
+            </select>
+            <p class="fl-error" id="fl-err-signing_up_as" hidden></p>
+            <div id="fl-signer-note" aria-live="polite"></div>
+          </div>
+
+          <!-- 5. Participant name (shown when signing up for someone else) -->
+          <div class="fl-group" id="fl-participant-group" hidden>
+            <p class="fl-help">Please tell us who will attend the workshop.</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fl-participant-first">Participant First Name <span aria-hidden="true">*</span></label>
+                <input type="text" id="fl-participant-first" name="participant_first_name" data-required="true" disabled />
+                <p class="fl-error" id="fl-err-participant_first_name" hidden></p>
+              </div>
+              <div class="form-group">
+                <label for="fl-participant-last">Participant Last Name <span aria-hidden="true">*</span></label>
+                <input type="text" id="fl-participant-last" name="participant_last_name" data-required="true" disabled />
+                <p class="fl-error" id="fl-err-participant_last_name" hidden></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Guardian question (shown when signing up for yourself) -->
+          <div class="fl-group" id="fl-guardian-group" hidden>
+            <fieldset class="fl-fieldset">
+              <legend>Is the participant under 18 or do they have a legal guardian? <span aria-hidden="true">*</span></legend>
+              <div class="fl-choices">
+                <label class="fl-choice" for="fl-guardian-yes">
+                  <input type="radio" id="fl-guardian-yes" name="has_guardian" value="Yes" data-required="true" disabled />
+                  <span>Yes</span>
+                </label>
+                <label class="fl-choice" for="fl-guardian-no">
+                  <input type="radio" id="fl-guardian-no" name="has_guardian" value="No" data-required="true" disabled />
+                  <span>No</span>
+                </label>
+              </div>
+              <p class="fl-error" id="fl-err-has_guardian" hidden></p>
+            </fieldset>
+          </div>
+
+          <!-- 7. Organization -->
+          <div class="form-group">
+            <label for="fl-organization">Organization / School / Program <span class="fl-optional">(optional)</span></label>
+            <input type="text" id="fl-organization" name="organization" autocomplete="organization" />
+          </div>
+
+          <!-- 8. About -->
+          <div class="form-group">
+            <label for="fl-about">Tell us a little about yourself and why you are interested in this program <span class="fl-optional">(optional)</span></label>
+            <textarea id="fl-about" name="about"></textarea>
+          </div>
+
+          <!-- 9. Planning (all optional) -->
+          <fieldset class="fl-fieldset fl-section">
+            <legend class="fl-section-title">A few things that help us plan (optional)</legend>
+            <div class="fl-section-body">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="fl-contact-preference">Best way to reach you</label>
+                  <select id="fl-contact-preference" name="contact_preference">
+                    <option value="" selected>Choose one</option>
+                    <option value="Email">Email</option>
+                    <option value="Phone call">Phone call</option>
+                    <option value="Text message">Text message</option>
+                    <option value="No preference">No preference</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="fl-availability">Best times for a workshop</label>
+                  <select id="fl-availability" name="availability">
+                    <option value="" selected>Choose one</option>
+                    <option value="Weekday daytime">Weekday daytime</option>
+                    <option value="Weekday evening">Weekday evening</option>
+                    <option value="Weekend">Weekend</option>
+                    <option value="Flexible">Flexible</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="fl-accommodations">Anything that would help the participant feel comfortable or supported?</label>
+                <p class="fl-help" id="fl-accommodations-help">Please do not include medical details here. We will talk with you before the workshop.</p>
+                <textarea id="fl-accommodations" name="accommodations" aria-describedby="fl-accommodations-help"></textarea>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- PHOTO & VIDEO RELEASE -->
+          <section class="fl-section fl-release" aria-labelledby="fl-release-heading">
+            <h2 class="fl-section-title" id="fl-release-heading">Photo &amp; Video Release</h2>
+            <div class="fl-release-box" id="fl-release-text">
+              <p>Hug Your Head Foundation, INC. ("HYH") will take photographs and video during Financial Literacy for Life workshops, and agreeing to this release is required to participate. I give HYH permission to use the photographs, video, voice, and likeness of the participant named above, without payment, in HYH's website, social media, newsletters, grant reports, fundraising, and other materials that promote HYH's programs. I understand that: (1) I will not be paid and will not own the photos or video; (2) names will not be published with images unless I separately approve; (3) this permission has no expiration, but I can withdraw it for future use at any time by emailing HugYourHead@Gmail.com, which will not affect any use that already happened, although withdrawing means the participant can no longer attend workshops; and (4) if the participant is under 18 or has a legal guardian, I am the parent or legal guardian and have the authority to give this permission.</p>
+            </div>
+
+            <div class="fl-field">
+              <label class="fl-check" for="fl-release-agreed">
+                <input type="checkbox" id="fl-release-agreed" name="release_agreed" value="YES" required />
+                <span>I have read and agree to the Photo &amp; Video Release above. I understand it is required to participate. <span aria-hidden="true">*</span></span>
+              </label>
+              <p class="fl-error" id="fl-err-release_agreed" hidden></p>
+            </div>
+
+            <div class="form-group">
+              <label for="fl-signature-name">Type your full legal name as your electronic signature <span aria-hidden="true">*</span></label>
+              <input type="text" id="fl-signature-name" name="signature_name" autocomplete="off" spellcheck="false" required />
+              <p class="fl-error" id="fl-err-signature_name" hidden></p>
+            </div>
+
+            <div class="form-group">
+              <label for="fl-signer-role">I am the: <span aria-hidden="true">*</span></label>
+              <select id="fl-signer-role" name="signer_role" required>
+                <option value="" selected>Choose one</option>
+                <option value="Participant (adult, no guardian)">Participant (adult, no guardian)</option>
+                <option value="Parent">Parent</option>
+                <option value="Legal Guardian">Legal Guardian</option>
+              </select>
+              <p class="fl-error" id="fl-err-signer_role" hidden></p>
+            </div>
+
+            <div class="fl-field">
+              <label class="fl-check" for="fl-signature-consent">
+                <input type="checkbox" id="fl-signature-consent" name="signature_consent" value="YES" required />
+                <span>I agree that my typed name above is my legally binding electronic signature. <span aria-hidden="true">*</span></span>
+              </label>
+              <p class="fl-error" id="fl-err-signature_consent" hidden></p>
+            </div>
+          </section>
+
+          <div class="fl-status" id="fl-form-status" aria-live="polite"></div>
+
+          <button type="submit" class="btn btn-primary fl-submit">Sign Me Up</button>
+        </form>
+
+        <div class="form-success" id="fl-signup-success">
+          <div style="font-size: 2.5rem; margin-bottom: 16px;" aria-hidden="true">💙</div>
+          <h2 class="fl-success-title" id="fl-success-heading" tabindex="-1">You're Signed Up!</h2>
+          <p style="margin-top: 8px; color: #374151; line-height: 1.7;">We will be in touch with details on upcoming workshops. We look forward to seeing you there.</p>
+          <p style="margin-top: 12px; color: #374151; line-height: 1.7;">Questions? Email <a href="mailto:HugYourHead@Gmail.com" class="fl-inline-link">HugYourHead@Gmail.com</a>.</p>
+          <p style="margin-top: 20px;"><a href="financial-literacy.html" class="btn btn-primary">Back to program details</a></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <img src="Hug Your Head.png" alt="Hug Your Head Foundation" class="footer__logo" loading="lazy" />
+        <p class="footer__org">Hug Your Head Foundation, INC.</p>
+        <p class="footer__tagline">Learning To Live With TBI</p>
+        <p class="footer__501c3">A 501(c)(3) Nonprofit Organization<br>Scottsdale, Arizona</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="footer__links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Us</a>
+          <a href="tbi.html">TBI Info</a>
+          <a href="programs.html">Programs</a>
+          <a href="speaking.html">Speaking</a>
+          <a href="get-involved.html">Get Involved</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div>
+        <h4>Stay Connected</h4>
+        <div class="footer__social">
+          <a href="https://www.facebook.com/HugYourHead" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
+          <a href="https://www.instagram.com/hugyourhead" target="_blank" rel="noopener noreferrer" aria-label="Instagram">ig</a>
+          <a href="https://www.youtube.com/@hugyourhead" target="_blank" rel="noopener noreferrer" aria-label="YouTube">▶</a>
+        </div>
+        <p style="font-size: .85rem; opacity: .65; margin-bottom: 14px;">Subscribe for updates, events, and TBI resources.</p>
+        <a href="http://eepurl.com/hPcne9" target="_blank" rel="noopener noreferrer" class="footer__newsletter-link">✉ Subscribe to Newsletter</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <div class="container">
+      <p>Copyright &copy; 2025 Hug Your Head Foundation, INC. | 501(c)(3) | Scottsdale, AZ | <a href="mailto:HugYourHead@Gmail.com" style="color: inherit;">HugYourHead@Gmail.com</a></p>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top">↑</button>
+<script src="script.js"></script>
+</body>
+</html>

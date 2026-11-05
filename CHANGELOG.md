@@ -2,6 +2,13 @@
 
 ---
 
+## November 4, 2026
+- Moved Financial Literacy sign-up form to its own page, financial-literacy-signup.html, with a call-to-action button on the program page
+- Rebuilt the form with a required Photo & Video Release and electronic signature (release v2-2026-11), conditional participant fields, inline validation, and accessibility improvements
+- Added optional contact preference, availability, and accommodations fields
+- Rewrote "How the Program Works" for individual sign-up
+- Fixed programs.html Program 07 to say in-person only
+
 ## August 29, 2026 — Update 4
 - Updated financial-literacy.html signup form from organization meeting request to individual participant signup
 - Changed hero button text to "Sign Up"

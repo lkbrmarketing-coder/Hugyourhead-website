@@ -830,6 +830,242 @@ p  { font-size: 1rem; }
 .topic-card p  { font-size: .88rem; opacity: .75; }
 
 /* =========================================================
+   FINANCIAL LITERACY — SIGN-UP CTA + SIGN-UP PAGE
+   (scoped to .fl-* classes and .btn-xl; no other page uses these)
+   ========================================================= */
+.btn-xl {
+  min-height: 64px;
+  padding: 20px 64px;
+  font-size: 1.25rem;
+  justify-content: center;
+}
+
+/* Call-to-action band on financial-literacy.html */
+.fl-cta__text {
+  max-width: 640px;
+  margin: 0 auto 32px;
+  color: var(--white);
+  opacity: .92;
+  line-height: 1.8;
+  font-size: 1.125rem;
+}
+.fl-cta__note {
+  max-width: 560px;
+  margin: 24px auto 0;
+  color: var(--white);
+  opacity: .85;
+  font-size: .95rem;
+  line-height: 1.6;
+}
+.fl-cta .btn:focus-visible,
+.fl-link-light:focus-visible { outline: 3px solid var(--white); outline-offset: 4px; }
+.fl-link-light { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
+.fl-link-light:hover { color: var(--white); }
+
+/* Sign-up page layout */
+.fl-page [hidden] { display: none !important; }
+.fl-wrap { max-width: 760px; margin: 0 auto; }
+.fl-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--dark);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  margin-bottom: 16px;
+}
+.fl-back:hover { color: var(--brown); }
+.fl-intro { font-size: 1.125rem; line-height: 1.75; color: #1f2937; }
+.fl-notice {
+  margin: 24px 0 32px;
+  padding: 20px 24px;
+  background: #fdf1ea;
+  border: 2px solid var(--peach-dark);
+  border-left-width: 8px;
+  border-radius: var(--radius-md);
+  color: var(--dark);
+}
+.fl-notice p { font-size: 1.125rem; line-height: 1.7; }
+.fl-panel {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 40px;
+}
+
+/* Form fields (overrides the shared .form-group look only inside .fl-form) */
+.fl-form { gap: 28px; }
+.fl-form .form-group { gap: 8px; }
+.fl-form .form-group label,
+.fl-form legend {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--dark);
+  opacity: 1;
+  line-height: 1.4;
+}
+.fl-form .form-group input,
+.fl-form .form-group select,
+.fl-form .form-group textarea {
+  min-height: 52px;
+  padding: 12px 16px;
+  border: 2px solid #6b7280;
+  font-size: 1.0625rem;
+  color: var(--dark);
+  width: 100%;
+}
+.fl-form .form-group textarea { min-height: 130px; }
+.fl-form .form-group input:focus,
+.fl-form .form-group select:focus,
+.fl-form .form-group textarea:focus {
+  border-color: var(--dark);
+  outline: 3px solid var(--dark);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+.fl-form [aria-invalid="true"] { border-color: #b91c1c !important; }
+.fl-optional { font-weight: 400; color: #4b5563; }
+.fl-help { font-size: 1rem; color: #374151; line-height: 1.6; }
+.fl-sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.fl-group { display: flex; flex-direction: column; gap: 12px; }
+
+/* Inline error messages (red text + red bar, not color alone) */
+.fl-error {
+  color: #b91c1c;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  border-left: 4px solid #b91c1c;
+  padding-left: 10px;
+  margin-top: 2px;
+}
+
+/* Radio groups and checkboxes: large tap targets */
+.fl-fieldset { border: none; padding: 0; margin: 0; min-width: 0; }
+.fl-fieldset legend { padding: 0; margin-bottom: 12px; }
+.fl-choices { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+.fl-choice,
+.fl-check {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 56px;
+  padding: 12px 18px;
+  border: 2px solid #6b7280;
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--dark);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.fl-choice { min-width: 140px; }
+.fl-check { align-items: flex-start; }
+.fl-choice input,
+.fl-check input {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  margin: 0;
+  accent-color: var(--dark);
+  cursor: pointer;
+}
+.fl-check input { margin-top: 1px; }
+.fl-choice:has(input:checked),
+.fl-check:has(input:checked) { border-color: var(--dark); background: rgba(149,212,226,.22); }
+.fl-choice:focus-within,
+.fl-check:focus-within { outline: 3px solid var(--dark); outline-offset: 2px; }
+.fl-choice:has([aria-invalid="true"]),
+.fl-check:has([aria-invalid="true"]) { border-color: #b91c1c; }
+.fl-field { display: flex; flex-direction: column; gap: 8px; }
+
+/* Sections inside the form */
+.fl-section {
+  border-top: 2px solid #e2e8f0;
+  padding-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.fl-fieldset.fl-section { display: block; }
+.fl-fieldset.fl-section > legend { float: left; width: 100%; margin-bottom: 20px; }
+.fl-section-body { clear: both; display: flex; flex-direction: column; gap: 24px; }
+.fl-form .fl-section-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark);
+  line-height: 1.3;
+}
+.fl-release-box {
+  border: 2px solid var(--dark);
+  border-radius: var(--radius-md);
+  background: var(--light);
+  padding: 24px;
+  color: #111827;
+}
+.fl-release-box p { font-size: 1.0625rem; line-height: 1.8; }
+
+/* Helpful notes and the status / error summary */
+.fl-note {
+  margin-top: 4px;
+  padding: 14px 18px;
+  background: #eef8fb;
+  border-left: 6px solid var(--blue-dark);
+  border-radius: var(--radius-sm);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--dark);
+}
+.fl-note a,
+.fl-inline-link { color: var(--dark); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.fl-status:not(:empty) {
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.fl-status--error:not(:empty) { background: #fef2f2; border: 2px solid #b91c1c; color: #7f1d1d; }
+
+.fl-submit {
+  width: 100%;
+  justify-content: center;
+  min-height: 64px;
+  font-size: 1.25rem;
+}
+.fl-submit:disabled { opacity: .7; cursor: wait; transform: none; box-shadow: none; }
+.fl-page a:focus-visible,
+.fl-page .btn:focus-visible { outline: 3px solid var(--dark); outline-offset: 3px; }
+.fl-success-title { font-size: clamp(1.2rem, 2.5vw, 1.6rem); }
+.fl-success-title:focus { outline: none; }
+
+/* Spam trap: moved off-screen (not display:none) */
+.fl-hp {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .fl-panel { padding: 24px 18px; }
+  .fl-choices { flex-direction: column; }
+  .fl-choice { width: 100%; }
+  .btn-xl { width: 100%; max-width: 420px; padding: 20px 24px; }
+}
+
+/* =========================================================
    RESPONSIVE
    ========================================================= */
 @media (max-width: 1024px) {
