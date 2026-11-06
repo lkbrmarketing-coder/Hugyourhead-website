@@ -610,7 +610,7 @@ function speak(text,quiet){
 }
 function barKey(){return UI.tour?('t:'+UI.tour.key+':'+UI.tour.i):UI.chal?('c:'+UI.chal.id):('m:'+UI.mission)}
 function fixBars(){
-  var tb=document.querySelector('.tabbar'),bars=document.querySelectorAll('.trybar');
+  var tb=document.querySelector('.tabbar')||document.querySelector('.foot'),bars=document.querySelectorAll('.trybar');
   for(var i=0;i<bars.length;i++){bars[i].style.bottom=tb?(tb.offsetHeight+8)+'px':''}
 }
 function minBar(){
