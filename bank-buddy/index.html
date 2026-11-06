@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b2a4a">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="description" content="Bank Buddy is a practice banking app from Hug Your Head Foundation.">
+<link rel="manifest" href="/bank-buddy/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/bank-buddy/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/bank-buddy/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bank Buddy">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<title>Bank Buddy Guided</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one phone-width column, navy header, white rows on a pale grey ground, tab bar at the bottom. */
+:root{
+  --navy:#0b2a4a; --acc:#0a6ebd; --bg:#f2f4f7; --line:#e1e6ec; --mute:#5b6b7a; --txt:#1b2733; --pos:#17703f; --err:#b3261e; --gold:#e8a317;
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:#dfe5ec;color:var(--txt);font-family:var(--font);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button,input,select{font-family:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid #ffbf47;outline-offset:2px}
+#app{height:100%;max-width:430px;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(11,42,74,.18)}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.hdr{background:var(--navy);color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 12px 14px;flex:none}
+.hdr.big{padding:calc(env(safe-area-inset-top) + 18px) 20px 20px}
+.nav{display:grid;grid-template-columns:96px 1fr 96px;align-items:center;min-height:44px}
+.nav .t{font-size:18px;font-weight:700;text-align:center}
+.nav .r{display:flex;justify-content:flex-end}
+.nbtn{display:inline-flex;align-items:center;gap:2px;min-height:44px;min-width:44px;padding:0 8px;color:#fff;font-weight:600;font-size:17px;background:none;border:none}
+.tabbar{flex:none;display:flex;background:#fff;border-top:1px solid var(--line);padding:6px 4px calc(env(safe-area-inset-bottom) + 8px)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:56px;background:none;border:none;color:var(--mute);font-size:12px;font-weight:600;padding:0}
+.tab[aria-current="page"]{color:var(--acc);font-weight:700}
+.sect{display:flex;justify-content:space-between;align-items:baseline;padding:18px 16px 8px}
+.sect h2{margin:0;font-size:14px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.6px}
+.sect span{font-size:15px;font-weight:700}
+.row{display:flex;align-items:center;gap:12px;padding:14px 16px;min-height:56px;background:#fff;border:none;border-bottom:1px solid var(--line);width:100%;text-align:left;text-decoration:none;color:var(--txt)}
+.row .m{flex:1;min-width:0}
+.row .n{font-size:17px;font-weight:600}
+.row .s{font-size:14px;color:var(--mute);margin-top:2px;line-height:1.3}
+.row .a{text-align:right}
+.row .amt{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
+.chev{color:#8a97a5;flex:none}
+.qa{display:flex;background:#fff;padding:16px 8px 14px;border-bottom:1px solid var(--line)}
+.qa button{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:44px;background:none;border:none;font-size:13px;font-weight:600}
+.qa .c{width:52px;height:52px;border-radius:26px;background:#e6f0fa;color:var(--acc);display:flex;align-items:center;justify-content:center}
+.promo{margin:16px;background:#fff;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;border:1px solid var(--line);width:calc(100% - 32px);text-align:left}
+.tx{display:flex;align-items:center;gap:12px;padding:10px 16px;min-height:60px;background:#fff;border:none;border-bottom:1px solid var(--line);width:100%;text-align:left}
+.av{flex:none;width:40px;height:40px;border-radius:20px;background:#e6edf5;color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px}
+.tx .m{flex:1;min-width:0}
+.tx .n{font-size:16px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx .s{font-size:14px;color:var(--mute)}
+.tx .v{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.pos{color:var(--pos)}
+.lbl{padding:12px 16px 6px;font-size:13px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.6px}
+.seg{display:flex;background:#fff;border-bottom:1px solid var(--line)}
+.seg button{flex:1;padding:12px 0;font-size:16px;font-weight:600;color:var(--mute);background:none;border:none;border-bottom:3px solid transparent;min-height:48px}
+.seg button[aria-selected="true"]{color:var(--acc);font-weight:700;border-bottom-color:var(--acc)}
+.pill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;border-radius:22px;background:rgba(255,255,255,.14);color:#fff;font-weight:600;font-size:15px;border:none}
+.search{display:flex;gap:8px;padding:10px 16px}
+.search .f{flex:1;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #c9d2dc;border-radius:22px;padding:0 14px;min-height:44px;color:var(--mute)}
+.search input{flex:1;border:none;outline:none;background:transparent;font-size:16px;min-width:0;min-height:42px}
+.search .fb{width:44px;height:44px;border-radius:22px;border:1px solid #c9d2dc;background:#fff;color:var(--navy);display:flex;align-items:center;justify-content:center}
+.chips{display:flex;gap:8px;padding:0 16px 10px}
+.chip{min-height:36px;padding:0 14px;border-radius:18px;border:1px solid #c9d2dc;background:#fff;font-size:14px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.fld{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;padding:12px 16px;min-height:60px;border-bottom:1px solid var(--line)}
+.fld .fm{flex:1;min-width:0}
+.fld .lab{display:block;font-size:13px;font-weight:600;color:var(--mute)}
+.fld .val{font-size:17px;font-weight:600;margin-top:2px}
+.fld .sub{font-size:14px;color:var(--mute)}
+.fld select{width:100%;border:none;background:transparent;font-size:17px;font-weight:600;padding:2px 28px 2px 0;appearance:none;-webkit-appearance:none;outline-offset:6px;margin-top:2px}
+.fld .dd{position:absolute;right:16px;top:50%;transform:translateY(-50%);pointer-events:none;color:#8a97a5}
+.fld input.txt{width:100%;border:none;outline:none;background:transparent;font-size:17px;font-weight:500;padding:2px 0;min-height:28px;margin-top:2px}
+.amt-box{background:#fff;padding:14px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.amt-box .in{display:flex;align-items:center;gap:4px}
+.amt-box .in span{font-size:34px;font-weight:700;color:var(--mute)}
+.amt-box input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:34px;font-weight:700;min-height:48px;font-variant-numeric:tabular-nums}
+.err{display:flex;gap:8px;align-items:flex-start;margin:12px 16px 0;padding:10px 12px;border-radius:10px;background:#fdecea;color:var(--err);font-size:15px;font-weight:600;line-height:1.35}
+.note{padding:12px 16px;font-size:13px;color:var(--mute);line-height:1.45}
+.foot{padding:12px 16px calc(env(safe-area-inset-bottom) + 20px);display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:54px;border-radius:28px;border:2px solid var(--acc);background:var(--acc);color:#fff;font-weight:700;font-size:18px;width:100%}
+.btn.s{background:#fff;color:var(--acc)}
+.btn.sm{min-height:48px;font-size:16px}
+.kv{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:14px 16px;background:#fff;border-bottom:1px solid var(--line)}
+.kv .k{font-size:15px;color:var(--mute);font-weight:500}
+.kv .v{font-size:16px;font-weight:600;text-align:right;min-width:0;overflow-wrap:anywhere}
+.hero{background:#fff;padding:22px 16px 18px;text-align:center;border-bottom:1px solid var(--line)}
+.hero .k{font-size:14px;font-weight:600;color:var(--mute)}
+.hero .b{font-size:44px;font-weight:800;letter-spacing:-.5px;margin-top:4px;font-variant-numeric:tabular-nums}
+.ok{width:72px;height:72px;border-radius:36px;background:var(--pos);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.login-top{background:var(--navy);padding:calc(env(safe-area-inset-top) + 56px) 24px 84px;display:flex;flex-direction:column;align-items:center;gap:12px;color:#fff}
+.login-card{margin:-52px 20px 0;background:#fff;border-radius:16px;padding:20px 18px 18px;box-shadow:0 6px 20px rgba(11,42,74,.18);display:flex;flex-direction:column;gap:14px}
+.login-card label.l{display:block;font-size:14px;font-weight:600;color:var(--mute);margin-bottom:4px}
+.login-card input[type=text],.login-card input[type=password]{width:100%;border:1.5px solid #9aa8b6;border-radius:10px;padding:10px 12px;font-size:18px;min-height:48px;background:#fff}
+.pw{display:flex;align-items:center;border:1.5px solid #9aa8b6;border-radius:10px;padding-right:6px}
+.pw input{border:none!important;flex:1;min-width:0}
+.linkbtn{background:none;border:none;color:var(--acc);font-weight:600;font-size:16px;min-height:44px;padding:0 8px}
+.contact{display:flex;align-items:center;gap:14px;padding:10px 16px;min-height:62px;background:#fff;border:none;border-bottom:1px solid var(--line);width:100%;text-align:left}
+.rec{display:flex;gap:6px;padding:4px 10px 16px;overflow-x:auto}
+.rec button{flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;width:76px;min-height:44px;background:none;border:none;font-size:13px;font-weight:600}
+.rec .av{width:56px;height:56px;border-radius:28px;background:#dbe8f6;font-size:19px}
+.card3d{margin:16px;border-radius:18px;padding:18px;color:#fff;background:linear-gradient(135deg,#0b2a4a,#0a6ebd);min-height:170px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 8px 20px rgba(11,42,74,.25)}
+.sw{position:relative;width:52px;height:32px;flex:none}
+.sw input{position:absolute;inset:0;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.sw i{position:absolute;inset:0;border-radius:16px;background:#9aa8b6;transition:background .15s}
+.sw i::after{content:"";position:absolute;left:3px;top:3px;width:26px;height:26px;border-radius:13px;background:#fff;transition:transform .15s}
+.sw input:checked + i{background:var(--acc)}
+.sw input:checked + i::after{transform:translateX(20px)}
+.sw input:focus-visible + i{outline:3px solid #ffbf47;outline-offset:2px}
+.scrim{position:absolute;inset:0;background:rgba(11,42,74,.5);display:flex;align-items:flex-end;z-index:20}
+.sheet{background:#fff;width:100%;border-radius:20px 20px 0 0;padding:8px 0 calc(env(safe-area-inset-bottom) + 16px);max-height:85%;overflow-y:auto}
+.sheet .grab{width:40px;height:5px;border-radius:3px;background:#c9d2dc;margin:4px auto 10px}
+.sheet h2{margin:0;padding:4px 16px 8px;font-size:20px}
+.toast{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 84px);background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:15px;font-weight:600;z-index:30;text-align:center}
+.badge{position:absolute;top:6px;right:6px;min-width:18px;height:18px;border-radius:9px;background:var(--gold);color:var(--txt);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.up{width:100%;display:flex;gap:10px;padding:12px 16px;background:#fff}
+.up label{flex:1;position:relative;min-height:96px;border:2px dashed #9aa8b6;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:600;color:var(--mute);text-align:center;padding:8px;cursor:pointer}
+.up label.done{border-style:solid;border-color:var(--pos);color:var(--pos)}
+.up input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.hdr{position:relative}
+.login-top{position:relative}
+.tipsbtn{position:absolute;top:calc(env(safe-area-inset-top) + 10px);right:10px;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px 0 10px;border-radius:22px;border:none;background:#ffbf47;color:#3b2a00;font-weight:800;font-size:15px;z-index:5}
+.tipsbtn.s1{right:76px}.tipsbtn.s2{right:60px}
+.tourblock{position:absolute;inset:0;z-index:40;background:transparent}
+.tourblock.dim{background:rgba(11,42,74,.68)}
+.ring{position:absolute;z-index:41;border:3px solid #ffbf47;border-radius:14px;box-shadow:0 0 0 9999px rgba(11,42,74,.68);pointer-events:none}
+.ring.pulse{box-shadow:none;animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,191,71,.8)}50%{box-shadow:0 0 0 10px rgba(255,191,71,0)}}
+.tpop{position:absolute;z-index:43;left:16px;width:calc(100% - 32px);max-width:330px;background:#fff;border-radius:16px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.tpop.say{left:50%;top:50%;transform:translate(-50%,-50%);width:calc(100% - 40px);max-width:340px;padding:22px 20px 16px;text-align:center}
+.tpop h3{margin:8px 0 6px;font-size:22px;line-height:1.2}
+.tpop p{margin:0;font-size:17px;line-height:1.45;font-weight:500}
+.tpop.say p{font-size:19px}
+.tpop .tb{display:flex;align-items:center;gap:8px;margin-top:12px}
+.tpop .cnt{flex:1;font-size:13px;color:var(--mute);font-weight:600;text-align:left}
+.tbtn{min-height:46px;padding:0 20px;border-radius:23px;border:2px solid var(--acc);background:var(--acc);color:#fff;font-weight:700;font-size:17px}
+.tbtn.o{background:#fff;color:var(--acc)}
+.tbtn.ic{width:46px;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.skip{background:none;border:none;color:var(--mute);font-size:14px;font-weight:600;min-height:44px;padding:0 6px;text-decoration:underline}
+.trybar{position:absolute;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 96px);z-index:35;background:#fff8e1;border:2px solid #ffbf47;border-radius:16px;padding:8px 8px 8px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.trybar .t{flex:1;font-size:16px;font-weight:700;line-height:1.3;color:#3b2a00}
+.trybar.mbar{background:#e6f0fa;border-color:var(--acc)}
+.trybar.mbar .t{color:var(--navy)}
+.mcard{display:block;width:calc(100% - 32px);margin:12px 16px 0;padding:14px 16px;border-radius:16px;border:2px solid #ffbf47;background:#fff8e1;text-align:left}
+.mc-top{display:flex;justify-content:space-between;align-items:center}
+.mc-rank{display:inline-flex;align-items:center;gap:6px;font-size:19px;font-weight:800;color:#3b2a00}
+.mc-n{font-size:14px;font-weight:700;color:#3b2a00}
+.bar{display:block;height:12px;border-radius:6px;background:#f0e2b6;margin:10px 0;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--navy);border-radius:6px}
+.mc-cta{display:flex;align-items:center;justify-content:space-between;font-size:16px;font-weight:700;color:var(--acc)}
+.rankcard{background:#fff;padding:18px 16px;border-bottom:1px solid var(--line)}
+.lv{display:flex;gap:6px;margin-top:12px}
+.lv span{flex:1;text-align:center;font-size:13px;font-weight:700;padding:8px 2px;border-radius:10px;border:2px solid var(--line);color:var(--mute)}
+.lv span.on{border-color:var(--navy);background:var(--navy);color:#fff}
+.lv span.past{border-color:var(--pos);color:var(--pos)}
+.chip2{flex:none;min-height:36px;display:inline-flex;align-items:center;padding:0 14px;border-radius:18px;font-size:14px;font-weight:700;border:2px solid var(--acc);color:var(--acc);background:#fff}
+.chip2.dn{border-color:var(--pos);color:var(--pos)}
+.stars{display:flex;justify-content:center;gap:4px;flex-wrap:wrap}
+.chk{background:#fff;padding:6px 16px 10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.chk label{display:flex;align-items:flex-start;gap:12px;min-height:48px;padding:10px 0;font-size:16px;font-weight:600;line-height:1.35;border-bottom:1px solid var(--line)}
+.chk label:last-child{border-bottom:none}
+.chk input{width:26px;height:26px;accent-color:var(--acc);flex:none;margin:0}
+.btn[disabled]{opacity:.45}
+.qcard{margin:16px;background:#fff;border:2px solid var(--line);border-radius:16px;padding:16px}
+.qcard .src{font-size:13px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.5px}
+.qcard .msg{font-size:20px;font-weight:600;line-height:1.4;margin-top:6px}
+.res{margin:0 16px;padding:14px;border-radius:14px;border:2px solid;font-size:16px;line-height:1.45}
+.res.good{border-color:var(--pos);background:#eaf6ee}.res.bad{border-color:var(--err);background:#fdecea}
+.res b{display:flex;align-items:center;gap:8px;font-size:19px;margin-bottom:4px}
+.login-card{position:relative;z-index:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+/* ---------- helpers ---------- */
+var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var fmt=function(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n)};
+var r2=function(n){return Math.round(n*100)/100};
+var dshort=function(iso){return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric'})};
+var dlong=function(iso){return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
+function ico(p,s,fill){s=s||24;return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="'+(fill||'none')+'" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>'}
+var P={
+ accounts:'<path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3 20h18"/>',
+ transfer:'<path d="M4 8h14M14 4l4 4-4 4"/><path d="M20 16H6M10 12l-4 4 4 4"/>',
+ deposit:'<path d="M4 8h3l2-3h6l2 3h3v11H4V8z"/><circle cx="12" cy="13" r="3.5"/>',
+ cards:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/>',
+ more:'<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
+ bell:'<path d="M6 16v-5a6 6 0 1112 0v5l2 2H4l2-2z"/><path d="M10 21h4"/>',
+ chev:'<path d="M9 5l7 7-7 7"/>',back:'<path d="M15 5l-7 7 7 7"/>',down:'<path d="M5 9l7 7 7-7"/>',
+ eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+ eyeoff:'<path d="M3 3l18 18"/><path d="M10.6 6.1A9.8 9.8 0 0112 6c6 0 10 6 10 6a17 17 0 01-3.2 3.9M6.5 7.6C3.9 9.3 2 12 2 12s4 7 10 7a9.6 9.6 0 004.2-1"/>',
+ face:'<path d="M4 8V6a2 2 0 012-2h2M16 4h2a2 2 0 012 2v2M20 16v2a2 2 0 01-2 2h-2M8 20H6a2 2 0 01-2-2v-2"/><path d="M9 10v1M15 10v1M12 10v4h-1M9 16c1.5 1.3 4.5 1.3 6 0"/>',
+ bills:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+ person:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M17 8h5M19.5 5.5v5"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+ cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+ filter:'<path d="M4 6h16M7 12h10M10 18h4"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',
+ warn:'<path d="M12 3l10 18H2L12 3z"/><path d="M12 10v5"/><path d="M12 18h.01"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.5 4-6.5 8-6.5s7 2 8 6.5"/>',
+ shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+ help:'<circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 2.5-3 4.5"/><path d="M12 18h.01"/>',
+ doc:'<path d="M6 3h8l4 4v14H6V3z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
+ out:'<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>'
+};
+var LOGO='<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#0a6ebd"/><path d="M20 9l9 20-9-5-9 5z" fill="#fff"/></svg>';
+
+/* ---------- data ---------- */
+var CONTACTS=[
+ {id:'mom',name:'Mom',ini:'MC',sub:'maria.c@example.com'},
+ {id:'jordan',name:'Jordan Patel',ini:'JP',sub:'(555) 014-2290'},
+ {id:'alex',name:'Alex Rivera',ini:'AR',sub:'alex.r@example.com'},
+ {id:'taylor',name:'Taylor Lee',ini:'TL',sub:'(555) 013-7741'},
+ {id:'casey',name:'Casey Nguyen',ini:'CN',sub:'casey.n@example.com'}
+];
+var PAYEES=[
+ {id:'phone',name:'Phone Company',sub:'Due in 6 days',amt:40},
+ {id:'power',name:'Desert Electric and Gas',sub:'Due in 11 days',amt:60},
+ {id:'net',name:'Skyline Internet',sub:'Due in 14 days',amt:50},
+ {id:'water',name:'City Water Department',sub:'Due in 20 days',amt:25}
+];
+var SEND_LIMIT=2500, MIN_DUE=25;
+function dAgo(n){var d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-n);return d.toISOString()}
+function seed(){
+  var id=0;
+  function t(a,n,c,amt,d,p){id++;return {id:'t'+id,a:a,n:n,c:c,amt:amt,d:dAgo(d),p:!!p}}
+  return {
+    nid:100,alerts:2,locked:false,faceId:true,paperless:true,done:{},seen:{},tips:true,autoread:false,
+    accts:[
+      {id:'chk',name:'Everyday Checking',kind:'Checking',mask:'4821',bal:1000},
+      {id:'sav',name:'Premier Savings',kind:'Savings',mask:'7730',bal:1000},
+      {id:'cc',name:'Rewards Visa',kind:'Credit card',mask:'1156',bal:75,limit:500}
+    ],
+    txs:[
+      t('chk','Coffee Corner','Dining',-5,0,true),
+      t('chk','Grocery Mart','Groceries',-40,1),
+      t('chk','Direct deposit','Payroll',500,2),
+      t('chk','Streaming Plus','Entertainment',-10,3),
+      t('chk','Gas Station','Auto',-30,4),
+      t('chk','Transfer from Premier Savings','Transfer',100,5),
+      t('chk','Phone Company','Bills',-50,6),
+      t('chk','Pizza Place','Dining',-20,8),
+      t('sav','Transfer to Everyday Checking','Transfer',-100,5),
+      t('sav','Interest paid','Interest',2,9),
+      t('sav','Transfer from Everyday Checking','Transfer',100,12),
+      t('cc','Online Store','Shopping',-50,2),
+      t('cc','Riverside Restaurant','Dining',-25,3),
+      t('cc','Payment, thank you','Payment',100,10)
+    ]
+  };
+}
+var KEY='bankbuddy-guided-v1';
+function load(){try{var s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+var S=load()||seed();
+if(!S.done)S.done={};if(!S.seen)S.seen={};if(S.tips===undefined)S.tips=true;if(S.autoread===undefined)S.autoread=false;
+var UI={view:{name:'signin'},hist:[],sheet:null,flow:null,dep:null,q:'',filter:'all',showFilter:false,dtab:'activity',showPw:false,toast:'',err:'',cq:'',u:'',pwv:'',tour:null,mission:null,celebrate:null,scam:null,safety:[false,false,false],spoken:''};
+
+function A(id){return S.accts.filter(function(a){return a.id===id})[0]}
+function present(a){
+  var pend=S.txs.filter(function(t){return t.a===a.id&&t.p}).reduce(function(s,t){return s+t.amt},0);
+  return r2(a.bal-pend);
+}
+function addTx(a,n,c,amt,p){S.nid++;S.txs.push({id:'t'+S.nid,a:a,n:n,c:c,amt:r2(amt),d:new Date().toISOString(),p:!!p})}
+function conf(){var c='ABCDEFGHJKMNPQRSTUVWXYZ23456789',o='';for(var i=0;i<8;i++){o+=c[Math.floor(Math.random()*c.length)];if(i===3)o+='-'}return o}
+function parseAmt(v){v=String(v||'').replace(/[$,\s]/g,'');if(!/^\d+(\.\d{1,2})?$/.test(v))return NaN;return r2(parseFloat(v))}
+function greet(){var h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening'}
+function ini(n){return n.split(/\s+/).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase()}
+
+/* ---------- navigation ---------- */
+function go(view){UI.tour=null;UI.sheet=null;UI.hist.push(UI.view);UI.view=view;UI.err='';render(true)}
+function back(){UI.tour=null;UI.sheet=null;UI.view=UI.hist.pop()||{name:'accounts'};UI.err='';render(true)}
+function root(name){UI.tour=null;UI.sheet=null;UI.hist=[];UI.view={name:name};UI.err='';UI.q='';UI.filter='all';UI.showFilter=false;UI.dtab='activity';render(true)}
+
+/* ---------- components ---------- */
+function tabbar(active){
+  var tabs=[['accounts','Accounts','accounts'],['pay','Pay &amp; Transfer','transfer'],['deposit','Deposit','deposit'],['cards','Cards','cards'],['more','More','more']];
+  return '<nav class="tabbar" aria-label="Main" data-tour="tabbar">'+tabs.map(function(t){
+    return '<button class="tab" data-a="tab" data-t="'+t[0]+'"'+(active===t[0]?' aria-current="page"':'')+'>'+ico(P[t[2]],26,t[0]==='more'?'currentColor':'none')+'<span>'+t[1]+'</span></button>'}).join('')+'</nav>';
+}
+function nav(title,left,right){
+  return '<header class="hdr"><div class="nav"><div>'+(left||'')+'</div><div class="t">'+title+'</div><div class="r">'+(right||'')+'</div></div></header>';
+}
+function nb(a,text,icon,extra){return '<button class="nbtn" data-a="'+a+'"'+(extra||'')+'>'+(icon?ico(P[icon],22):'')+text+'</button>'}
+function kv(k,v){return '<div class="kv"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>'}
+function chevRow(icon,title,sub,attrs){
+  return '<button class="row" '+attrs+'><span class="av" style="width:44px;height:44px;border-radius:12px;background:#e6f0fa;color:var(--acc)">'+ico(P[icon],26)+'</span><span class="m"><span class="n" style="display:block">'+title+'</span><span class="s" style="display:block">'+sub+'</span></span><span class="chev">'+ico(P.chev,20)+'</span></button>';
+}
+function txRow(t){
+  var pos=t.amt>0;
+  return '<button class="tx" data-a="tx" data-id="'+t.id+'"><span class="av">'+esc(t.c==='Payment'?'P':ini(t.n.replace(/^(Transfer|Sent|Bill pay)( to| from)?:?\s*/i,'')||t.n))+'</span><span class="m"><span class="n" style="display:block">'+esc(t.n)+'</span><span class="s" style="display:block">'+dshort(t.d)+' · '+(t.p?'Pending':esc(t.c))+'</span></span><span class="v'+(pos?' pos':'')+'">'+(pos?'+':'-')+fmt(Math.abs(t.amt))+'</span></button>';
+}
+function acctOpts(list,sel){return list.map(function(a){return '<option value="'+a.id+'"'+(a.id===sel?' selected':'')+'>'+esc(a.name)+' ...'+a.mask+'</option>'}).join('')}
+
+/* ---------- screens ---------- */
+function listFor(a){
+  var q=UI.q.trim().toLowerCase();
+  var list=S.txs.filter(function(t){return t.a===a.id}).sort(function(x,y){return (y.p-x.p)||(new Date(y.d)-new Date(x.d))||(y.id<x.id?-1:1)});
+  if(UI.filter==='in')list=list.filter(function(t){return t.amt>0});
+  if(UI.filter==='out')list=list.filter(function(t){return t.amt<0});
+  if(q)list=list.filter(function(t){return (t.n+' '+t.c).toLowerCase().indexOf(q)>-1});
+  if(!list.length)return '<div class="note" style="text-align:center;padding:28px 16px;font-size:15px">No transactions match.</div>';
+  var pend=list.filter(function(t){return t.p}),post=list.filter(function(t){return !t.p});
+  return (pend.length?'<div class="lbl">Pending</div>'+pend.map(txRow).join(''):'')+(post.length?'<div class="lbl">Posted</div>'+post.map(txRow).join(''):'');
+}
+function vDetail(){
+  var a=A(UI.view.id), cc=a.kind==='Credit card';
+  var sub=cc?('Credit card ...'+a.mask):(a.kind+' ...'+a.mask);
+  var body='';
+  if(UI.dtab==='activity'){
+    body='<div class="search" data-tour="search"><label class="f"><span class="sr" style="position:absolute;left:-9999px">Search transactions</span>'+ico(P.search,20)+'<input id="q" type="search" placeholder="Search transactions" value="'+esc(UI.q)+'" data-in="q"></label><button class="fb" data-a="filtertoggle" aria-label="Filter transactions" aria-expanded="'+UI.showFilter+'">'+ico(P.filter,20)+'</button></div>'+
+    (UI.showFilter?'<div class="chips">'+[['all','All'],['in','Money in'],['out','Money out']].map(function(c){return '<button class="chip" data-a="filter" data-f="'+c[0]+'" aria-pressed="'+(UI.filter===c[0])+'">'+c[1]+'</button>'}).join('')+'</div>':'')+
+    '<div id="txlist" data-tour="txlist">'+listFor(a)+'</div>';
+  } else if(UI.dtab==='details'){
+    body='<div style="height:12px"></div>'+kv('Nickname',esc(a.name))+kv('Account type',a.kind)+kv('Account number','•••••••'+a.mask)+kv('Opened','March 14, 2021')+
+      (a.kind==='Savings'?kv('Interest rate','0.50% APY'):'')+(cc?kv('Credit limit',fmt(a.limit))+kv('Available credit',fmt(a.limit-a.bal))+kv('Minimum payment due',fmt(MIN_DUE)):'')+
+      '<div class="note">Routing and full account numbers are hidden in this demo.</div>';
+  } else {
+    body='<div style="height:12px"></div>'+['October 2026','September 2026','August 2026'].map(function(m){return '<button class="row" data-a="soon" data-m="Statements are not available in this demo."><span class="av" style="background:#e6f0fa;color:var(--acc)">'+ico(P.doc,22)+'</span><span class="m"><span class="n" style="display:block;font-size:16px">'+m+' statement</span><span class="s" style="display:block">PDF</span></span><span class="chev">'+ico(P.chev,20)+'</span></button>'}).join('');
+  }
+  var primaryBtn = cc ? '<button class="pill" data-a="newtransfer" data-to="cc" data-from="chk">'+ico(P.transfer,20)+'Pay card</button>' : '<button class="pill" data-a="newtransfer" data-from="'+a.id+'">'+ico(P.transfer,20)+'Transfer</button>';
+  return '<header class="hdr" style="padding-bottom:18px"><div style="display:flex;justify-content:space-between;align-items:center"><button class="nbtn" data-a="back" data-tour="back" aria-label="Back" style="padding:0">'+ico(P.back,26)+'</button><button class="nbtn" data-a="soon" data-m="More options are not part of this demo." aria-label="More options" style="justify-content:center">'+ico(P.more,26,'currentColor')+'</button></div>'+
+  '<div style="padding:0 8px"><div style="font-size:17px;font-weight:600">'+esc(a.name)+'</div><div style="font-size:14px;color:#b9cbe0">'+sub+'</div>'+
+  '<div data-tour="balance" style="font-size:42px;font-weight:800;margin-top:10px;letter-spacing:-.5px;font-variant-numeric:tabular-nums">'+fmt(a.bal)+'</div>'+
+  '<div style="font-size:14px;color:#b9cbe0">'+(cc?'Current balance · Available credit '+fmt(a.limit-a.bal):'Available balance · Present balance '+fmt(present(a)))+'</div>'+
+  '<div data-tour="actions" style="display:flex;gap:8px;margin-top:14px">'+primaryBtn+'<button class="pill" data-a="tab" data-t="deposit">'+ico(P.deposit,20)+'Deposit</button><button class="pill" data-a="bills">'+ico(P.bills,20)+'Pay bill</button></div></div></header>'+
+  '<div class="seg" role="tablist" data-tour="tabs">'+[['activity','Activity'],['details','Details'],['statements','Statements']].map(function(t){return '<button role="tab" data-a="dtab" data-t="'+t[0]+'" aria-selected="'+(UI.dtab===t[0])+'">'+t[1]+'</button>'}).join('')+'</div>'+
+  '<div class="scroll">'+body+'<div style="height:16px"></div></div>'+tabbar('accounts');
+}
+function avail(a){return a.kind==='Credit card'?('Balance '+fmt(a.bal)):('Available '+fmt(a.bal))}
+function flowTitle(f){return f.kind==='transfer'?'transferring':f.kind==='send'?'sending':'paying'}
+function contactList(list){
+  if(!list.length)return '<div class="note" style="text-align:center;padding:24px 16px;font-size:15px">No one matches.</div>';
+  return list.map(function(c){return '<button class="contact" data-a="startsend" data-id="'+c.id+'"><span class="av" style="width:44px;height:44px;border-radius:22px">'+c.ini+'</span><span class="m" style="flex:1"><span style="display:block;font-size:17px;font-weight:600">'+esc(c.name)+'</span><span style="display:block;font-size:14px;color:var(--mute)">'+esc(c.sub)+'</span></span><span class="chev">'+ico(P.chev,20)+'</span></button>'}).join('');
+}
+function vSheet(){
+  var s=UI.sheet; if(!s)return '';
+  var inner='';
+  if(s.type==='tx'){
+    var t=S.txs.filter(function(x){return x.id===s.id})[0], a=A(t.a), pos=t.amt>0;
+    inner='<h2>'+esc(t.n)+'</h2><div style="padding:0 16px 8px;font-size:32px;font-weight:800" class="'+(pos?'pos':'')+'">'+(pos?'+':'-')+fmt(Math.abs(t.amt))+'</div>'+kv('Status',t.p?'Pending':'Posted')+kv('Date',dlong(t.d))+kv('Category',esc(t.c))+kv('Account',esc(a.name)+' ...'+a.mask)+kv('Reference',t.id.toUpperCase());
+  } else if(s.type==='alerts'){
+    inner='<h2>Notifications</h2>'+
+    '<div class="kv" style="display:block"><div style="font-weight:700;font-size:16px">Paycheck deposited</div><div class="s" style="font-size:14px;color:var(--mute);margin-top:2px">$500.00 arrived in Everyday Checking.</div></div>'+
+    '<div class="kv" style="display:block"><div style="font-weight:700;font-size:16px">Security tip</div><div style="font-size:14px;color:var(--mute);margin-top:2px;line-height:1.4">Bank Buddy will never ask for your PIN or password by text message, email, or phone call.</div></div>';
+  } else if(s.type==='security'){
+    inner='<h2>Security center</h2><div class="kv" style="display:block"><div style="font-size:15px;line-height:1.5;color:var(--txt)">Never share your password, PIN, or one-time codes. Be careful with messages that rush you, promise prizes, or ask you to send money to someone you do not know.</div></div>';
+  }
+  return '<div class="scrim" data-a="closesheet" id="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-label="Details" data-stop="1"><div class="grab"></div>'+inner+'<div style="padding:12px 16px 0"><button class="btn s sm" data-a="closesheet" id="sheetclose">Close</button></div></div></div>';
+}
+var toastT;
+function toast(m){UI.toast=m;render();clearTimeout(toastT);toastT=setTimeout(function(){UI.toast='';render()},2200)}
+
+/* ---------- flows ---------- */
+function startFlow(f){UI.flow=f;go({name:'form'})}
+function validate(){
+  var f=UI.flow, amt=parseAmt(f.amount), from=A(f.from);
+  if(isNaN(amt)||amt<=0)return 'Enter an amount greater than $0.00, like 25.00.';
+  if(amt>from.bal)return 'Not enough money in '+from.name+'. It has '+fmt(from.bal)+' available.';
+  if(f.kind==='transfer'&&A(f.to).kind==='Credit card'&&amt>A(f.to).bal)return 'That is more than the card balance of '+fmt(A(f.to).bal)+'.';
+  if(f.kind==='send'&&amt>SEND_LIMIT)return 'The most you can send in one day is '+fmt(SEND_LIMIT)+'.';
+  f.amt=amt;return '';
+}
+function submit(){
+  var f=UI.flow, amt=f.amt, from=A(f.from), code=conf(), res;
+  from.bal=r2(from.bal-amt);
+  if(f.kind==='transfer'){
+    var to=A(f.to), cc=to.kind==='Credit card';
+    if(cc){to.bal=r2(to.bal-amt);addTx(to.id,'Payment, thank you','Payment',amt);addTx(from.id,'Payment to '+to.name,'Transfer',-amt)}
+    else{to.bal=r2(to.bal+amt);addTx(from.id,'Transfer to '+to.name,'Transfer',-amt);addTx(to.id,'Transfer from '+from.name,'Transfer',amt)}
+    res={head:cc?'Payment submitted':'Transfer submitted',line:fmt(amt)+' is on its way to '+to.name+'.'+(f.freq!=='One time'?' It repeats '+f.freq.toLowerCase()+'.':''),rows:[['From',esc(from.name)+' ...'+from.mask],['To',esc(to.name)+' ...'+to.mask],['Amount',fmt(amt)],['Date',dlong(new Date().toISOString())]],code:code,again:'newtransfer',againLabel:'Make another transfer'};
+  } else if(f.kind==='send'){
+    var c=CONTACTS.filter(function(x){return x.id===f.contact})[0];
+    addTx(from.id,'Sent to '+c.name,'Sent money',-amt);
+    res={head:'Money sent',line:fmt(amt)+' is on its way to '+c.name+'.',rows:[['Sent to',esc(c.name)],['From',esc(from.name)+' ...'+from.mask],['Amount',fmt(amt)],['Date',dlong(new Date().toISOString())]],code:code,again:'sendpick',againLabel:'Send to someone else'};
+  } else {
+    var p=PAYEES.filter(function(x){return x.id===f.payee})[0];
+    addTx(from.id,'Bill pay: '+p.name,'Bills',-amt);
+    res={head:'Payment submitted',line:fmt(amt)+' is on its way to '+p.name+'.',rows:[['Paid to',esc(p.name)],['From',esc(from.name)+' ...'+from.mask],['Amount',fmt(amt)],['Date',dlong(new Date().toISOString())]],code:code,again:'bills',againLabel:'Pay another bill'};
+  }
+  save();
+  complete(f.kind==='transfer'?'transfer':f.kind==='send'?'send':'bill');
+  UI.hist=[{name:'accounts'}]; UI.view={name:'confirm',r:res}; UI.flow=null; render(true);
+}
+
+/* ---------- tutorial, missions, scam watch ---------- */
+P.speaker='<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 010 7"/><path d="M19 6a8.5 8.5 0 010 12"/>';
+P.star='<path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9L12 2.5z"/>';
+function buddyFace(sz){return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 100 100" aria-hidden="true" style="flex:none"><circle cx="50" cy="50" r="48" fill="#95d4e2"/><circle cx="34" cy="44" r="6" fill="#0f3a46"/><circle cx="66" cy="44" r="6" fill="#0f3a46"/><circle cx="26" cy="62" r="7" fill="#e7ac8f"/><circle cx="74" cy="62" r="7" fill="#e7ac8f"/><path d="M36 64 Q50 78 64 64" fill="none" stroke="#0f3a46" stroke-width="5" stroke-linecap="round"/></svg>'}
+function tipsBtn(cls){return '<button class="tipsbtn '+(cls||'')+'" data-a="tips" aria-label="Show tips for this screen">'+ico(P.help,20)+'Tips</button>'}
+
+var MISSIONS=[
+ {id:'signin',t:'Log in',d:'Sign in to your account.',hint:'Sign in with any username and password.'},
+ {id:'checking',t:'Look inside Checking',d:'Open Checking and find your balance.',hint:'Tap Everyday Checking.'},
+ {id:'savings',t:'Look inside Savings',d:'Open Savings and see what is saved.',hint:'Tap Premier Savings.'},
+ {id:'transfer',t:'Move your money',d:'Move money from one account to another.',hint:'Tap Transfer, pick your accounts, and type an amount.'},
+ {id:'send',t:'Send money safely',d:'Send money to a friend. Do the safety check first.',hint:'Tap Send money and pick a person.'},
+ {id:'bill',t:'Pay a bill',d:'Pay a bill from your account.',hint:'Tap Pay bills and pick a bill.'},
+ {id:'deposit',t:'Deposit a check',d:'Put a check into your account.',hint:'Tap Deposit at the bottom of the screen.'},
+ {id:'scam',t:'Spot the scams',d:'Learn how to tell a scam from the real thing.',hint:'Tap Scam Watch and answer the questions.'}
+];
+var RANKS=[['Beginner',0],['Learner',3],['Skilled',5],['Expert',8]];
+function doneCount(){return MISSIONS.filter(function(m){return S.done[m.id]}).length}
+function rankOf(n){var r=RANKS[0][0];RANKS.forEach(function(x){if(n>=x[1])r=x[0]});return r}
+function nextRank(n){for(var i=0;i<RANKS.length;i++){if(n<RANKS[i][1])return RANKS[i]}return null}
+function mById(id){return MISSIONS.filter(function(m){return m.id===id})[0]}
+function complete(id){
+  if(S.done[id])return;
+  var before=rankOf(doneCount());
+  S.done[id]=true; save();
+  var after=rankOf(doneCount());
+  UI.celebrate={id:id,title:mById(id).t,rank:before!==after?after:''};
+  if(UI.mission===id)UI.mission=null;
+}
+
+var TOURS={
+ signin:[
+  ['say','','Welcome!','This is the login page. You can log in to your account with this page.'],
+  ['say','','Try it!','You can use any username and password you choose.'],
+  ['spot','[data-tour=username]','','This is your username. You set it up when you open your account and set up your online account.'],
+  ['spot','[data-tour=password]','','This is your password. It is a secret. Only you should know it. You make it when you set up your online account.'],
+  ['spot','[data-tour=show]','','Tap the eye to see what you typed. Make sure nobody is looking at your screen.'],
+  ['spot','[data-tour=faceid]','','Some phones let you log in with your face. That is another safe way to log in.'],
+  ['try','[data-tour=signinbtn]','','Your turn! Type a username and a password. Then tap Sign in.']
+ ],
+ accounts:[
+  ['say','','Your Accounts page','This is your home page. It shows all of your money in one place. You see it first every time you log in.'],
+  ['spot','[data-tour=missions]','','These are your missions. Finish missions to practice and earn stars.'],
+  ['spot','[data-tour=bell]','','The bell shows messages from the bank. A number means there is something new.'],
+  ['spot','[data-tour=qa-transfer]','','Transfer moves money between your own accounts.'],
+  ['spot','[data-tour=qa-bills]','','Pay bills sends money to companies, like your phone company.'],
+  ['spot','[data-tour=qa-deposit]','','Deposit puts a check into your account. You take a picture with your phone.'],
+  ['spot','[data-tour=qa-send]','','Send money gives money to a person. Only send to people you know and trust.'],
+  ['spot','[data-tour=total]','','This number is all the money you have in your checking and savings.'],
+  ['spot','[data-tour=row-chk]','','Checking is money you spend. You use it for things you buy. Tap it to look inside.'],
+  ['spot','[data-tour=row-sav]','','Savings is money you keep safe. You try not to spend it.'],
+  ['spot','[data-tour=row-cc]','','A credit card lets you buy now and pay later. This number is what you owe.'],
+  ['spot','[data-tour=scamcard]','','Scam Watch teaches you how to spot tricks that try to steal your money.'],
+  ['spot','[data-tour=tabbar]','','These buttons take you to other parts of the app. Accounts is where you are now.'],
+  ['try','[data-tour=missions]','','Your turn! Tap Start a mission to see what to practice.']
+ ],
+ missions:[
+  ['say','','Missions','Missions help you practice. Finish a mission to earn a star. Finish them all to become an Expert!'],
+  ['spot','[data-tour=rank]','','This is your level. Everyone starts as a Beginner. Your level goes up as you finish missions.'],
+  ['spot','[data-tour=mlist]','','Tap a mission to start it. You can do them in any order.']
+ ],
+ detail:[
+  ['say','','Your account page','This page shows one account. You can see how much money is in it and what happened.'],
+  ['spot','[data-tour=back]','','Tap the arrow to go back to all your accounts.'],
+  ['spot','[data-tour=balance]','','This is your balance. It is how much money you can use right now.'],
+  ['spot','[data-tour=actions]','','These buttons let you move money, deposit a check, or pay a bill from this account.'],
+  ['spot','[data-tour=tabs]','','Activity shows money in and out. Details has facts about the account. Statements are monthly papers from the bank.'],
+  ['spot','[data-tour=search]','','Search helps you find one purchase. Try typing a store name.'],
+  ['spot','[data-tour=txlist]','','Each line is one time money moved. A plus (+) means money came in. A minus (-) means money went out. Pending means the bank is not finished yet. Tap a line to see more.']
+ ],
+ pay:[
+  ['say','','Pay and Transfer','This page is where you move money.'],
+  ['spot','[data-tour=pay-transfer]','','Transfer moves money between your own accounts.'],
+  ['spot','[data-tour=pay-send]','','Send money gives money to another person.'],
+  ['spot','[data-tour=pay-bills]','','Pay bills sends money to companies, like your phone company.'],
+  ['spot','[data-tour=pay-sched]','','Scheduled payments shows payments that will happen later.'],
+  ['spot','[data-tour=pay-recent]','','Recent shows money you moved lately.']
+ ],
+ 'form-transfer':[
+  ['say','','Transfer money','On this page you move money from one of your accounts to another.'],
+  ['spot','[data-tour=f-from]','','From is where the money comes out. It shows how much you have.'],
+  ['spot','[data-tour=f-to]','','To is where the money goes in.'],
+  ['spot','[data-tour=f-amount]','','Type how much to move. Use numbers only. Type 50 for fifty dollars.'],
+  ['spot','[data-tour=f-date]','','This is the day the money moves. It is today.'],
+  ['spot','[data-tour=f-freq]','','One time means it moves once. Weekly means it moves again every week.'],
+  ['spot','[data-tour=f-memo]','','A memo is a small note to help you remember why. You do not have to type one.'],
+  ['spot','[data-tour=f-continue]','','Tap Continue to look it over. Nothing is sent yet.'],
+  ['try','[data-tour=f-amount]','','Your turn! Pick your accounts, type an amount, and tap Continue.']
+ ],
+ 'form-send':[
+  ['say','','Send money','On this page you send money to a person. Money sent to a person can be hard to get back, so go slowly.'],
+  ['spot','[data-tour=f-to]','','This is who gets the money. Make sure it is the right person.'],
+  ['spot','[data-tour=f-from]','','This is the account the money comes out of.'],
+  ['spot','[data-tour=f-amount]','','Type how much to send. Use numbers only.'],
+  ['spot','[data-tour=f-memo]','','A memo is a small note to help you remember why. You do not have to type one.'],
+  ['spot','[data-tour=f-note]','','Remember: only send money to people you know and trust.'],
+  ['spot','[data-tour=f-continue]','','Tap Continue to check everything before it is sent.'],
+  ['try','[data-tour=f-amount]','','Your turn! Type an amount, like 10, and tap Continue.']
+ ],
+ 'form-bill':[
+  ['say','','Pay a bill','On this page you pay a bill, like a phone bill or a power bill.'],
+  ['spot','[data-tour=f-payee]','','This is the company you are paying.'],
+  ['spot','[data-tour=f-from]','','This is the account the money comes out of.'],
+  ['spot','[data-tour=f-amount]','','This is how much is due. It is already filled in for you.'],
+  ['spot','[data-tour=f-continue]','','Tap Continue to check it before it is sent.'],
+  ['try','[data-tour=f-continue]','','Your turn! Tap Continue.']
+ ],
+ review:[
+  ['say','','Check before you send','This is the most important page. Look at everything before you send. Once money is sent, it can be hard to get back.'],
+  ['spot','[data-tour=rv-amount]','','This is the amount. Is it right?'],
+  ['spot','[data-tour=rv-rows]','','Check who gets the money and which account it comes from. Are they right?'],
+  ['spot','[data-tour=safety]','','Read each sentence. Tap the box when it is true for you. If you cannot tap a box, STOP and ask someone you trust.'],
+  ['spot','[data-tour=rv-submit]','','Tap Submit only when everything is right.'],
+  ['spot','[data-tour=rv-edit]','','Something wrong? Tap Edit to fix it.']
+ ],
+ confirm:[
+  ['say','','All done!','This page tells you it worked.'],
+  ['spot','[data-tour=code]','','This is your confirmation number. It is like a receipt. Save it in case there is a problem.'],
+  ['spot','[data-tour=c-done]','','Tap Done to go back home.']
+ ],
+ sendpick:[
+  ['say','','Send money','First, pick the person you want to send money to.'],
+  ['spot','[data-tour=sp-search]','','You can type a name here to find someone.'],
+  ['spot','[data-tour=sp-recent]','','These are people you sent money to lately.'],
+  ['spot','[data-tour=sp-list]','','This is everyone in your contacts. Tap a name to pick that person.']
+ ],
+ bills:[
+  ['say','','Pay bills','Here are the companies you pay.'],
+  ['spot','[data-tour=b-list]','','Each one shows how much is due and when. Tap one to pay it.']
+ ],
+ deposit:[
+  ['say','','Deposit a check','You can put a paper check into your account by taking pictures with your phone.'],
+  ['spot','[data-tour=d-to]','','This is the account the money goes into.'],
+  ['spot','[data-tour=d-amount]','','Type the amount that is written on the check.'],
+  ['spot','[data-tour=d-photos]','','You take a picture of the front and the back of the check. For practice, pictures are optional.'],
+  ['spot','[data-tour=d-submit]','','Tap Deposit check when you are ready.'],
+  ['try','[data-tour=d-amount]','','Your turn! Type an amount, like 100, and tap Deposit check.']
+ ],
+ cards:[
+  ['say','','Cards','This page shows your credit card.'],
+  ['spot','[data-tour=c-card]','','This is your credit card. A credit card lets you buy now and pay later.'],
+  ['spot','[data-tour=c-info]','','Balance is what you owe. Available credit is how much more you can buy. Minimum payment is the least you must pay.'],
+  ['spot','[data-tour=c-pay]','','Tap Make a payment to pay back some of what you owe.'],
+  ['spot','[data-tour=c-lock]','','Lost your card? Lock it. No one can use it while it is locked.']
+ ],
+ more:[
+  ['say','','More','This page has your settings and help.'],
+  ['spot','[data-tour=m-settings]','','Settings let you turn things on or off.'],
+  ['spot','[data-tour=m-help]','','The Security center has tips to keep your money safe.'],
+  ['spot','[data-tour=m-signout]','','Tap Sign out when you are done. Always sign out on a phone that other people use.']
+ ],
+ scam:[
+  ['say','','Scam Watch','Scams are tricks that try to steal your money. Let us learn how to spot them.'],
+  ['spot','[data-tour=s-signs]','','Scammers often do these things. If you see one, be careful.'],
+  ['spot','[data-tour=s-stop]','','If you think something is a scam, do these three things.']
+ ]
+};
+function tourKey(){var v=UI.view;if(v.name==='form'&&UI.flow)return 'form-'+UI.flow.kind;return v.name}
+function maybeStartTour(){
+  if(UI.tour||UI.celebrate||UI.sheet||!S.tips)return;
+  var k=tourKey();
+  if(TOURS[k]&&!S.seen[k])UI.tour={key:k,i:0};
+}
+function stepText(st){return (st[2]?st[2]+'. ':'')+st[3]}
+function speak(text,quiet){
+  try{
+    if(!('speechSynthesis' in window)){if(!quiet)toast('Reading out loud is not available on this phone.');return}
+    window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(text);u.rate=0.9;window.speechSynthesis.speak(u);
+  }catch(e){if(!quiet)toast('Reading out loud is not available on this phone.')}
+}
+function vTour(){
+  var t=UI.tour; if(!t||UI.celebrate)return '';
+  var steps=TOURS[t.key], st=steps[t.i], n=steps.length;
+  var listen='<button class="tbtn o ic" data-a="speak" aria-label="Read this out loud">'+ico(P.speaker,22)+'</button>';
+  if(st[0]==='try'){
+    return '<div class="ring pulse" id="tring"></div><div class="trybar" role="status">'+buddyFace(40)+'<span class="t">'+esc(st[3])+'</span>'+listen+'</div>';
+  }
+  var last=(t.i>=n-1)||(steps[t.i+1][0]==='try'&&false);
+  var nextLabel=(t.i>=n-1)?'Got it':'Next';
+  var head=st[2]?'<h3>'+esc(st[2])+'</h3>':'';
+  var pop='<div class="tpop'+(st[0]==='say'?' say':'')+'" id="tpop" role="dialog" aria-modal="true" aria-label="Tip">'+(st[0]==='say'?buddyFace(72):'')+head+'<p>'+esc(st[3])+'</p><div class="tb"><span class="cnt">'+(t.i+1)+' of '+n+'</span><button class="skip" data-a="tskip">Skip tips</button>'+listen+'<button class="tbtn" id="tnext" data-a="tnext">'+nextLabel+'</button></div></div>';
+  if(st[0]==='say')return '<div class="tourblock dim"></div>'+pop;
+  return '<div class="tourblock"></div><div class="ring" id="tring"></div>'+pop;
+}
+function ringTo(el,fix){
+  var ring=document.getElementById('tring'),app=document.getElementById('app');
+  if(!ring||!el)return null;
+  var sc=el.closest('.scroll');
+  if(fix&&sc){var er=el.getBoundingClientRect(),sr=sc.getBoundingClientRect();
+    if(er.top<sr.top+8||er.bottom>sr.bottom-8){sc.scrollTop+=(er.top+er.height/2)-(sr.top+sr.height/2)}}
+  var ar=app.getBoundingClientRect(),r=el.getBoundingClientRect(),top=r.top,bottom=r.bottom;
+  if(sc){var s2=sc.getBoundingClientRect();top=Math.max(top,s2.top);bottom=Math.min(bottom,s2.bottom)}
+  var pad=6;
+  ring.style.left=(r.left-ar.left-pad)+'px';ring.style.top=(top-ar.top-pad)+'px';
+  ring.style.width=(r.width+pad*2)+'px';ring.style.height=Math.max(0,bottom-top)+pad*2+'px';
+  return {top:top-ar.top-pad,bottom:bottom-ar.top+pad,ah:ar.height};
+}
+function placeTour(){
+  var t=UI.tour; if(!t)return;
+  var st=TOURS[t.key][t.i]; if(st[0]==='say')return;
+  var el=document.querySelector(st[1]);
+  if(!el){if(st[0]==='spot')ACT.tnext();else{var rg=document.getElementById('tring');if(rg)rg.style.display='none'}return}
+  var pos=ringTo(el,true);
+  if(st[0]==='try'){var sc=el.closest('.scroll');if(sc&&!sc._tw){sc._tw=1;sc.addEventListener('scroll',function(){var e2=document.querySelector(TOURS[UI.tour?UI.tour.key:t.key][UI.tour?UI.tour.i:t.i][1]);if(UI.tour&&e2)ringTo(e2,false)},{passive:true})}return}
+  var pop=document.getElementById('tpop'); if(!pop||!pos)return;
+  var ph=pop.offsetHeight, y=pos.bottom+12;
+  if(y+ph>pos.ah-10){y=pos.top-ph-12}
+  if(y<8)y=Math.max(8,pos.ah-ph-10);
+  pop.style.top=y+'px';
+}
+function vCelebrate(){
+  var c=UI.celebrate; if(!c)return '';
+  var n=doneCount(),tot=MISSIONS.length,stars='';
+  for(var i=0;i<tot;i++){stars+='<svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true" fill="'+(i<n?'#e8a317':'none')+'" stroke="#8a6a00" stroke-width="1.6" stroke-linejoin="round">'+P.star+'</svg>'}
+  var rk=c.rank?'<p style="margin-top:12px;font-weight:800;font-size:20px;color:var(--navy)">'+(c.rank==='Expert'?'You are a Bank Buddy Expert! You finished every mission.':'You moved up! You are now a '+esc(c.rank)+'.')+'</p>':'';
+  return '<div class="tourblock dim"></div><div class="tpop say" role="dialog" aria-modal="true" aria-label="Mission complete">'+buddyFace(72)+'<h3>Mission complete!</h3><p>'+esc(c.title)+'</p><div class="stars" style="margin:12px 0 4px">'+stars+'</div><p style="font-size:16px;color:var(--mute);font-weight:600">'+n+' of '+tot+' missions done</p>'+rk+'<div class="tb" style="justify-content:center"><button class="tbtn" id="celebok" data-a="celebrate">Keep going</button></div></div>';
+}
+function vMbar(){
+  if(!UI.mission||UI.tour||UI.celebrate)return '';
+  var nm=UI.view.name; if(nm==='signin'||nm==='missions'||nm==='confirm')return '';
+  var m=mById(UI.mission), i=MISSIONS.indexOf(m)+1;
+  return '<div class="trybar mbar" role="status"><span class="t">Mission '+i+': '+esc(m.t)+'. '+esc(m.hint)+'</span><button class="skip" data-a="mcancel">Stop</button></div>';
+}
+function missionsCard(){
+  var n=doneCount(),tot=MISSIONS.length;
+  return '<button class="mcard" data-a="missions" data-tour="missions"><span class="mc-top"><span class="mc-rank">'+ico(P.star,22,'currentColor')+rankOf(n)+'</span><span class="mc-n">'+n+' of '+tot+' missions</span></span><span class="bar" aria-hidden="true"><i style="width:'+Math.round(n/tot*100)+'%"></i></span><span class="mc-cta"><span>'+(n>=tot?'You are an Expert!':'Start a mission')+'</span>'+ico(P.chev,18)+'</span></button>';
+}
+function vMissions(){
+  var n=doneCount(),tot=MISSIONS.length,nx=nextRank(n),rk=rankOf(n);
+  var lv='<div class="lv">'+RANKS.map(function(r){var cls=rk===r[0]?'on':(n>=r[1]?'past':'');return '<span class="'+cls+'">'+(n>=r[1]&&rk!==r[0]?'&#10003; ':'')+r[0]+'</span>'}).join('')+'</div>';
+  var rows=MISSIONS.map(function(m,i){var d=!!S.done[m.id];
+    return '<button class="row" data-a="mission" data-id="'+m.id+'"><span class="av" style="'+(d?'background:var(--pos);color:#fff':'')+'">'+(d?ico(P.check,22):(i+1))+'</span><span class="m"><span class="n" style="display:block;font-size:17px">'+esc(m.t)+'</span><span class="s" style="display:block">'+esc(m.d)+'</span></span><span class="chip2'+(d?' dn':'')+'">'+(d?'Done':'Start')+'</span></button>'}).join('');
+  return nav('Missions',nb('back','Back','back'))+'<div class="scroll"><div class="rankcard" data-tour="rank"><div style="font-size:14px;font-weight:700;color:var(--mute)">Your level</div><div style="font-size:34px;font-weight:800;color:var(--navy)">'+rk+'</div><span class="bar" aria-hidden="true"><i style="width:'+Math.round(n/tot*100)+'%"></i></span><div style="font-size:16px;font-weight:600">'+n+' of '+tot+' missions done'+(nx?'. '+(nx[1]-n)+' more to become a '+nx[0]+'.':'. You are an Expert!')+'</div>'+lv+'</div><div data-tour="mlist" style="margin-top:12px">'+rows+'</div><div style="height:20px"></div></div>';
+}
+var QUIZ=[
+ {src:'Text message',msg:'YOU WON $500! Send your PIN right now to get your prize.',scam:true,why:'Banks never ask for your PIN. A prize you did not enter for is a trick. And the message rushes you.'},
+ {src:'Text message from "Mom"',msg:'I lost my phone and I need $200 right now. Do not tell anyone.',scam:true,why:'Scammers pretend to be family. They rush you and ask for a secret. Call your family on the number you already have before you send anything.'},
+ {src:'Bank Buddy app',msg:'You sent $25 to Jordan Patel. Your confirmation number is 4F82-91KD.',scam:false,why:'This is a receipt for something you did. It does not ask you for anything.'},
+ {src:'Phone call',msg:'This is the bank. We found a problem. Tell us your password so we can fix it.',scam:true,why:'The bank will never ask for your password. Hang up. Call the number on your bank card.'},
+ {src:'Bank Buddy app',msg:'Your October statement is ready. Open the app to see it.',scam:false,why:'It tells you something is ready and asks for nothing secret. You open the app yourself.'}
+];
+function vScam(){
+  var sc=UI.scam||(UI.scam={stage:'lesson',i:0,ans:null,score:0}), body='', foot='';
+  function flag(t,s){return '<div class="row" style="cursor:default"><span style="color:var(--navy)">'+ico(P.warn,30)+'</span><span class="m"><span class="n" style="display:block;font-size:18px">'+t+'</span><span class="s" style="display:block;font-size:15px">'+s+'</span></span></div>'}
+  if(sc.stage==='lesson'){
+    body='<div class="hero" style="padding:22px 20px"><div style="color:var(--navy);display:flex;justify-content:center">'+ico(P.shield,56)+'</div><h1 style="margin:8px 0 4px;font-size:26px">Scams try to trick you</h1><div style="font-size:17px;color:var(--mute);line-height:1.4">A scammer wants your money or your secrets. Learn the signs.</div></div><div style="height:12px"></div><div data-tour="s-signs">'+flag('They rush you','"Do it NOW!" or "You must act today!"')+flag('They ask for secrets','Your PIN, password, or a code sent to your phone')+flag('It sounds too good to be true','"You won a prize!" or "Free money!"')+'</div>'+
+    '<div data-tour="s-stop" style="margin:16px;background:var(--navy);color:#fff;border-radius:16px;padding:16px"><div style="font-size:20px;font-weight:800;margin-bottom:6px">If you think it is a scam:</div><div style="font-size:18px;line-height:1.6;font-weight:600">1. Stop.<br>2. Do not reply.<br>3. Tell someone you trust.</div></div>';
+    foot='<div class="foot"><button class="btn" data-a="stest">Test yourself</button></div>';
+  } else if(sc.stage==='quiz'){
+    var q=QUIZ[sc.i], res='';
+    body='<div class="lbl" style="padding-top:16px">Question '+(sc.i+1)+' of '+QUIZ.length+'</div><div class="qcard"><div class="src">'+esc(q.src)+'</div><div class="msg">'+esc(q.msg)+'</div></div>';
+    if(sc.ans===null){
+      body+='<div style="padding:0 16px;font-size:20px;font-weight:800;margin-bottom:10px">Is this real or a scam?</div>';
+      foot='<div class="foot" style="flex-direction:row"><button class="btn s" data-a="sans" data-v="real">Real</button><button class="btn" data-a="sans" data-v="scam">Scam</button></div>';
+    } else {
+      var right=(sc.ans==='scam')===q.scam;
+      body+='<div class="res '+(right?'good':'bad')+'" role="status"><b>'+ico(right?P.check:P.warn,22)+(right?'Correct!':'Not quite.')+'</b>This one is '+(q.scam?'a scam':'real')+'. '+esc(q.why)+'</div>';
+      foot='<div class="foot"><button class="btn" data-a="snext">'+(sc.i>=QUIZ.length-1?'See my score':'Next question')+'</button></div>';
+    }
+  } else {
+    var ok=sc.score;
+    body='<div class="hero" style="padding:30px 20px"><div class="ok">'+ico(P.shield,40)+'</div><h1 style="margin:0 0 6px;font-size:28px">You got '+ok+' of '+QUIZ.length+'</h1><div style="font-size:17px;color:var(--mute);line-height:1.45">'+(ok>=QUIZ.length-1?'Great job! You can spot a scam.':'Good try. Look at the signs again and try once more.')+' Remember: Stop. Do not reply. Tell someone you trust.</div></div>';
+    foot='<div class="foot"><button class="btn" data-a="sfinish">Finish mission</button><button class="btn s sm" data-a="sretry">Try again</button></div>';
+  }
+  return nav('Scam Watch',nb('back','Back','back'))+'<div class="scroll">'+body+'</div>'+foot;
+}
+
+function sect(t,r,tour){return '<div class="sect"'+(tour?' data-tour="'+tour+'"':'')+'><h2>'+t+'</h2>'+(r?'<span>'+r+'</span>':'')+'</div>'}
+function fieldSel(label,id,bind,opts,sel,subtxt,tour){
+  return '<div class="fld"'+(tour?' data-tour="'+tour+'"':'')+'><div class="fm"><label class="lab" for="'+id+'">'+label+'</label><select id="'+id+'" data-sel="'+bind+'">'+opts+'</select><div class="sub">'+subtxt+'</div></div><span class="dd">'+ico(P.down,22)+'</span></div>';
+}
+function vSignin(){
+  return '<div class="scroll"><div class="login-top">'+tipsBtn()+LOGO+'<div style="font-size:28px;font-weight:800;letter-spacing:-.3px">Bank Buddy</div><div style="font-size:16px;color:#b9cbe0;font-weight:500">Sign in to your accounts</div></div>'+
+  '<form id="loginform" class="login-card" novalidate>'+
+  '<div data-tour="username"><label class="l" for="u">Username</label><input id="u" type="text" placeholder="Enter your username" value="'+esc(UI.u)+'" data-in="u" autocomplete="off" autocapitalize="none"></div>'+
+  '<div data-tour="password"><label class="l" for="p">Password</label><div class="pw"><input id="p" type="'+(UI.showPw?'text':'password')+'" placeholder="Enter your password" value="'+esc(UI.pwv)+'" data-in="pwv" autocomplete="off"><button type="button" data-tour="show" data-a="pw" aria-label="'+(UI.showPw?'Hide':'Show')+' password" style="flex:none;width:44px;height:44px;border:none;background:none;color:var(--mute)">'+ico(UI.showPw?P.eyeoff:P.eye,24)+'</button></div></div>'+
+  (UI.err?'<div class="err" role="alert" style="margin:0">'+ico(P.warn,20)+'<span>'+esc(UI.err)+'</span></div>':'')+
+  '<div style="display:flex;align-items:center;justify-content:space-between"><label style="display:flex;align-items:center;gap:10px;font-size:16px;font-weight:500;min-height:44px"><input type="checkbox" style="width:22px;height:22px;accent-color:var(--acc);margin:0">Remember me</label><button type="button" class="linkbtn" data-a="soon" data-m="Password reset is not part of this practice app.">Forgot?</button></div>'+
+  '<button class="btn" type="submit" data-tour="signinbtn">Sign in</button>'+
+  '<button type="button" data-tour="faceid" data-a="face" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;border:none;background:none;color:var(--acc);font-weight:700;font-size:17px">'+ico(P.face,26)+'Sign in with Face ID</button></form>'+
+  '<div style="display:flex;justify-content:space-around;padding:18px 16px 0"><button class="linkbtn" style="font-size:15px" data-a="soon" data-m="Opening an account is not part of this practice app.">Open an account</button><button class="linkbtn" style="font-size:15px" data-a="soon" data-m="The ATM locator is not part of this practice app.">Find an ATM</button><button class="linkbtn" style="font-size:15px" data-a="soon" data-m="Contact options are not part of this practice app.">Contact us</button></div>'+
+  '<div style="padding:22px 28px calc(env(safe-area-inset-bottom) + 24px);text-align:center;font-size:13px;color:var(--mute);line-height:1.45"><div style="display:flex;justify-content:center;align-items:center;gap:6px;font-weight:600;margin-bottom:4px">'+ico(P.lock,16)+'Secure sign in</div>Bank Buddy is a practice app from Hug Your Head Foundation. Type anything to practice signing in. No real money moves.</div></div>';
+}
+function qa(icon,label,a,x,tour){return '<button data-a="'+a+'" '+(x||'')+(tour?' data-tour="'+tour+'"':'')+'><span class="c">'+ico(P[icon],26)+'</span>'+label+'</button>'}
+function vAccounts(){
+  var dep=S.accts.filter(function(a){return a.kind!=='Credit card'});
+  var total=dep.reduce(function(s,a){return s+a.bal},0);
+  function ar(a){
+    return '<button class="row" data-tour="row-'+a.id+'" data-a="acct" data-id="'+a.id+'"><span class="m"><span class="n" style="display:block">'+esc(a.name)+'</span><span class="s" style="display:block">'+a.kind+' ...'+a.mask+'</span></span><span class="a"><span class="amt" style="display:block">'+fmt(a.bal)+'</span><span class="s" style="display:block;font-size:13px">'+(a.kind==='Credit card'?'Amount you owe':'Available balance')+'</span></span><span class="chev">'+ico(P.chev,20)+'</span></button>';
+  }
+  return '<header class="hdr big" style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:15px;font-weight:500;color:#b9cbe0">'+greet()+'</div><div style="font-size:24px;font-weight:700">Sam Carter</div></div>'+
+  '<button data-tour="bell" data-a="bell" aria-label="Notifications'+(S.alerts?', '+S.alerts+' new':'')+'" style="position:relative;width:48px;height:48px;border-radius:24px;border:none;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center">'+ico(P.bell,26)+(S.alerts?'<span class="badge">'+S.alerts+'</span>':'')+'</button></header>'+
+  '<div class="scroll">'+missionsCard()+'<div class="qa" style="margin-top:12px">'+qa('transfer','Transfer','newtransfer','','qa-transfer')+qa('bills','Pay bills','bills','','qa-bills')+qa('deposit','Deposit','tab','data-t="deposit"','qa-deposit')+qa('person','Send money','sendpick','','qa-send')+'</div>'+
+  sect('Deposit accounts',fmt(total),'total')+dep.map(ar).join('')+sect('Credit cards')+ar(A('cc'))+
+  '<button class="promo" data-tour="scamcard" data-a="scamopen"><span style="flex:1"><span style="display:block;font-size:16px;font-weight:700">Scam Watch</span><span style="display:block;font-size:14px;color:var(--mute);margin-top:2px">Learn how to spot tricks that try to steal your money.</span></span><span style="color:var(--acc);font-weight:700;font-size:15px">Open</span></button></div>'+tabbar('accounts');
+}
+function vPay(){
+  var recent=S.txs.filter(function(t){return !t.p&&(t.c==='Transfer'||t.c==='Bills'||t.c==='Payment'||/^Sent/.test(t.n))&&t.amt<0}).sort(function(x,y){return new Date(y.d)-new Date(x.d)}).slice(0,4);
+  return '<header class="hdr big"><div style="font-size:26px;font-weight:700">Pay &amp; Transfer</div></header><div class="scroll">'+
+  chevRow('transfer','Transfer money','Between your Bank Buddy accounts','data-a="newtransfer" data-tour="pay-transfer"')+
+  chevRow('person','Send money to someone','Using their email or mobile number','data-a="sendpick" data-tour="pay-send"')+
+  chevRow('bills','Pay bills','Manage payees and upcoming bills','data-a="bills" data-tour="pay-bills"')+
+  chevRow('cal','Scheduled payments','See and change what is coming up','data-a="soon" data-m="No payments are scheduled." data-tour="pay-sched"')+
+  sect('Recent','','pay-recent')+(recent.length?recent.map(function(t){return '<button class="tx" data-a="tx" data-id="'+t.id+'"><span class="m"><span class="n" style="display:block">'+esc(t.n)+'</span><span class="s" style="display:block">'+dshort(t.d)+' · Completed</span></span><span class="v">'+fmt(Math.abs(t.amt))+'</span></button>'}).join(''):'<div class="note">Nothing yet.</div>')+
+  '</div>'+tabbar('pay');
+}
+function vForm(){
+  var f=UI.flow, title, from=A(f.from), body='';
+  var deps=S.accts.filter(function(a){return a.kind!=='Credit card'});
+  if(f.kind==='transfer'){
+    title='Transfer money';
+    var toList=S.accts.filter(function(a){return a.id!==f.from});
+    if(!A(f.to)||f.to===f.from)f.to=toList[0].id;
+    body+='<div style="height:16px"></div>'+fieldSel('From','ff','flow.from',acctOpts(deps,f.from),f.from,avail(from),'f-from')+fieldSel('To','ft','flow.to',acctOpts(toList,f.to),f.to,avail(A(f.to))+(A(f.to).kind==='Credit card'?' · Card payment':''),'f-to');
+  } else if(f.kind==='send'){
+    title='Send money'; var c=CONTACTS.filter(function(x){return x.id===f.contact})[0];
+    body+='<div style="height:16px"></div>'+'<div class="fld" data-tour="f-to"><span class="av" style="width:48px;height:48px;border-radius:24px;background:#dbe8f6">'+c.ini+'</span><div class="fm"><span class="lab">To</span><div class="val">'+esc(c.name)+'</div><div class="sub">'+esc(c.sub)+'</div></div></div>'+fieldSel('From','ff','flow.from',acctOpts(deps,f.from),f.from,avail(from),'f-from');
+  } else {
+    title='Pay bill'; var p=PAYEES.filter(function(x){return x.id===f.payee})[0];
+    body+='<div style="height:16px"></div>'+'<div class="fld" data-tour="f-payee"><div class="fm"><span class="lab">Pay to</span><div class="val">'+esc(p.name)+'</div><div class="sub">'+p.sub+'</div></div></div>'+fieldSel('From','ff','flow.from',acctOpts(deps,f.from),f.from,avail(from),'f-from');
+  }
+  body+='<div style="height:16px"></div><div class="amt-box" data-tour="f-amount"><label class="lab" for="fa" style="display:block;font-size:13px;font-weight:600;color:var(--mute)">Amount</label><div class="in"><span>$</span><input id="fa" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" value="'+esc(f.amount)+'" data-in="flow.amount"></div></div>';
+  if(UI.err)body+='<div class="err" role="alert">'+ico(P.warn,20)+'<span>'+esc(UI.err)+'</span></div>';
+  body+='<div style="height:16px"></div><div class="fld" data-tour="f-date"><div class="fm"><span class="lab">Date</span><div class="val">Today, '+dlong(new Date().toISOString())+'</div></div><span style="color:var(--acc)">'+ico(P.cal,22)+'</span></div>';
+  if(f.kind==='transfer'){
+    body+='<div class="fld" data-tour="f-freq"><div class="fm"><label class="lab" for="fr">Frequency</label><select id="fr" data-sel="flow.freq">'+['One time','Weekly','Every 2 weeks','Monthly'].map(function(x){return '<option'+(x===f.freq?' selected':'')+'>'+x+'</option>'}).join('')+'</select></div><span class="dd">'+ico(P.down,22)+'</span></div>';
+  }
+  if(f.kind!=='bill')body+='<div class="fld" data-tour="f-memo"><div class="fm"><label class="lab" for="fm">Memo (optional)</label><input class="txt" id="fm" type="text" maxlength="40" placeholder="Add a note" value="'+esc(f.memo)+'" data-in="flow.memo"></div></div>';
+  if(f.kind==='send')body+='<div class="note" data-tour="f-note">Only send money to people you know and trust. Payments sent this way usually cannot be reversed. Limit '+fmt(SEND_LIMIT)+' per day.</div>';
+  else if(f.kind==='transfer')body+='<div class="note">Transfers made after 7 PM may post the next business day.</div>';
+  return nav(title,nb('back','Cancel'))+'<div class="scroll">'+body+'</div><div class="foot"><button class="btn" data-tour="f-continue" data-a="fcontinue">Continue</button></div>';
+}
+var SAFETY=['I know this person and I trust them.','Nobody is rushing me or telling me to keep a secret.','The name and the amount are right.'];
+function vReview(){
+  var f=UI.flow, from=A(f.from), rows='', isSend=f.kind==='send';
+  if(f.kind==='transfer'){var to=A(f.to);rows=kv('From',esc(from.name)+' ...'+from.mask)+kv('To',esc(to.name)+' ...'+to.mask)}
+  else if(isSend){var c=CONTACTS.filter(function(x){return x.id===f.contact})[0];rows=kv('Send to',esc(c.name)+'<br><span style="font-weight:500;color:var(--mute);font-size:14px">'+esc(c.sub)+'</span>')+kv('From',esc(from.name)+' ...'+from.mask)}
+  else {var p=PAYEES.filter(function(x){return x.id===f.payee})[0];rows=kv('Pay to',esc(p.name))+kv('From',esc(from.name)+' ...'+from.mask)}
+  rows+=kv('Date',dlong(new Date().toISOString()));
+  if(f.kind==='transfer')rows+=kv('Frequency',esc(f.freq));
+  if(f.kind!=='bill')rows+=kv('Memo',f.memo?esc(f.memo):'None');
+  var safe='', ready=true;
+  if(isSend){
+    ready=UI.safety.every(function(x){return x});
+    safe='<div class="lbl" style="padding-top:16px">Check before you send</div><div class="chk" data-tour="safety">'+SAFETY.map(function(s,i){return '<label><input type="checkbox" data-safety="'+i+'"'+(UI.safety[i]?' checked':'')+'><span>'+s+'</span></label>'}).join('')+'</div>';
+  }
+  return nav('Review',nb('back','Back','back'))+'<div class="scroll"><div class="hero" data-tour="rv-amount"><div class="k">You are '+flowTitle(f)+'</div><div class="b">'+fmt(f.amt)+'</div></div><div style="height:16px"></div><div data-tour="rv-rows">'+rows+'</div>'+safe+
+  '<div class="note">'+(isSend&&!ready?'Tap all three boxes to turn on the Submit button. If you cannot, stop and ask someone you trust.':'By selecting Submit, you agree to move the amount shown. Check the details above before you continue.')+'</div></div><div class="foot"><button class="btn" data-tour="rv-submit" data-a="fsubmit"'+(ready?'':' disabled')+'>Submit</button><button class="btn s sm" data-tour="rv-edit" data-a="back">Edit</button></div>';
+}
+function vConfirm(){
+  var r=UI.view.r;
+  return nav('Confirmation')+'<div class="scroll"><div class="hero" style="padding:30px 16px 24px"><div class="ok">'+ico(P.check,42)+'</div><h1 style="margin:0 0 6px;font-size:26px;font-weight:800">'+esc(r.head)+'</h1><div style="font-size:16px;color:var(--mute);line-height:1.4">'+esc(r.line)+'</div></div><div style="height:16px"></div>'+r.rows.map(function(x){return kv(x[0],x[1])}).join('')+'<div data-tour="code">'+kv('Confirmation #',r.code)+'</div></div>'+
+  '<div class="foot"><button class="btn" data-tour="c-done" data-a="done">Done</button>'+(r.again?'<button class="btn s sm" data-a="'+r.again+'">'+r.againLabel+'</button>':'')+'</div>';
+}
+function vSendPick(){
+  var q=UI.cq.trim().toLowerCase();
+  var list=CONTACTS.filter(function(c){return !q||(c.name+' '+c.sub).toLowerCase().indexOf(q)>-1});
+  return nav('Send money',nb('back','Cancel'))+'<div class="scroll"><div data-tour="sp-search" style="padding:14px 16px;background:#fff;border-bottom:1px solid var(--line)"><label for="cq" style="position:absolute;left:-9999px">Search for a person</label><div style="display:flex;align-items:center;gap:10px;border:1.5px solid #9aa8b6;border-radius:12px;padding:0 12px;min-height:48px;color:var(--mute)">'+ico(P.search,22)+'<input id="cq" type="search" placeholder="Name, email, or mobile number" value="'+esc(UI.cq)+'" data-in="cq" style="flex:1;border:none;outline:none;background:transparent;font-size:16px;min-height:44px;min-width:0;color:var(--txt)"></div></div>'+
+  (q?'':'<div data-tour="sp-recent">'+sect('Recent')+'<div class="rec">'+['mom','jordan','alex','taylor'].map(function(id){var c=CONTACTS.filter(function(x){return x.id===id})[0];return '<button data-a="startsend" data-id="'+c.id+'"><span class="av">'+c.ini+'</span>'+esc(c.name.split(' ')[0])+'</button>'}).join('')+'</div></div>')+
+  sect('Contacts')+'<div id="clist" data-tour="sp-list">'+contactList(list)+'</div><div class="note">Only send money to people you know and trust. Payments sent this way usually cannot be reversed.</div></div>';
+}
+function vBills(){
+  return nav('Pay bills',nb('back','Cancel'))+'<div class="scroll">'+sect('Your payees')+'<div data-tour="b-list">'+PAYEES.map(function(p){return '<button class="row" data-a="startbill" data-id="'+p.id+'"><span class="m"><span class="n" style="display:block">'+esc(p.name)+'</span><span class="s" style="display:block">'+p.sub+'</span></span><span class="a"><span class="amt" style="display:block;font-size:17px">'+fmt(p.amt)+'</span><span class="s" style="display:block;font-size:13px">Amount due</span></span><span class="chev">'+ico(P.chev,20)+'</span></button>'}).join('')+'</div><div class="note">This practice app pays any bill in full from the account you pick.</div></div>';
+}
+function vDeposit(){
+  var d=UI.dep||(UI.dep={acct:'chk',amount:'',front:'',back:''});
+  var deps=S.accts.filter(function(a){return a.kind!=='Credit card'});
+  function up(id,label,key){return '<label class="'+(d[key]?'done':'')+'" for="'+id+'">'+ico(d[key]?P.check:P.deposit,28)+'<span>'+(d[key]?esc(d[key]):label)+'</span><input id="'+id+'" type="file" accept="image/*" data-file="'+key+'"></label>'}
+  return '<header class="hdr big"><div style="font-size:26px;font-weight:700">Deposit a check</div></header><div class="scroll"><div style="height:16px"></div>'+
+  fieldSel('Deposit to','da','dep.acct',acctOpts(deps,d.acct),d.acct,avail(A(d.acct)),'d-to')+
+  '<div style="height:16px"></div><div class="amt-box" data-tour="d-amount"><label class="lab" for="dm" style="display:block;font-size:13px;font-weight:600;color:var(--mute)">Check amount</label><div class="in"><span>$</span><input id="dm" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" value="'+esc(d.amount)+'" data-in="dep.amount"></div></div>'+
+  (UI.err?'<div class="err" role="alert">'+ico(P.warn,20)+'<span>'+esc(UI.err)+'</span></div>':'')+
+  '<div class="lbl" style="padding-top:16px">Photos of your check</div><div class="up" data-tour="d-photos">'+up('df','Front of check','front')+up('db','Back of check','back')+'</div>'+
+  '<div class="note">Photos are optional in this practice app and stay on your phone. Funds from a real check deposit can take a business day to clear.</div></div><div class="foot"><button class="btn" data-tour="d-submit" data-a="depsubmit">Deposit check</button></div>'+tabbar('deposit');
+}
+function vCards(){
+  var a=A('cc'), recent=S.txs.filter(function(t){return t.a==='cc'}).sort(function(x,y){return new Date(y.d)-new Date(x.d)}).slice(0,4);
+  var due=new Date();due.setDate(due.getDate()+14);
+  return '<header class="hdr big"><div style="font-size:26px;font-weight:700">Cards</div></header><div class="scroll">'+
+  '<div class="card3d" data-tour="c-card" role="img" aria-label="Rewards Visa ending 1156"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;font-size:18px">Bank Buddy</span><span style="font-size:14px;font-weight:600;opacity:.9">'+(S.locked?'LOCKED':'Rewards Visa')+'</span></div><div><div style="font-size:20px;letter-spacing:3px;font-weight:600">•••• •••• •••• 1156</div><div style="display:flex;justify-content:space-between;margin-top:8px;font-size:14px"><span>SAM CARTER</span><span>09/29</span></div></div></div>'+
+  '<div data-tour="c-info" style="background:#fff;border-top:1px solid var(--line)">'+kv('Balance (what you owe)','<b>'+fmt(a.bal)+'</b>')+kv('Available credit',fmt(a.limit-a.bal))+kv('Minimum payment',a.bal>0?fmt(Math.min(MIN_DUE,a.bal)):'$0.00')+kv('Payment due',a.bal>0?dlong(due.toISOString()):'No payment due')+'</div>'+
+  '<div style="padding:14px 16px 4px"><button class="btn" data-tour="c-pay" data-a="newtransfer" data-to="cc" data-from="chk">Make a payment</button></div>'+
+  '<div class="fld" data-tour="c-lock" style="margin-top:12px"><div class="fm"><div class="val">Lock card</div><div class="sub">Turn off new purchases while it is locked.</div></div><label class="sw"><input type="checkbox" data-a="lock" aria-label="Lock card"'+(S.locked?' checked':'')+'><i></i></label></div>'+
+  sect('Recent purchases')+recent.map(txRow).join('')+'</div>'+tabbar('cards');
+}
+function vMore(){
+  function tog(k,t,s){return '<div class="fld"><div class="fm"><div class="val">'+t+'</div><div class="sub">'+s+'</div></div><label class="sw"><input type="checkbox" data-a="toggle" data-k="'+k+'" aria-label="'+t+'"'+(S[k]?' checked':'')+'><i></i></label></div>'}
+  return '<header class="hdr big" style="display:flex;align-items:center;gap:14px"><span class="av" style="width:56px;height:56px;border-radius:28px;background:#dbe8f6;font-size:20px">SC</span><div><div style="font-size:22px;font-weight:700">Sam Carter</div><div style="font-size:14px;color:#b9cbe0">sam.carter@example.com</div></div></header><div class="scroll">'+
+  sect('Settings')+'<div data-tour="m-settings">'+tog('faceId','Sign in with Face ID','Skip typing your password')+tog('paperless','Paperless statements','Get statements online only')+tog('tips','Show tips on new screens','Pop-ups that explain each screen')+tog('autoread','Read tips out loud','Needs sound on your phone')+'</div>'+
+  sect('Support')+chevRow('shield','Security center','Tips to keep your money safe','data-tour="m-help" data-a="sheet" data-s="security"')+chevRow('help','Help and contact','Chat, call, or find a branch','data-a="soon" data-m="Help is not part of this practice app."')+
+  sect('Practice')+chevRow('star','Missions','See your level and your missions','data-a="missions"')+chevRow('help','Show all tips again','Replay the tips on every screen','data-a="replayall"')+
+  '<div style="height:16px"></div><button class="row" data-tour="m-signout" data-a="signout"><span class="chev" style="color:var(--acc)">'+ico(P.out,22)+'</span><span class="n" style="color:var(--acc);font-weight:700">Sign out</span></button>'+
+  '<div style="padding:16px 16px 4px"><button class="btn s sm" data-a="reset">Reset the money</button></div><div style="padding:6px 16px 4px"><button class="btn s sm" data-a="startover">Start over (new student)</button></div><div class="note" style="text-align:center">Bank Buddy practice app. Pretend money only.</div></div>'+tabbar('more');
+}
+function render(resetScroll){
+  maybeStartTour();
+  var sc=document.querySelector('.scroll'), top=sc?sc.scrollTop:0;
+  var v=UI.view, h='';
+  switch(v.name){
+    case 'signin':h=vSignin();break; case 'accounts':h=vAccounts();break; case 'detail':h=vDetail();break;
+    case 'pay':h=vPay();break; case 'form':h=vForm();break; case 'review':h=vReview();break; case 'confirm':h=vConfirm();break;
+    case 'sendpick':h=vSendPick();break; case 'bills':h=vBills();break; case 'deposit':h=vDeposit();break; case 'cards':h=vCards();break; case 'more':h=vMore();break;
+    case 'missions':h=vMissions();break; case 'scam':h=vScam();break;
+  }
+  if(v.name!=='signin'&&TOURS[tourKey()]){h=h.replace('</header>',tipsBtn(v.name==='accounts'?'s1':(v.name==='detail'?'s2':''))+'</header>')}
+  document.getElementById('app').innerHTML=h+vSheet()+vCelebrate()+vTour()+vMbar()+(UI.toast?'<div class="toast" role="status">'+esc(UI.toast)+'</div>':'');
+  var ns=document.querySelector('.scroll'); if(ns)ns.scrollTop=resetScroll?0:top;
+  placeTour();
+  var f=document.getElementById('celebok')||document.getElementById('tnext'); if(f&&!UI.toast)f.focus({preventScroll:true});
+  else if(UI.sheet){var b=document.getElementById('sheetclose');if(b)b.focus()}
+  if(S.autoread&&UI.tour&&!UI.celebrate){var k=UI.tour.key+':'+UI.tour.i;if(UI.spoken!==k){UI.spoken=k;speak(stepText(TOURS[UI.tour.key][UI.tour.i]),true)}}
+}
+
+/* ---------- events ---------- */
+var ACT={
+ tab:function(d){UI.dep=null;root(d.t)},
+ acct:function(d){if(d.id==='chk')complete('checking');if(d.id==='sav')complete('savings');UI.q='';UI.filter='all';UI.showFilter=false;UI.dtab='activity';go({name:'detail',id:d.id})},
+ back:function(){back()},
+ dtab:function(d){UI.dtab=d.t;render()},
+ filtertoggle:function(){UI.showFilter=!UI.showFilter;render()},
+ filter:function(d){UI.filter=d.f;render()},
+ tx:function(d){UI.sheet={type:'tx',id:d.id};render()},
+ bell:function(){S.alerts=0;save();UI.sheet={type:'alerts'};render()},
+ sheet:function(d){UI.sheet={type:d.s};render()},
+ closesheet:function(){UI.sheet=null;render()},
+ newtransfer:function(d){startFlow({kind:'transfer',from:d.from||'chk',to:d.to||(d.from==='sav'?'chk':'sav'),amount:'',memo:'',freq:'One time'})},
+ sendpick:function(){UI.cq='';go({name:'sendpick'})},
+ startsend:function(d){UI.safety=[false,false,false];startFlow({kind:'send',contact:d.id,from:'chk',amount:'',memo:''})},
+ bills:function(){go({name:'bills'})},
+ startbill:function(d){var p=PAYEES.filter(function(x){return x.id===d.id})[0];startFlow({kind:'bill',payee:d.id,from:'chk',amount:p.amt.toFixed(2),memo:''})},
+ fcontinue:function(){var e=validate();UI.err=e;if(e){render();var a=document.getElementById('fa');if(a)a.focus()}else go({name:'review'})},
+ fsubmit:function(){if(UI.flow.kind==='send'&&!UI.safety.every(function(x){return x})){toast('Tap all three boxes first.');return}submit()},
+ done:function(){root('accounts')},
+ depsubmit:function(){
+   var d=UI.dep, amt=parseAmt(d.amount);
+   if(isNaN(amt)||amt<=0){UI.err='Enter the amount written on the check, like 150.00.';render();return}
+   if(amt>10000){UI.err='Mobile deposits are limited to $10,000 per check.';render();return}
+   var a=A(d.acct); a.bal=r2(a.bal+amt); addTx(a.id,'Mobile check deposit','Deposit',amt,true); save();
+   complete('deposit');UI.hist=[{name:'accounts'}]; UI.view={name:'confirm',r:{head:'Deposit received',line:fmt(amt)+' was added to '+a.name+'. A real deposit can take a business day to clear.',rows:[['Deposit to',esc(a.name)+' ...'+a.mask],['Amount',fmt(amt)],['Date',dlong(new Date().toISOString())]],code:conf(),again:'',againLabel:''}}; UI.dep=null; UI.err=''; render(true);
+ },
+ lock:function(d,e){S.locked=e.target.checked;save();render()},
+ toggle:function(d,e){S[d.k]=e.target.checked;save();if(d.k==='tips'&&!S.tips)UI.tour=null},
+ signout:function(){UI.hist=[];UI.view={name:'signin'};UI.err='';render(true)},
+ reset:function(){var keep={done:S.done,seen:S.seen,tips:S.tips,autoread:S.autoread};S=seed();for(var k in keep)S[k]=keep[k];save();UI.dep=null;toast('The money is reset.')},
+ pw:function(){UI.showPw=!UI.showPw;render()},
+ face:function(){complete('signin');root('accounts')},
+ soon:function(d){toast(d.m||'Not part of this demo.')}
+};
+/* ---------- tutorial + mission actions ---------- */
+ACT.tnext=function(){
+  var t=UI.tour; if(!t)return;
+  var steps=TOURS[t.key];
+  if(t.i>=steps.length-1){S.seen[t.key]=true;save();UI.tour=null;render();return}
+  t.i++;
+  if(steps[t.i][0]==='try'){S.seen[t.key]=true;save()}
+  render();
+};
+ACT.tskip=function(){if(UI.tour){S.seen[UI.tour.key]=true;save()}UI.tour=null;render()};
+ACT.tips=function(){var k=tourKey();if(!TOURS[k]){toast('There are no tips for this screen.');return}UI.sheet=null;UI.tour={key:k,i:0};render()};
+ACT.speak=function(){
+  if(UI.celebrate){speak('Mission complete! '+UI.celebrate.title);return}
+  if(UI.tour){speak(stepText(TOURS[UI.tour.key][UI.tour.i]))}
+};
+ACT.celebrate=function(){UI.celebrate=null;render()};
+ACT.missions=function(){go({name:'missions'})};
+ACT.mission=function(d){
+  var m=mById(d.id);
+  if(S.done[d.id]&&d.id==='signin'){toast('You already did this one. Nice work!');return}
+  UI.mission=d.id;
+  if(d.id==='deposit'){UI.dep=null;root('deposit')}
+  else if(d.id==='scam'){UI.hist=[{name:'accounts'}];UI.scam=null;UI.tour=null;UI.view={name:'scam'};render(true)}
+  else root('accounts');
+};
+ACT.mcancel=function(){UI.mission=null;render()};
+ACT.scamopen=function(){UI.scam=null;go({name:'scam'})};
+ACT.stest=function(){UI.scam={stage:'quiz',i:0,ans:null,score:0};render(true)};
+ACT.sans=function(d){var sc=UI.scam,q=QUIZ[sc.i];sc.ans=d.v;if((d.v==='scam')===q.scam)sc.score++;render()};
+ACT.snext=function(){var sc=UI.scam;if(sc.i>=QUIZ.length-1){sc.stage='done'}else{sc.i++;sc.ans=null}render(true)};
+ACT.sretry=function(){UI.scam={stage:'quiz',i:0,ans:null,score:0};render(true)};
+ACT.sfinish=function(){complete('scam');UI.scam=null;root('accounts')};
+ACT.replayall=function(){S.seen={};save();toast('Tips will show again on each screen.')};
+ACT.startover=function(){S=seed();save();UI.mission=null;UI.celebrate=null;UI.dep=null;UI.flow=null;UI.scam=null;UI.u='';UI.pwv='';UI.hist=[];UI.view={name:'signin'};UI.tour=null;render(true)};
+
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-a]'); if(!t)return;
+  if(t.classList.contains('scrim')&&e.target.closest('[data-stop]'))return;
+  if(t.type==='checkbox'&&e.type==='click'){/* handled by change */return}
+  var fn=ACT[t.dataset.a]; if(fn){fn(t.dataset,e)}
+});
+document.addEventListener('change',function(e){
+  var t=e.target;
+  if(t.matches('input[type=checkbox][data-a]')){var fn=ACT[t.dataset.a];if(fn)fn(t.dataset,e);return}
+  if(t.dataset.safety!==undefined){UI.safety[+t.dataset.safety]=t.checked;render();return}
+  if(t.dataset.sel){var p=t.dataset.sel.split('.');UI[p[0]][p[1]]=t.value;UI.err='';render()}
+  if(t.dataset.file){UI.dep[t.dataset.file]=t.files&&t.files[0]?t.files[0].name:'';render()}
+});
+document.addEventListener('input',function(e){
+  var t=e.target; if(!t.dataset.in)return;
+  var p=t.dataset.in.split('.');
+  if(p.length===2){UI[p[0]][p[1]]=t.value}
+  else{UI[p[0]]=t.value;
+    if(p[0]==='q'){var a=A(UI.view.id);document.getElementById('txlist').innerHTML=listFor(a)}
+    if(p[0]==='cq'){var q=UI.cq.trim().toLowerCase();document.getElementById('clist').innerHTML=contactList(CONTACTS.filter(function(c){return !q||(c.name+' '+c.sub).toLowerCase().indexOf(q)>-1}))}
+  }
+});
+document.addEventListener('submit',function(e){
+  if(e.target.id==='loginform'){
+    e.preventDefault();
+    var u=document.getElementById('u').value.trim(),p=document.getElementById('p').value;
+    if(!u||!p){UI.err='Enter your username and password.';render();return}
+    complete('signin');root('accounts');
+  }
+});
+window.addEventListener('resize',function(){if(UI.tour)placeTour()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&UI.sheet){UI.sheet=null;render()}});
+render();
+</script>
+</body>
+</html>
