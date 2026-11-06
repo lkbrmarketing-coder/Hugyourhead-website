@@ -1180,6 +1180,8 @@ ACT.repcopy=function(){
 ACT.repshare=function(){try{navigator.share({title:'Bank Buddy results',text:reportText()})}catch(e){}};
 
 ensure();
+if(S.nick)setTimeout(track,800);
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'&&S.nick)sendNow()});
 document.addEventListener('click',function(e){
   var t=e.target.closest('[data-a]'); if(!t)return;
   if(t.classList.contains('scrim')&&e.target.closest('[data-stop]'))return;
@@ -1211,7 +1213,7 @@ document.addEventListener('submit',function(e){
     var nmv=(document.getElementById('nm').value||'').trim();
     if(!nmv){UI.err='Type your name first.';render();var nf=document.getElementById('nm');if(nf)nf.focus();return}
     if(!u||!p){UI.err='Enter your username and password.';render();return}
-    S.nick=nmv.slice(0,30);S.user=u.slice(0,30);if(!S.startedAt)S.startedAt=new Date().toISOString();save();complete('signin');root('accounts');
+    S.nick=nmv.slice(0,30);S.user=u.slice(0,30);if(!S.startedAt)S.startedAt=new Date().toISOString();save();logEv('signin','Signed in');complete('signin');root('accounts');
   }
 });
 window.addEventListener('resize',function(){if(UI.tour)placeTour();fixBars()});
