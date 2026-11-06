@@ -732,7 +732,7 @@ function vAccounts(){
   function ar(a){
     return '<button class="row" data-tour="row-'+a.id+'" data-a="acct" data-id="'+a.id+'"><span class="m"><span class="n" style="display:block">'+esc(a.name)+'</span><span class="s" style="display:block">'+a.kind+' ...'+a.mask+'</span></span><span class="a"><span class="amt" style="display:block">'+fmt(a.bal)+'</span><span class="s" style="display:block;font-size:13px">'+(a.kind==='Credit card'?'Amount you owe':'Available balance')+'</span></span><span class="chev">'+ico(P.chev,20)+'</span></button>';
   }
-  return '<header class="hdr big" style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:15px;font-weight:500;color:#b9cbe0">'+greet()+'</div><div style="font-size:24px;font-weight:700">Sam Carter</div></div>'+
+  return '<header class="hdr big" style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:15px;font-weight:500;color:#b9cbe0">'+greet()+'</div><div style="font-size:24px;font-weight:700">'+esc(S.user||'Guest')+'</div></div>'+
   '<button data-tour="bell" data-a="bell" aria-label="Notifications'+(S.alerts?', '+S.alerts+' new':'')+'" style="position:relative;width:48px;height:48px;border-radius:24px;border:none;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center">'+ico(P.bell,26)+(S.alerts?'<span class="badge">'+S.alerts+'</span>':'')+'</button></header>'+
   '<div class="scroll">'+missionsCard()+'<div class="qa" style="margin-top:12px">'+qa('transfer','Transfer','newtransfer','','qa-transfer')+qa('bills','Pay bills','bills','','qa-bills')+qa('deposit','Deposit','tab','data-t="deposit"','qa-deposit')+qa('person','Send money','sendpick','','qa-send')+'</div>'+
   sect('Deposit accounts',fmt(total),'total')+dep.map(ar).join('')+sect('Credit cards')+ar(A('cc'))+
@@ -829,7 +829,7 @@ function vCards(){
 }
 function vMore(){
   function tog(k,t,s){return '<div class="fld"><div class="fm"><div class="val">'+t+'</div><div class="sub">'+s+'</div></div><label class="sw"><input type="checkbox" data-a="toggle" data-k="'+k+'" aria-label="'+t+'"'+(S[k]?' checked':'')+'><i></i></label></div>'}
-  return '<header class="hdr big" style="display:flex;align-items:center;gap:14px"><span class="av" style="width:56px;height:56px;border-radius:28px;background:#dbe8f6;font-size:20px">SC</span><div><div style="font-size:22px;font-weight:700">Sam Carter</div><div style="font-size:14px;color:#b9cbe0">sam.carter@example.com</div></div></header><div class="scroll">'+
+  return '<header class="hdr big" style="display:flex;align-items:center;gap:14px"><span class="av" style="width:56px;height:56px;border-radius:28px;background:#dbe8f6;font-size:20px">'+esc((S.user||'G').charAt(0).toUpperCase())+'</span><div><div style="font-size:14px;color:#b9cbe0">Username</div><div style="font-size:22px;font-weight:700;word-break:break-all">'+esc(S.user||'Guest')+'</div></div></header><div class="scroll">'+
   sect('Settings')+'<div data-tour="m-settings">'+tog('faceId','Sign in with Face ID','Skip typing your password')+tog('paperless','Paperless statements','Get statements online only')+tog('tips','Show tips on new screens','Pop-ups that explain each screen')+tog('autoread','Read tips out loud','Needs sound on your phone')+'</div>'+
   sect('Support')+chevRow('shield','Security center','Tips to keep your money safe','data-tour="m-help" data-a="sheet" data-s="security"')+chevRow('help','Help and contact','Chat, call, or find a branch','data-a="soon" data-m="Help is not part of this practice app."')+
   sect('Practice')+chevRow('star','Missions','See your level and your missions','data-a="missions"')+chevRow('help','Show all tips again','Replay the tips on every screen','data-a="replayall"')+
@@ -954,7 +954,7 @@ document.addEventListener('submit',function(e){
     e.preventDefault();
     var u=document.getElementById('u').value.trim(),p=document.getElementById('p').value;
     if(!u||!p){UI.err='Enter your username and password.';render();return}
-    complete('signin');root('accounts');
+    S.user=u.slice(0,30);save();complete('signin');root('accounts');
   }
 });
 window.addEventListener('resize',function(){if(UI.tour)placeTour();fixBars()});
