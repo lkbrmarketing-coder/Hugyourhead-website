@@ -679,7 +679,7 @@ function vMissions(){
   var lv='<div class="lv">'+RANKS.map(function(r){var cls=rk===r[0]?'on':(n>=r[1]?'past':'');return '<span class="'+cls+'">'+(n>=r[1]&&rk!==r[0]?'&#10003; ':'')+r[0]+'</span>'}).join('')+'</div>';
   var rows=MISSIONS.map(function(m,i){var d=S.free?!!(S.pdone&&S.pdone[m.id]):!!S.done[m.id];
     return '<button class="row" data-a="mission" data-id="'+m.id+'"><span class="av" style="'+(d?'background:var(--pos);color:#fff':'')+'">'+(d?ico(P.check,22):(i+1))+'</span><span class="m"><span class="n" style="display:block;font-size:17px">'+esc(m.t)+'</span><span class="s" style="display:block">'+esc(m.d)+'</span></span><span class="chip2'+(d?' dn':'')+'">'+(d?'Done':'Start')+'</span></button>'}).join('');
-  return nav('Missions',nb('back','Back','back'))+'<div class="scroll"><div class="rankcard" data-tour="rank"><div style="font-size:14px;font-weight:700;color:var(--mute)">Your level</div><div style="font-size:34px;font-weight:800;color:var(--navy)">'+rk+'</div><span class="bar" aria-hidden="true"><i style="width:'+Math.round(n/tot*100)+'%"></i></span><div style="font-size:16px;font-weight:600">'+n+' of '+tot+' missions done'+(nx?'. '+(nx[1]-n)+' more to become a '+nx[0]+'.':'. You are an Expert!')+'</div>'+lv+'</div>'+(S.free?'<div class="rankcard" style="margin-top:12px"><div style="font-size:17px;font-weight:800;color:var(--navy)">No-help practice</div><div style="font-size:16px;line-height:1.45;margin-top:4px">Try each mission again with no pop-ups. Tap Tips for one hint. Done: '+MISSIONS.filter(function(m){return S.pdone&&S.pdone[m.id]}).length+' of '+tot+'.</div></div>':'')+'<div data-tour="mlist" style="margin-top:12px">'+rows+'</div>'+(n>=tot?'<div class="rankcard" style="margin-top:12px"><div style="font-size:18px;font-weight:800;color:var(--navy)">Next steps</div><div style="font-size:16px;line-height:1.45;margin:6px 0 10px">1. Try it again with no help. Tap Tips if you get stuck.<br>2. Do the final challenges.</div><button class="btn" data-a="startfree">'+(S.free?'Practice mode is on':'Practice with no help')+'</button></div>':'')+'<div style="padding:12px 16px 0"><button class="btn s sm" data-a="chhub">Final challenges</button></div><div style="padding:8px 16px 0"><button class="btn s sm" data-a="progress">My progress</button></div><div style="height:20px"></div></div>';
+  return nav('Missions',nb('back','Back','back'))+'<div class="scroll"><div class="rankcard" data-tour="rank"><div style="font-size:14px;font-weight:700;color:var(--mute)">Your level</div><div style="font-size:34px;font-weight:800;color:var(--navy)">'+rk+'</div><span class="bar" aria-hidden="true"><i style="width:'+Math.round(n/tot*100)+'%"></i></span><div style="font-size:16px;font-weight:600">'+n+' of '+tot+' missions done'+(nx?'. '+(nx[1]-n)+' more to become a '+nx[0]+'.':'. You are an Expert!')+'</div>'+lv+'</div>'+(S.free?'<div class="rankcard" style="margin-top:12px"><div style="font-size:17px;font-weight:800;color:var(--navy)">No-help practice</div><div style="font-size:16px;line-height:1.45;margin-top:4px">Try each mission again with no pop-ups. Tap Tips for one hint. Done: '+PM().filter(function(m){return S.pdone&&S.pdone[m.id]}).length+' of '+PM().length+' (you do not need to log in again).</div></div>':'')+'<div data-tour="mlist" style="margin-top:12px">'+rows+'</div>'+(n>=tot?'<div class="rankcard" style="margin-top:12px"><div style="font-size:18px;font-weight:800;color:var(--navy)">Next steps</div><div style="font-size:16px;line-height:1.45;margin:6px 0 10px">1. Try it again with no help. Tap Tips if you get stuck.<br>2. Do the final challenges.</div><button class="btn" data-a="startfree">'+(S.free?'Practice mode is on':'Practice with no help')+'</button></div>':'')+'<div style="padding:12px 16px 0"><button class="btn s sm" data-a="chhub">Final challenges</button></div><div style="padding:8px 16px 0"><button class="btn s sm" data-a="progress">My progress</button></div><div style="height:20px"></div></div>';
 }
 var QUIZ=[
  {src:'Text message',msg:'YOU WON $500! Send your PIN right now to get your prize.',scam:true,why:'Banks never ask for your PIN. A prize you did not enter for is a trick. And the message rushes you.'},
@@ -956,16 +956,43 @@ var REPORT_EMAIL='HugYourHead@Gmail.com';
 var TRACK_URL='https://script.google.com/macros/s/AKfycbytNheOuJBUz_tVa9B8JIYYW22Z_TJZCMkN0MnQeKJoVGXLuEUzPGFgBkwDSD5zJjcu/exec';
 var TRACK_KEY='bankbuddy-2026';
 function pidOf(){if(!S.pid)S.pid='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);return S.pid}
+function PM(){return MISSIONS.filter(function(m){return m.id!=='signin'})}
+function stageText(){
+  var n=doneCount(),tot=MISSIONS.length,d=S.ch.dinner||{},sc=S.ch.scam||{};
+  var pn=PM().filter(function(m){return S.pdone&&S.pdone[m.id]}).length,ptot=PM().length;
+  if(!S.startedAt&&!n)return 'Not started';
+  if(n<tot){var nx=MISSIONS.filter(function(m){return !S.done[m.id]})[0];return 'STEP 1 Guided missions: '+n+' of '+tot+' done. On: '+nx.t}
+  if(!S.freeUsed)return 'STEP 2 No-help practice: guided done, has not started practice';
+  if(pn<ptot){var np=PM().filter(function(m){return !(S.pdone&&S.pdone[m.id])})[0];return 'STEP 2 No-help practice: '+pn+' of '+ptot+' done. On: '+np.t}
+  if(!d.done)return 'STEP 3 Challenges: Dinner Challenge not finished'+(d.tries?' ('+d.tries+(d.tries===1?' try':' tries')+')':' (not started)');
+  if(!sc.passed)return 'STEP 3 Challenges: Scam Test not passed'+(sc.tries?' (best '+sc.bestScore+' of '+SCEN.length+', '+sc.tries+(sc.tries===1?' try':' tries')+')':' (not started)');
+  return 'ALL COMPLETE';
+}
 function snapshot(){
-  var n=doneCount(),d=S.ch.dinner||{},sc=S.ch.scam||{},q=S.qz,p=scamPct();
-  return {name:S.nick||'',level:rankOf(n),missions:n,missionsTotal:MISSIONS.length,
-    missionList:MISSIONS.map(function(m){return (S.done[m.id]?'Y ':'- ')+m.t}).join(' | '),
-    scamScorePct:p===null?'':p,scamAnswers:S.sc.t?S.sc.r+'/'+S.sc.t:'',
-    quizBest:q.tries?q.best+'/'+QUIZ.length:'',quizTries:q.tries,
-    dinnerDone:!!d.done,dinnerTries:d.tries||0,dinnerBestMistakes:d.best===undefined?'':d.best,
-    scamTestBest:sc.tries?sc.bestScore+'/'+SCEN.length:'',scamTestTries:sc.tries||0,scamTestPassed:!!sc.passed,
-    practiceMode:S.freeUsed?'yes':'no',practiceMissions:MISSIONS.filter(function(m){return S.pdone&&S.pdone[m.id]}).length,tipsUsed:S.tipsUsed||0,started:S.startedAt||'',
-    guidedDone:n>=MISSIONS.length,allDone:n>=MISSIONS.length&&!!d.done&&!!sc.passed};
+  var n=doneCount(),d=S.ch.dinner||{},sc=S.ch.scam||{},q=S.qz,p=scamPct(),tr=S.tr||{},lg=S.log[S.log.length-1];
+  var done=n>=MISSIONS.length&&!!d.done&&!!sc.passed;
+  return {name:S.nick||'',
+    cols:[
+      ['Name',S.nick||''],
+      ['PROGRESS',stageText()],
+      ['Finished everything',done?'YES':'No'],
+      ['Level',rankOf(n)],
+      ['Guided missions',n+' of '+MISSIONS.length],
+      ['Mission detail',MISSIONS.map(function(m){return (S.done[m.id]?'Y ':'- ')+m.t}).join(' | ')],
+      ['No-help missions',PM().filter(function(m){return S.pdone&&S.pdone[m.id]}).length+' of '+PM().length],
+      ['Dinner Challenge',d.done?'Done, fewest mistakes '+d.best:(d.tries?'Not finished':'Not started')],
+      ['Dinner tries',d.tries||0],
+      ['Dinner mistakes (total)',tr.d||0],
+      ['Scam Test',sc.tries?'Best '+sc.bestScore+' of '+SCEN.length+(sc.passed?' (passed)':' (not passed)'):'Not started'],
+      ['Scam Test tries',sc.tries||0],
+      ['Scam Test wrong answers (total)',tr.s||0],
+      ['Scam Watch quiz best',q.tries?q.best+' of '+QUIZ.length:''],
+      ['Quiz wrong answers (total)',tr.q||0],
+      ['Scam score %',p===null?'':p],
+      ['Tips used',S.tipsUsed||0],
+      ['Last action',lg?lg.m:''],
+      ['Started',S.startedAt||'']
+    ]};
 }
 var _tt=null;
 function track(){if(!TRACK_URL||!S.nick)return;clearTimeout(_tt);_tt=setTimeout(sendNow,1500)}
@@ -1107,7 +1134,7 @@ function ensure(){
   if(!S.sc)S.sc={r:0,t:0};if(!S.qz)S.qz={tries:0,best:0,last:0};if(!S.ch)S.ch={};if(!S.log)S.log=[];if(!S.doneAt)S.doneAt={};
   if(S.free===undefined)S.free=false;if(S.nick===undefined)S.nick='';
 }
-function logEv(k,m){S.evn=(S.evn||0)+1;S.log.push({id:S.evn,k:k,m:m,at:new Date().toISOString()});if(S.log.length>80)S.log=S.log.slice(-80);track()}
+function logEv(k,m){S.tr=S.tr||{d:0,q:0,s:0};if(k==='dinnermiss')S.tr.d++;if(k==='quizq'&&/WRONG/.test(m))S.tr.q++;if(k==='scq'&&/WRONG/.test(m))S.tr.s++;S.evn=(S.evn||0)+1;S.log.push({id:S.evn,k:k,m:m,at:new Date().toISOString()});if(S.log.length>80)S.log=S.log.slice(-80);track()}
 function finishDinner(){
   var d=S.ch.dinner||(S.ch.dinner={tries:1}), m=UI.chal.mistakes;
   d.done=true;d.last=m;d.best=(d.best===undefined)?m:Math.min(d.best,m);d.at=new Date().toISOString();
