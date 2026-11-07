@@ -2,6 +2,13 @@
 
 ---
 
+## November 7, 2026
+- Added educational-purposes-only disclaimers to the Financial Literacy page (hero line and full disclaimer above the footer) and a short disclaimer on the sign-up page
+- Updated the copyright year to 2026 on every page and made it update automatically
+- Sign-up page: confirmed hero image, removed hero subtext and "Please note" box
+- Programs page Program 07 now says in-person only
+- Image lock-down: every image used by the site is stored locally in the Website folder and tracked in git; full backup made
+
 ## November 4, 2026
 - Moved Financial Literacy sign-up form to its own page, financial-literacy-signup.html, with a call-to-action button on the program page
 - Rebuilt the form with a required Photo & Video Release and electronic signature (release v2-2026-11), conditional participant fields, inline validation, and accessibility improvements

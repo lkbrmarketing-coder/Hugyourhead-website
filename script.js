@@ -5,6 +5,11 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   /* -------------------------------------------------------
+     0. COPYRIGHT YEAR
+  ------------------------------------------------------- */
+  document.querySelectorAll('.js-year').forEach(function (el) { el.textContent = new Date().getFullYear(); });
+
+  /* -------------------------------------------------------
      1. MOBILE HAMBURGER OVERLAY NAV
   ------------------------------------------------------- */
   const hamburger = document.querySelector('.nav__hamburger');
