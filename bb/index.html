@@ -501,75 +501,92 @@ var TOURS={
    ['try','[data-tour=signinbtn]','','Step 4. Tap Sign in.']
   ],
   accounts:[
-   ['say','','Your home page','This is your Accounts page. It shows all of your money. You see it first every time you log in.'],
-   ['spot','[data-tour=total]','','This number is all the money in your checking and savings.'],
-   ['try','[data-tour=row-chk]','','Checking is money you spend. Tap Checking to look inside.'],
-   ['spot','[data-tour=qa-transfer]','','These buttons move money. Transfer moves money between your accounts. Pay bills pays companies. Deposit adds a check. Send gives money to a person. You will try each one in the missions.'],
-   ['try','[data-tour=missions]','','Missions help you practice. Tap Start a mission.']
+   ['say','','Your home page','This is your Accounts page. It is your home page. It shows all of your money. You see it first every time you log in. Let us look at what is on it.'],
+   ['spot','[data-tour=total]','','This number is all the money in your checking and savings added together.'],
+   ['spot','[data-tour=row-chk]','','This is one of your accounts. Checking is money you spend. Savings is money you keep for later. Tap an account to look inside it.'],
+   ['spot','[data-tour=qa-row]','','These buttons move money. Transfer moves money between your accounts. Pay bills pays companies. Deposit adds a check. Send money gives money to a person.'],
+   ['spot','[data-tour=scamcard]','','Scam Watch teaches you how to spot tricks that try to steal your money.'],
+   ['say','','Explore!','Now you can look around. Tap anything you like. You cannot break anything. This is only practice. When you are ready, I will show you where to start.'],
+   ['spot','[data-tour=missions]','','Missions help you practice, one step at a time. Tap Start a mission when you are ready.']
   ],
   missions:[
-   ['say','','Missions','Missions help you practice. Finish a mission to earn a star. Your level goes up as you finish missions. Finish them all to become an Expert!'],
-   ['try','[data-a=mission][data-id={next}]','','Tap this mission to start it.']
+   ['say','','Missions','This is the Missions page. Missions are small jobs that help you practice. Finish a mission to earn a star. Your level goes up as you earn stars.'],
+   ['spot','[data-tour=rank]','','This is your level. It goes up when you finish missions. Finish them all to become an Expert!'],
+   ['spot','[data-tour=mlist]','','This is the list of missions. A check mark means you finished it. You can do them in any order.'],
+   ['say','','Pick a mission','Tap a mission to start it. I will show you what to do.']
   ],
   detail:[
-   ['say','','Your account page','This page shows one account. You can see how much money is in it and what happened.'],
+   ['say','','Your account page','This page shows one account. You can see how much money is in it and what happened. Let us look at each part.'],
    ['spot','[data-tour=balance]','','This is your balance. It is how much money you can use right now.'],
+   ['spot','[data-tour=actions]','','These buttons let you move money from this account. You will try them in the missions.'],
+   ['spot','[data-tour=tabs]','','Activity shows money in and out. Details has facts about the account. Statements are monthly papers. You can tap each one.'],
    ['spot','[data-tour=txlist]','','Each line is one time money moved. A plus (+) means money came in. A minus (-) means money went out.'],
-   ['spot','[data-tour=tabs]','','Activity shows money in and out. Details has facts about the account. You can tap them to look.'],
-   ['say','','Now look around','Take your time. Look at the page. When you are done, tap the arrow at the top left to go back.']
+   ['say','','Explore!','Explore the page. Tap around and look. When you are done, tap the arrow in the top corner to go back to your accounts.'],
+   ['spot','[data-tour=back]','','This arrow takes you back to your accounts.']
   ],
   pay:[
-   ['say','','Pay and Transfer','This page is where you move money. Transfer moves money between your own accounts. Send money gives money to a person. Pay bills pays companies. Tap the one you want.']
+   ['say','','Pay and Transfer','This page is where you move money. Let us look at what you can do.'],
+   ['spot','[data-tour=pay-transfer]','','Transfer moves money between your own accounts.'],
+   ['spot','[data-tour=pay-send]','','Send money gives money to a person, like a friend.'],
+   ['spot','[data-tour=pay-bills]','','Pay bills pays companies, like your phone company.'],
+   ['say','','Explore!','Look around. Tap the one you want when you are ready.']
   ],
   'form-transfer':[
-   ['say','','Transfer money','On this page you move money from one of your accounts to another. We will go one step at a time.'],
-   ['try','[data-tour=f-from]','','Step 1. This is where the money comes FROM. Pick an account.'],
-   ['try','[data-tour=f-to]','','Step 2. This is where the money goes TO. Pick a different account.'],
-   ['try','[data-tour=f-amount]','','Step 3. Type how much. Use numbers only. Type 50 for fifty dollars.'],
-   ['try','[data-tour=f-continue]','','Step 4. Tap Continue to look it over. Nothing is sent yet.']
+   ['say','','Transfer money','On this page you move money from one of your accounts to another. Let us look at each part.'],
+   ['spot','[data-tour=f-from]','','This is where the money comes FROM.'],
+   ['spot','[data-tour=f-to]','','This is where the money goes TO.'],
+   ['spot','[data-tour=f-amount]','','Type how much to move here. Use numbers only.'],
+   ['spot','[data-tour=f-continue]','','Tap Continue to look it over. Nothing is sent yet.']
   ],
   'form-send':[
-   ['say','','Send money','On this page you send money to a person. Money sent to a person can be hard to get back, so go slowly.'],
+   ['say','','Send money','On this page you send money to a person. Money sent to a person can be hard to get back, so go slowly. Let us look at each part.'],
    ['spot','[data-tour=f-to]','','This is who gets the money. Make sure it is the right person.'],
-   ['try','[data-tour=f-from]','','Step 1. This is the account the money comes out of. Pick one.'],
-   ['try','[data-tour=f-amount]','','Step 2. Type how much to send. Use numbers only. Try 10.'],
-   ['try','[data-tour=f-continue]','','Step 3. Tap Continue to check everything before it is sent.']
+   ['spot','[data-tour=f-from]','','This is the account the money comes out of.'],
+   ['spot','[data-tour=f-amount]','','Type how much to send here. Use numbers only.'],
+   ['spot','[data-tour=f-continue]','','Tap Continue to check everything before it is sent.']
   ],
   'form-bill':[
-   ['say','','Pay a bill','On this page you pay a bill, like a phone bill. The company and the amount are already filled in for you.'],
-   ['try','[data-tour=f-from]','','Step 1. This is the account the money comes out of. Pick one.'],
-   ['try','[data-tour=f-continue]','','Step 2. Tap Continue to check it before it is sent.']
+   ['say','','Pay a bill','On this page you pay a bill, like a phone bill. Let us look at each part.'],
+   ['spot','[data-tour=f-payee]','','This is the company you are paying.'],
+   ['spot','[data-tour=f-from]','','This is the account the money comes out of.'],
+   ['spot','[data-tour=f-continue]','','Tap Continue to check it before it is sent.']
   ],
   review:[
    ['say','','Check before you send','This is the most important page. Look at everything before you send. Once money is sent, it can be hard to get back.'],
-   ['spot','[data-tour=rv-rows]','','Check the amount, who gets the money, and which account it comes from. Are they all right?'],
+   ['spot','[data-tour=rv-rows]','','Check who gets the money and which account it comes from. Are they right?'],
    ['spot','[data-tour=safety]','','Sending money to a person? Read each sentence. Tap the box when it is true for you. If you cannot tap a box, STOP and ask someone you trust.'],
-   ['try','[data-tour=rv-submit]','','Tap Submit only when everything is right. Something wrong? Tap Edit to fix it.']
+   ['spot','[data-tour=rv-submit]','','Tap Submit only when everything is right.'],
+   ['spot','[data-tour=rv-edit]','','Something wrong? Tap Edit to fix it.']
   ],
   confirm:[
-   ['say','','All done!','This page tells you it worked.'],
+   ['say','','All done!','This page tells you it worked. Let us look at it.'],
    ['spot','[data-tour=code]','','This is your confirmation number. It is like a receipt. Save it in case there is a problem.'],
-   ['say','','Look around','Take your time. Look at the page. When you are ready, tap Done at the bottom.']
+   ['say','','Explore!','Look at the page. When you are ready, tap Done at the bottom.'],
+   ['spot','[data-tour=c-done]','','Tap Done to go back home.']
   ],
   sendpick:[
-   ['say','','Send money','First, pick the person you want to send money to. You can type a name to find someone, or pick from the list.'],
-   ['try','[data-a=startsend][data-id=jordan]','','Tap Jordan to pick that person. Only pick someone you know.']
+   ['say','','Send money','On this page you pick the person you want to send money to.'],
+   ['spot','[data-tour=sp-search]','','You can type a name here to find someone.'],
+   ['spot','[data-tour=sp-list]','','Or pick someone from your list. Only pick someone you know.']
   ],
   bills:[
    ['say','','Pay bills','Here are the companies you pay. Each one shows how much is due and when.'],
-   ['try','[data-a=startbill]','','Tap a bill to pay it.']
+   ['spot','[data-tour=b-list]','','Tap a bill to pay it.']
   ],
   deposit:[
-   ['say','','Deposit a check','You can put a paper check into your account by taking pictures with your phone. For practice, pictures are optional.'],
-   ['try','[data-tour=d-to]','','Step 1. This is the account the money goes into. Pick one.'],
-   ['try','[data-tour=d-amount]','','Step 2. Type the amount that is written on the check. Try 100.'],
-   ['try','[data-tour=d-submit]','','Step 3. Tap Deposit check.']
+   ['say','','Deposit a check','You can put a paper check into your account by taking pictures with your phone. Let us look at each part.'],
+   ['spot','[data-tour=d-to]','','This is the account the money goes into.'],
+   ['spot','[data-tour=d-amount]','','Type the amount that is written on the check here.'],
+   ['spot','[data-tour=d-photos]','','Tap these boxes to take a picture of the front and the back of the check. For practice, it adds a pretend picture.'],
+   ['spot','[data-tour=d-submit]','','Tap Deposit check when you are done.']
   ],
   cards:[
-   ['say','','Cards','A credit card lets you buy things now and pay for them later. The bank lends you the money. You must pay it back.'],
+   ['say','','Cards','A credit card lets you buy things now and pay for them later. The bank lends you the money. You must pay it back. Let us look at the page.'],
    ['spot','[data-tour=c-info]','','Balance is what you owe. Available credit is how much more you can buy. Minimum payment is the least you must pay.'],
    ['spot','[data-tour=c-pay]','','Tap Make a payment to pay your card. Pay on time so you do not owe extra money.'],
-   ['spot','[data-tour=c-lock]','','Lost your card? Lock it. No one can use it while it is locked.']
+   ['spot','[data-tour=c-lock]','','Lost your card? Lock it. No one can use it while it is locked.'],
+   ['say','','Explore!','Look around the page. When you are done, tap Accounts at the bottom to go back home.'],
+   ['spot','.tabbar [data-t=accounts]','','Tap Accounts to go back home.']
   ],
  more:[
   ['say','','More','This page has your settings and help.'],
@@ -585,14 +602,16 @@ var TOURS={
  scam:[
   ['say','','Scam Watch','Scams are tricks that try to steal your money. Let us learn how to spot them.'],
   ['spot','[data-tour=s-signs]','','Scammers often do these things. If you see one, be careful.'],
-  ['spot','[data-tour=s-stop]','','If you think something is a scam, do these three things.']
+  ['spot','[data-tour=s-stop]','','If you think something is a scam, do these three things.'],
+  ['say','','Explore!','Read the page. When you are ready, tap Test yourself at the bottom.']
  ]
 };
 function tourKey(){var v=UI.view;if(v.name==='form'&&UI.flow)return 'form-'+UI.flow.kind;return v.name}
 function maybeStartTour(){
   if(UI.tour||UI.celebrate||UI.sheet||!S.tips||S.free||UI.chal||UI.chalDone||UI.hint||UI.mintro||UI.bintro)return;
   var k=tourKey();
-  if(TOURS[k]&&!S.seen[k]){var i0=(S.tp&&S.tp[k])||0;if(i0>=TOURS[k].length)i0=0;UI.tour={key:k,i:i0};var cf=coachFind();if(cf)UI.lseen=cf.key}
+  var rpt=UI.mission&&!S.free&&{detail:1,cards:1,deposit:1,scam:1}[k]&&!(UI.tseen&&UI.tseen[UI.mission+':'+k+':'+(UI.view.id||'')]);
+  if(TOURS[k]&&(!S.seen[k]||rpt)){if(S.seen[k])S.tp[k]=0;var i0=(S.tp&&S.tp[k])||0;if(i0>=TOURS[k].length)i0=0;UI.tour={key:k,i:i0};var cf=coachFind();if(cf)UI.lseen=cf.key}
 }
 function stepText(st){return (st[2]?st[2]+'. ':'')+st[3]}
 var VOICE=null;
@@ -827,7 +846,7 @@ function vTour(){
   var last=(t.i>=n-1)||(steps[t.i+1][0]==='try'&&false);
   var nextLabel=(t.i>=n-1)?'Got it':'Next';
   var head=st[2]?'<h3>'+esc(st[2])+'</h3>':'';
-  var sheet=(st[0]==='say'&&t.key!=='signin');
+  var sheet=false;
   var pop='<div class="tpop'+(st[0]==='say'?' say':'')+(sheet?' sheet':'')+'" id="tpop" role="dialog" aria-modal="true" aria-label="Tip">'+(st[0]==='say'?buddyFace(72):'')+head+'<p>'+esc(st[3])+'</p><div class="tb"><span class="cnt">'+(t.i+1)+' of '+n+'</span><button class="skip" data-a="tskip">Skip tips</button>'+listen+'<button class="tbtn" id="tnext" data-a="tnext">'+nextLabel+'</button></div></div>';
   if(st[0]==='say')return (sheet?'':'<div class="tourblock dim"></div>')+pop;
   return '<div class="tourblock"></div><div class="ring" id="tring"></div>'+pop;
@@ -851,6 +870,7 @@ function placeTour(){
   if(st[0]==='try'){placeCoach();return}
   var el=document.querySelector(resolveSel(st[1]));
   if(!el){if(st[0]==='spot')ACT.tnext();else tourAdvance();return}
+  if(!el.closest('.scroll')&&!el.closest('.foot')&&!el.closest('.tabbar')){var sc0=document.querySelector('.scroll');if(sc0)sc0.scrollTop=0}
   var pos=ringTo(el,true);
   if(st[0]==='try'){var sc=el.closest('.scroll');if(sc&&!sc._tw){sc._tw=1;sc.addEventListener('scroll',function(){var e2=document.querySelector(TOURS[UI.tour?UI.tour.key:t.key][UI.tour?UI.tour.i:t.i][1]);if(UI.tour&&e2)ringTo(e2,false)},{passive:true})}return}
   var pop=document.getElementById('tpop'); if(!pop||!pos)return;
@@ -941,7 +961,7 @@ function vAccounts(){
   }
   return '<header class="hdr big" style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:15px;font-weight:500;color:#b9cbe0">'+greet()+'</div><div style="font-size:24px;font-weight:700">'+esc(S.user||'Guest')+'</div></div>'+
   '<button data-tour="bell" data-a="bell" aria-label="Notifications'+(S.alerts?', '+S.alerts+' new':'')+'" style="position:relative;width:48px;height:48px;border-radius:24px;border:none;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center">'+ico(P.bell,26)+(S.alerts?'<span class="badge">'+S.alerts+'</span>':'')+'</button></header>'+
-  '<div class="scroll">'+missionsCard()+'<div class="qa" style="margin-top:12px">'+qa('transfer','Transfer','newtransfer','','qa-transfer')+qa('bills','Pay bills','bills','','qa-bills')+qa('deposit','Deposit','tab','data-t="deposit"','qa-deposit')+qa('person','Send money','sendpick','','qa-send')+'</div>'+
+  '<div class="scroll">'+missionsCard()+'<div class="qa" data-tour="qa-row" style="margin-top:12px">'+qa('transfer','Transfer','newtransfer','','qa-transfer')+qa('bills','Pay bills','bills','','qa-bills')+qa('deposit','Deposit','tab','data-t="deposit"','qa-deposit')+qa('person','Send money','sendpick','','qa-send')+'</div>'+
   sect('Deposit accounts',fmt(total),'total')+dep.map(ar).join('')+sect('Credit cards')+ar(A('cc'))+
   '<button class="promo" data-tour="scamcard" data-a="scamopen"><span style="flex:1"><span style="display:block;font-size:16px;font-weight:700">Scam Watch</span><span style="display:block;font-size:14px;color:var(--mute);margin-top:2px">Learn how to spot tricks that try to steal your money.</span></span><span style="color:var(--acc);font-weight:700;font-size:15px">Open</span></button>'+'<button class="promo" style="margin-top:0" data-a="chhub"><span style="flex:1"><span style="display:block;font-size:16px;font-weight:700">Bonus missions</span><span style="display:block;font-size:14px;color:var(--mute);margin-top:2px">Try real-life stories on your own for extra stars.</span></span><span style="color:var(--acc);font-weight:700;font-size:15px">Open</span></button></div>'+tabbar('accounts');
 }
@@ -1077,7 +1097,7 @@ function render(resetScroll){
     h=h.replace('</header>',(showM?'<button class="tipsbtn mbtn" data-a="mhelp" aria-label="Show me what to do next">Mission</button>':'')+tipsBtn(v.name==='accounts'?'s1':(v.name==='detail'?'s2':''))+'</header>');
     if(showM)h=h.replace('<header class="hdr','<header class="hdr hasm');
   }
-  document.getElementById('app').innerHTML=h+vSheet()+vCelebrate()+vChalDone()+vHint()+'<div id="tourlayer">'+(vTour()||vCoach())+'</div>'+vLook()+vMintro()+vBintro()+vCap()+(UI.toast?'<div class="toast" role="status">'+esc(UI.toast)+'</div>':'');
+  document.getElementById('app').innerHTML=h+vSheet()+vCelebrate()+vChalDone()+vHint()+'<div id="tourlayer">'+(vTour()||vCoach())+'</div>'+vMintro()+vBintro()+vCap()+(UI.toast?'<div class="toast" role="status">'+esc(UI.toast)+'</div>':'');
   var ns=document.querySelector('.scroll'); if(ns)ns.scrollTop=resetScroll?0:top;
   placeTour(); fixBars();
   var mb=document.querySelector('.mbtn'),tb2=document.querySelector('.tipsbtn:not(.mbtn)');
@@ -1149,10 +1169,11 @@ function refreshTour(){
   l.innerHTML=vTour()||vCoach(); placeTour(); fixBars();
   if(S.autoread&&UI.tour&&!UI.celebrate){var k=UI.tour.key+':'+UI.tour.i;if(UI.spoken!==k){UI.spoken=k;speak(stepText(TOURS[UI.tour.key][UI.tour.i]),true)}}
 }
+function markTseen(k){UI.tseen=UI.tseen||{};if(UI.mission)UI.tseen[UI.mission+':'+k+':'+(UI.view.id||'')]=true}
 function tourAdvance(){
   var t=UI.tour; if(!t)return;
   var steps=TOURS[t.key]; t.i++;
-  if(t.i>=steps.length){S.seen[t.key]=true;S.tp[t.key]=steps.length;UI.tour=null}
+  if(t.i>=steps.length){S.seen[t.key]=true;S.tp[t.key]=steps.length;UI.tour=null;markTseen(t.key);var sc1=document.querySelector('.scroll');if(sc1)sc1.scrollTop=0}
   else S.tp[t.key]=t.i;
   save(); refreshTour();
 }
@@ -1191,7 +1212,7 @@ ACT.tnext=function(){
 };
 ACT.lookok=function(){var c=coachFind();if(c)UI.lseen=lookKey(c);render()};
 ACT.mhelp=function(){
-  if(UI.tour){S.seen[UI.tour.key]=true;S.tp[UI.tour.key]=TOURS[UI.tour.key].length;UI.tour=null}
+  if(UI.tour){markTseen(UI.tour.key);S.seen[UI.tour.key]=true;S.tp[UI.tour.key]=TOURS[UI.tour.key].length;UI.tour=null}
   UI.chide=null;
   var c=coachFind();UI.cask=c?c.key:('fb:'+tourKey()+(UI.view.id||''));
   if(UI.chal){UI.chal.help=(UI.chal.help||0)+1;var o=S.ch[UI.chal.id]||(S.ch[UI.chal.id]={tries:1});o.help=(o.help||0)+1;logEv('bonushelp','Asked for help in bonus mission: '+bonusById(UI.chal.id).t+' (on '+tourKey()+')');save()}
@@ -1199,7 +1220,7 @@ ACT.mhelp=function(){
 };
 ACT.chide=function(){var c=coachFind();if(c&&UI.chide!==c.key&&!(c.look&&UI.cask!==c.key))UI.chide=c.key;else UI.chide=UI.cask||(c&&c.key);UI.cask=null;render()};
 ACT.capx=function(){hideCap()};
-ACT.tskip=function(){if(UI.tour){S.seen[UI.tour.key]=true;S.tp[UI.tour.key]=TOURS[UI.tour.key].length;save()}UI.tour=null;render()};
+ACT.tskip=function(){if(UI.tour){markTseen(UI.tour.key);S.seen[UI.tour.key]=true;S.tp[UI.tour.key]=TOURS[UI.tour.key].length;save()}UI.tour=null;render()};
 ACT.tips=function(){var k=tourKey();if(S.free||UI.chal){S.tipsUsed=(S.tipsUsed||0)+1;logEv('tip','Used a tip on '+k+(UI.chal?' (challenge)':' (practice mode)'));UI.sheet=null;UI.tour=null;UI.hint=hintText();render();return}if(!TOURS[k]){toast('There are no tips for this screen.');return}UI.sheet=null;S.tp[k]=0;UI.tour={key:k,i:0};render()};
 ACT.speak=function(){
   if(UI.celebrate){speak('Mission complete! '+UI.celebrate.title);return}
@@ -1221,7 +1242,7 @@ ACT.mgo=function(){UI.mintro=null;render()};
 ACT.mission=function(d){
   var m=mById(d.id);
   if(S.done[d.id]&&d.id==='signin'){toast('You already did this one. Nice work!');return}
-  UI.mission=d.id;UI.mintro=S.free?null:d.id;UI.chal=null;UI.cask=null;UI.chide=null;
+  UI.mission=d.id;UI.tseen={};UI.mintro=S.free?null:d.id;UI.chal=null;UI.cask=null;UI.chide=null;
   if(d.id==='deposit'){UI.dep=null;root('deposit')}
   else if(d.id==='scam'){UI.hist=[{name:'accounts'}];UI.scam=null;UI.tour=null;UI.view={name:'scam'};render(true)}
   else root('accounts');
