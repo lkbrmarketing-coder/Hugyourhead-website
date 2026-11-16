@@ -154,6 +154,8 @@ a{color:inherit}
 .coach .ctext{font-size:25px;line-height:1.22;font-weight:800;color:#1b2430;margin:8px 0 10px}
 .coach .cb{display:flex;gap:8px;align-items:center;justify-content:space-between}
 .coach .cb .stop{border:none;background:none;color:var(--mute);font-size:15px;font-weight:700;text-decoration:underline;min-height:44px;padding:0 6px}
+.coach .cnext{flex:1;font-size:22px;min-height:56px}
+.coach .cb2{text-align:center;margin-top:2px}
 .coach.nudge{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 .ring{position:absolute;z-index:41;border:3px solid #ffbf47;border-radius:14px;box-shadow:0 0 0 9999px rgba(11,42,74,.68);pointer-events:none}
@@ -461,9 +463,9 @@ function complete(id){
 var TOURS={
   signin:[
    ['say','','Welcome!','This is the login page. You log in to your account here. We will do it together, one small step at a time.'],
-   ['try','[data-tour=pname]','','Step 1. Type your first name in this box. Then tap the next box.'],
-   ['try','[data-tour=username]','','Step 2. This is your username. You make one when you open your account. Make one up and type it.'],
-   ['try','[data-tour=password]','','Step 3. This is your password. It is a secret. Make one up. Do not use a real one. Tap the eye to see it.'],
+   ['try','[data-tour=pname]','','Step 1. Type your first name in this box. Then tap Next.'],
+   ['try','[data-tour=username]','','Step 2. This is your username. You make one when you open your account. Make one up and type it. Then tap Next.'],
+   ['try','[data-tour=password]','','Step 3. This is your password. It is a secret. Make one up. Do not use a real one. Tap the eye to see it. Then tap Next.'],
    ['try','[data-tour=signinbtn]','','Step 4. Tap Sign in.']
   ],
   accounts:[
@@ -655,13 +657,15 @@ function coachNow(){
   return null;
 }
 var ARROW='<svg viewBox="0 0 48 48" width="60" height="60" aria-hidden="true"><path d="M24 45 L5 23 H17 V3 H31 V23 H43 Z" fill="#ffbf47" stroke="#0b2a4a" stroke-width="3" stroke-linejoin="round"/></svg>';
+function isInputSel(sel){return /pname|username|password|f-amount|d-amount/.test(sel||'')}
 function coachHtml(o){
   var b='<div class="blk" data-a="coachnudge"></div><div class="blk" data-a="coachnudge"></div><div class="blk" data-a="coachnudge"></div><div class="blk" data-a="coachnudge"></div>';
   var lab=o.label?'<div class="clabel">'+esc(o.label)+'</div>':'';
   var st=o.step?'<div class="cstep">'+esc(o.step)+'</div>':'';
+  var nx=isInputSel(o.sel)?'<button class="tbtn cnext" data-a="tnext">Next &rsaquo;</button>':'';
   return b+'<div class="cring" id="tring"></div><div class="ptr" id="tptr">'+ARROW+'</div>'+
    '<div class="coach" id="coach" role="dialog" aria-label="What to do next" data-sel="'+esc(o.sel||'')+'"><div class="ch">'+buddyFace(44)+'<div>'+lab+st+'</div></div>'+
-   '<div class="ctext">'+esc(o.text)+'</div><div class="cb"><button class="tbtn o ic" data-a="speak" aria-label="Read this out loud">'+ico(P.speaker,22)+'</button>'+(o.skip?'<button class="stop" data-a="tskipstep">Skip this</button>':'<button class="stop" data-a="mcancel">Stop mission</button>')+'</div></div>';
+   '<div class="ctext">'+esc(o.text)+'</div><div class="cb"><button class="tbtn o ic" data-a="speak" aria-label="Read this out loud">'+ico(P.speaker,22)+'</button>'+nx+'</div><div class="cb2">'+(o.skip?'<button class="stop" data-a="tskipstep">Skip this step</button>':'<button class="stop" data-a="mcancel">Stop mission</button>')+'</div></div>';
 }
 function vCoach(){
   var c=coachNow(); if(!c)return '';
@@ -1039,6 +1043,15 @@ document.addEventListener('change',function(e){if(!UI.tour&&coachNow())setTimeou
 document.addEventListener('click',tryHit,true);
 document.addEventListener('change',tryHit,true);
 ACT.tskipstep=function(){tourAdvance()};
+ACT.tnext=function(){
+  var c=document.getElementById('coach'),sel=c?resolveSel(c.getAttribute('data-sel')):'',el=sel?document.querySelector(sel):null;
+  var inp=el&&(el.matches('input')?el:el.querySelector('input'));
+  if(inp&&!String(inp.value).trim()){toast('Type in the glowing box first.');inp.focus();return}
+  var before=UI.tour?UI.tour.i:-1,bk=UI.tour?UI.tour.key:'';
+  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  if(UI.tour&&UI.tour.key===bk&&UI.tour.i===before){tourAdvance();return}
+  refreshTour();
+};
 ACT.capx=function(){hideCap()};
 ACT.coachnudge=function(){var c=document.getElementById('coach');if(c){c.classList.remove('nudge');void c.offsetWidth;c.classList.add('nudge')}toast('Tap the glowing box.')};
 ACT.tskip=function(){if(UI.tour){S.seen[UI.tour.key]=true;S.tp[UI.tour.key]=TOURS[UI.tour.key].length;save()}UI.tour=null;render()};
