@@ -135,6 +135,9 @@ a{color:inherit}
 .tipsbtn.s1{right:76px}.tipsbtn.s2{right:60px}
 .tourblock{position:absolute;inset:0;z-index:40;background:transparent}
 .tourblock.dim{background:rgba(11,42,74,.68)}
+.cap{position:absolute;left:10px;right:10px;top:calc(env(safe-area-inset-top) + 64px);z-index:70;background:rgba(15,20,30,.94);color:#fff;border-radius:14px;padding:12px 8px 12px 14px;display:flex;gap:8px;align-items:flex-start;box-shadow:0 6px 20px rgba(0,0,0,.35);font-size:18px;line-height:1.4;font-weight:600}
+.cap .ct{flex:1}
+.cap .cx{flex:none;border:none;background:rgba(255,255,255,.18);color:#fff;border-radius:999px;width:36px;height:36px;font-size:22px;line-height:1}
 .ring{position:absolute;z-index:41;border:3px solid #ffbf47;border-radius:14px;box-shadow:0 0 0 9999px rgba(11,42,74,.68);pointer-events:none}
 .ring.pulse{box-shadow:none;animation:pulse 1.4s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,191,71,.8)}50%{box-shadow:0 0 0 10px rgba(255,191,71,0)}}
@@ -438,121 +441,83 @@ function complete(id){
 }
 
 var TOURS={
- signin:[
-  ['say','','Welcome!','This is the login page. You can log in to your account with this page.'],
-  ['say','','Try it!','Type your name. Then make up a username and a password. Do not use your real password. This is only practice.'],
-  ['spot','[data-tour=pname]','','Type your first name here. Hug Your Head uses it to see how you are doing in this practice app.'],
-  ['spot','[data-tour=username]','','This is your username. You set it up when you open your account and set up your online account.'],
-  ['spot','[data-tour=password]','','This is your password. It is a secret. Only you should know it. You make it when you set up your online account.'],
-  ['spot','[data-tour=show]','','Tap the eye to see what you typed. Make sure nobody is looking at your screen.'],
-  ['spot','[data-tour=faceid]','','Some phones let you log in with your face. That is another safe way to log in.'],
-  ['try','[data-tour=signinbtn]','','Your turn! Type your name. Make up a username and password. Tap Sign in.']
- ],
- accounts:[
-  ['say','','Your Accounts page','This is your home page. It shows all of your money in one place. You see it first every time you log in.'],
-  ['spot','[data-tour=missions]','','These are your missions. Finish missions to practice and earn stars.'],
-  ['spot','[data-tour=bell]','','The bell shows messages from the bank. A number means there is something new.'],
-  ['spot','[data-tour=qa-transfer]','','Transfer moves money between your own accounts.'],
-  ['spot','[data-tour=qa-bills]','','Pay bills sends money to companies, like your phone company.'],
-  ['spot','[data-tour=qa-deposit]','','Deposit puts a check into your account. You take a picture with your phone.'],
-  ['spot','[data-tour=qa-send]','','Send money gives money to a person. Only send to people you know and trust.'],
-  ['spot','[data-tour=total]','','This number is all the money you have in your checking and savings.'],
-  ['spot','[data-tour=row-chk]','','Checking is money you spend. You use it for things you buy. Tap it to look inside.'],
-  ['spot','[data-tour=row-sav]','','Savings is money you keep safe. You try not to spend it.'],
-  ['spot','[data-tour=row-cc]','','A credit card lets you buy now and pay later. This number is what you owe.'],
-  ['spot','[data-tour=scamcard]','','Scam Watch teaches you how to spot tricks that try to steal your money.'],
-  ['spot','[data-tour=tabbar]','','These buttons take you to other parts of the app. Accounts is where you are now.'],
-  ['try','[data-tour=missions]','','Your turn! Tap Start a mission to see what to practice.']
- ],
- missions:[
-  ['say','','Missions','Missions help you practice. Finish a mission to earn a star. Finish them all to become an Expert!'],
-  ['spot','[data-tour=rank]','','This is your level. Everyone starts as a Beginner. Your level goes up as you finish missions.'],
-  ['spot','[data-tour=mlist]','','Tap a mission to start it. You can do them in any order.']
- ],
- detail:[
-  ['say','','Your account page','This page shows one account. You can see how much money is in it and what happened.'],
-  ['spot','[data-tour=back]','','Tap the arrow to go back to all your accounts.'],
-  ['spot','[data-tour=balance]','','This is your balance. It is how much money you can use right now.'],
-  ['spot','[data-tour=actions]','','These buttons let you move money, deposit a check, or pay a bill from this account.'],
-  ['spot','[data-tour=tabs]','','Activity shows money in and out. Details has facts about the account. Statements are monthly papers from the bank.'],
-  ['spot','[data-tour=search]','','Search helps you find one purchase. Try typing a store name.'],
-  ['spot','[data-tour=txlist]','','Each line is one time money moved. A plus (+) means money came in. A minus (-) means money went out. Pending means the bank is not finished yet. Tap a line to see more.']
- ],
- pay:[
-  ['say','','Pay and Transfer','This page is where you move money.'],
-  ['spot','[data-tour=pay-transfer]','','Transfer moves money between your own accounts.'],
-  ['spot','[data-tour=pay-send]','','Send money gives money to another person.'],
-  ['spot','[data-tour=pay-bills]','','Pay bills sends money to companies, like your phone company.'],
-  ['spot','[data-tour=pay-sched]','','Scheduled payments shows payments that will happen later.'],
-  ['spot','[data-tour=pay-recent]','','Recent shows money you moved lately.']
- ],
- 'form-transfer':[
-  ['say','','Transfer money','On this page you move money from one of your accounts to another.'],
-  ['spot','[data-tour=f-from]','','From is where the money comes out. It shows how much you have.'],
-  ['spot','[data-tour=f-to]','','To is where the money goes in.'],
-  ['spot','[data-tour=f-amount]','','Type how much to move. Use numbers only. Type 50 for fifty dollars.'],
-  ['spot','[data-tour=f-date]','','This is the day the money moves. It is today.'],
-  ['spot','[data-tour=f-freq]','','One time means it moves once. Weekly means it moves again every week.'],
-  ['spot','[data-tour=f-memo]','','A memo is a small note to help you remember why. You do not have to type one.'],
-  ['spot','[data-tour=f-continue]','','Tap Continue to look it over. Nothing is sent yet.'],
-  ['try','[data-tour=f-amount]','','Your turn! Pick your accounts, type an amount, and tap Continue.']
- ],
- 'form-send':[
-  ['say','','Send money','On this page you send money to a person. Money sent to a person can be hard to get back, so go slowly.'],
-  ['spot','[data-tour=f-to]','','This is who gets the money. Make sure it is the right person.'],
-  ['spot','[data-tour=f-from]','','This is the account the money comes out of.'],
-  ['spot','[data-tour=f-amount]','','Type how much to send. Use numbers only.'],
-  ['spot','[data-tour=f-memo]','','A memo is a small note to help you remember why. You do not have to type one.'],
-  ['spot','[data-tour=f-note]','','Remember: only send money to people you know and trust.'],
-  ['spot','[data-tour=f-continue]','','Tap Continue to check everything before it is sent.'],
-  ['try','[data-tour=f-amount]','','Your turn! Type an amount, like 10, and tap Continue.']
- ],
- 'form-bill':[
-  ['say','','Pay a bill','On this page you pay a bill, like a phone bill or a power bill.'],
-  ['spot','[data-tour=f-payee]','','This is the company you are paying.'],
-  ['spot','[data-tour=f-from]','','This is the account the money comes out of.'],
-  ['spot','[data-tour=f-amount]','','This is how much is due. It is already filled in for you.'],
-  ['spot','[data-tour=f-continue]','','Tap Continue to check it before it is sent.'],
-  ['try','[data-tour=f-continue]','','Your turn! Tap Continue.']
- ],
- review:[
-  ['say','','Check before you send','This is the most important page. Look at everything before you send. Once money is sent, it can be hard to get back.'],
-  ['spot','[data-tour=rv-amount]','','This is the amount. Is it right?'],
-  ['spot','[data-tour=rv-rows]','','Check who gets the money and which account it comes from. Are they right?'],
-  ['spot','[data-tour=safety]','','Read each sentence. Tap the box when it is true for you. If you cannot tap a box, STOP and ask someone you trust.'],
-  ['spot','[data-tour=rv-submit]','','Tap Submit only when everything is right.'],
-  ['spot','[data-tour=rv-edit]','','Something wrong? Tap Edit to fix it.']
- ],
- confirm:[
-  ['say','','All done!','This page tells you it worked.'],
-  ['spot','[data-tour=code]','','This is your confirmation number. It is like a receipt. Save it in case there is a problem.'],
-  ['spot','[data-tour=c-done]','','Tap Done to go back home.']
- ],
- sendpick:[
-  ['say','','Send money','First, pick the person you want to send money to.'],
-  ['spot','[data-tour=sp-search]','','You can type a name here to find someone.'],
-  ['spot','[data-tour=sp-recent]','','These are people you sent money to lately.'],
-  ['spot','[data-tour=sp-list]','','This is everyone in your contacts. Tap a name to pick that person.']
- ],
- bills:[
-  ['say','','Pay bills','Here are the companies you pay.'],
-  ['spot','[data-tour=b-list]','','Each one shows how much is due and when. Tap one to pay it.']
- ],
- deposit:[
-  ['say','','Deposit a check','You can put a paper check into your account by taking pictures with your phone.'],
-  ['spot','[data-tour=d-to]','','This is the account the money goes into.'],
-  ['spot','[data-tour=d-amount]','','Type the amount that is written on the check.'],
-  ['spot','[data-tour=d-photos]','','You take a picture of the front and the back of the check. For practice, pictures are optional.'],
-  ['spot','[data-tour=d-submit]','','Tap Deposit check when you are ready.'],
-  ['try','[data-tour=d-amount]','','Your turn! Type an amount, like 100, and tap Deposit check.']
- ],
- cards:[
-  ['say','','Cards','This page shows your credit card.'],
-  ['spot','[data-tour=c-card]','','This is your credit card. A credit card lets you buy now and pay later.'],
-  ['spot','[data-tour=c-info]','','Balance is what you owe. Available credit is how much more you can buy. Minimum payment is the least you must pay.'],
-  ['spot','[data-tour=c-pay]','','Tap Make a payment to pay back some of what you owe.'],
-  ['spot','[data-tour=c-lock]','','Lost your card? Lock it. No one can use it while it is locked.']
- ],
+  signin:[
+   ['say','','Welcome!','This is the login page. You log in to your account here. We will do it together, one small step at a time.'],
+   ['try','[data-tour=pname]','','Step 1. Type your first name in this box. Then tap the next box.'],
+   ['try','[data-tour=username]','','Step 2. This is your username. You make one when you open your account. Make one up and type it.'],
+   ['try','[data-tour=password]','','Step 3. This is your password. It is a secret. Make one up. Do not use a real one. Tap the eye to see it.'],
+   ['try','[data-tour=signinbtn]','','Step 4. Tap Sign in.']
+  ],
+  accounts:[
+   ['say','','Your home page','This is your Accounts page. It shows all of your money. You see it first every time you log in.'],
+   ['spot','[data-tour=total]','','This number is all the money in your checking and savings.'],
+   ['try','[data-tour=row-chk]','','Checking is money you spend. Tap Checking to look inside.'],
+   ['spot','[data-tour=qa-transfer]','','These buttons move money. Transfer moves money between your accounts. Pay bills pays companies. Deposit adds a check. Send gives money to a person. You will try each one in the missions.'],
+   ['try','[data-tour=missions]','','Missions help you practice. Tap Start a mission.']
+  ],
+  missions:[
+   ['say','','Missions','Missions help you practice. Finish a mission to earn a star. Your level goes up as you finish missions. Finish them all to become an Expert!'],
+   ['try','[data-tour=mlist]','','Tap a mission to start it. You can do them in any order.']
+  ],
+  detail:[
+   ['say','','Your account page','This page shows one account. You can see how much money is in it and what happened.'],
+   ['spot','[data-tour=balance]','','This is your balance. It is how much money you can use right now.'],
+   ['spot','[data-tour=txlist]','','Each line is one time money moved. A plus (+) means money came in. A minus (-) means money went out.'],
+   ['try','[data-tour=tabs]','','Activity shows money in and out. Details has facts about the account. Tap Details to see.'],
+   ['try','[data-tour=back]','','Tap the arrow to go back to all your accounts.']
+  ],
+  pay:[
+   ['say','','Pay and Transfer','This page is where you move money. Transfer moves money between your own accounts. Send money gives money to a person. Pay bills pays companies. Tap the one you want.']
+  ],
+  'form-transfer':[
+   ['say','','Transfer money','On this page you move money from one of your accounts to another. We will go one step at a time.'],
+   ['try','[data-tour=f-from]','','Step 1. This is where the money comes FROM. Pick an account.'],
+   ['try','[data-tour=f-to]','','Step 2. This is where the money goes TO. Pick a different account.'],
+   ['try','[data-tour=f-amount]','','Step 3. Type how much. Use numbers only. Type 50 for fifty dollars.'],
+   ['try','[data-tour=f-continue]','','Step 4. Tap Continue to look it over. Nothing is sent yet.']
+  ],
+  'form-send':[
+   ['say','','Send money','On this page you send money to a person. Money sent to a person can be hard to get back, so go slowly.'],
+   ['spot','[data-tour=f-to]','','This is who gets the money. Make sure it is the right person.'],
+   ['try','[data-tour=f-from]','','Step 1. This is the account the money comes out of. Pick one.'],
+   ['try','[data-tour=f-amount]','','Step 2. Type how much to send. Use numbers only. Try 10.'],
+   ['try','[data-tour=f-continue]','','Step 3. Tap Continue to check everything before it is sent.']
+  ],
+  'form-bill':[
+   ['say','','Pay a bill','On this page you pay a bill, like a phone bill. The company and the amount are already filled in for you.'],
+   ['try','[data-tour=f-from]','','Step 1. This is the account the money comes out of. Pick one.'],
+   ['try','[data-tour=f-continue]','','Step 2. Tap Continue to check it before it is sent.']
+  ],
+  review:[
+   ['say','','Check before you send','This is the most important page. Look at everything before you send. Once money is sent, it can be hard to get back.'],
+   ['spot','[data-tour=rv-rows]','','Check the amount, who gets the money, and which account it comes from. Are they all right?'],
+   ['try','[data-tour=safety]','','Read each sentence. Tap the box when it is true for you. If you cannot tap a box, STOP and ask someone you trust.'],
+   ['try','[data-tour=rv-submit]','','Tap Submit only when everything is right. Something wrong? Tap Edit to fix it.']
+  ],
+  confirm:[
+   ['say','','All done!','This page tells you it worked.'],
+   ['spot','[data-tour=code]','','This is your confirmation number. It is like a receipt. Save it in case there is a problem.'],
+   ['try','[data-tour=c-done]','','Tap Done to go back home.']
+  ],
+  sendpick:[
+   ['say','','Send money','First, pick the person you want to send money to. You can type a name to find someone, or pick from the list.'],
+   ['try','[data-tour=sp-list]','','Tap a name to pick that person. Only pick someone you know.']
+  ],
+  bills:[
+   ['say','','Pay bills','Here are the companies you pay. Each one shows how much is due and when.'],
+   ['try','[data-tour=b-list]','','Tap one to pay it.']
+  ],
+  deposit:[
+   ['say','','Deposit a check','You can put a paper check into your account by taking pictures with your phone. For practice, pictures are optional.'],
+   ['try','[data-tour=d-to]','','Step 1. This is the account the money goes into. Pick one.'],
+   ['try','[data-tour=d-amount]','','Step 2. Type the amount that is written on the check. Try 100.'],
+   ['try','[data-tour=d-submit]','','Step 3. Tap Deposit check.']
+  ],
+  cards:[
+   ['say','','Cards','This page shows your credit card. A credit card lets you buy now and pay later.'],
+   ['spot','[data-tour=c-info]','','Balance is what you owe. Available credit is how much more you can buy. Minimum payment is the least you must pay.'],
+   ['spot','[data-tour=c-lock]','','Lost your card? Lock it. No one can use it while it is locked.']
+  ],
  more:[
   ['say','','More','This page has your settings and help.'],
   ['spot','[data-tour=m-settings]','','Settings let you turn things on or off.'],
@@ -569,7 +534,7 @@ function tourKey(){var v=UI.view;if(v.name==='form'&&UI.flow)return 'form-'+UI.f
 function maybeStartTour(){
   if(UI.tour||UI.celebrate||UI.sheet||!S.tips||S.free||UI.chal||UI.chalDone||UI.hint)return;
   var k=tourKey();
-  if(TOURS[k]&&!S.seen[k])UI.tour={key:k,i:0};
+  if(TOURS[k]&&!S.seen[k]){var i0=(S.tp&&S.tp[k])||0;if(i0>=TOURS[k].length)i0=0;UI.tour={key:k,i:i0}}
 }
 function stepText(st){return (st[2]?st[2]+'. ':'')+st[3]}
 var VOICE=null;
@@ -594,7 +559,19 @@ function pickVoice(){
   }catch(e){return null}
 }
 try{if('speechSynthesis' in window){window.speechSynthesis.onvoiceschanged=function(){VOICE=pickVoice()};VOICE=pickVoice()}}catch(e){}
+var _ct=null;
+function capHtml(t){return '<span class="ct">'+esc(t)+'</span><button class="cx" data-a="capx" aria-label="Close captions">&times;</button>'}
+function vCap(){return UI.cap?'<div id="cap" class="cap" role="status" aria-live="polite">'+capHtml(UI.cap)+'</div>':''}
+function hideCap(){UI.cap=null;clearTimeout(_ct);var c=document.getElementById('cap');if(c&&c.parentNode)c.parentNode.removeChild(c)}
+function showCap(t){
+  if(!S.caps)return;
+  UI.cap=String(t).replace(/\s+/g,' ').trim();
+  var a=document.getElementById('app'),c=document.getElementById('cap');
+  if(a){if(!c){c=document.createElement('div');c.id='cap';c.className='cap';c.setAttribute('role','status');c.setAttribute('aria-live','polite');a.appendChild(c)}c.innerHTML=capHtml(UI.cap)}
+  clearTimeout(_ct);_ct=setTimeout(hideCap,Math.max(4000,UI.cap.split(' ').length*450+2500));
+}
 function speak(text,quiet){
+  showCap(text);
   try{
     if(!('speechSynthesis' in window)){if(!quiet)toast('Reading out loud is not available on this phone.');return}
     var ss=window.speechSynthesis; ss.cancel();
@@ -622,7 +599,7 @@ function vTour(){
   var steps=TOURS[t.key], st=steps[t.i], n=steps.length;
   var listen='<button class="tbtn o ic" data-a="speak" aria-label="Read this out loud">'+ico(P.speaker,22)+'</button>';
   if(st[0]==='try'){
-    return '<div class="ring pulse" id="tring"></div><div class="trybar'+(UI.barMin===barKey()?' min':'')+'" data-a="barmax" role="status">'+buddyFace(32)+'<span class="t">'+esc(st[3])+'</span>'+listen+'<button class="mini" data-a="barmin" aria-label="Hide this box">Hide</button></div>';
+    return '<div class="ring pulse" id="tring"></div><div class="trybar'+(UI.barMin===barKey()?' min':'')+'" data-a="barmax" role="status">'+buddyFace(32)+'<span class="t">'+esc(st[3])+'</span>'+listen+'<button class="mini" data-a="tskipstep" aria-label="Skip this step">Skip</button></div>';
   }
   var last=(t.i>=n-1)||(steps[t.i+1][0]==='try'&&false);
   var nextLabel=(t.i>=n-1)?'Got it':'Next';
@@ -648,7 +625,7 @@ function placeTour(){
   var t=UI.tour; if(!t)return;
   var st=TOURS[t.key][t.i]; if(st[0]==='say')return;
   var el=document.querySelector(st[1]);
-  if(!el){if(st[0]==='spot')ACT.tnext();else{var rg=document.getElementById('tring');if(rg)rg.style.display='none'}return}
+  if(!el){if(st[0]==='spot')ACT.tnext();else tourAdvance();return}
   var pos=ringTo(el,true);
   if(st[0]==='try'){var sc=el.closest('.scroll');if(sc&&!sc._tw){sc._tw=1;sc.addEventListener('scroll',function(){var e2=document.querySelector(TOURS[UI.tour?UI.tour.key:t.key][UI.tour?UI.tour.i:t.i][1]);if(UI.tour&&e2)ringTo(e2,false)},{passive:true})}return}
   var pop=document.getElementById('tpop'); if(!pop||!pos)return;
@@ -837,7 +814,7 @@ function vCards(){
 function vMore(){
   function tog(k,t,s){return '<div class="fld"><div class="fm"><div class="val">'+t+'</div><div class="sub">'+s+'</div></div><label class="sw"><input type="checkbox" data-a="toggle" data-k="'+k+'" aria-label="'+t+'"'+(S[k]?' checked':'')+'><i></i></label></div>'}
   return '<header class="hdr big" style="display:flex;align-items:center;gap:14px"><span class="av" style="width:56px;height:56px;border-radius:28px;background:#dbe8f6;font-size:20px">'+esc((S.user||'G').charAt(0).toUpperCase())+'</span><div><div style="font-size:14px;color:#b9cbe0">Username</div><div style="font-size:22px;font-weight:700;word-break:break-all">'+esc(S.user||'Guest')+'</div></div></header><div class="scroll">'+
-  sect('Settings')+'<div data-tour="m-settings">'+tog('faceId','Sign in with Face ID','Skip typing your password')+tog('paperless','Paperless statements','Get statements online only')+tog('tips','Show tips on new screens','Pop-ups that explain each screen')+tog('autoread','Read tips out loud','Needs sound on your phone')+tog('free','Practice mode','No pop-ups. Tap Tips for one hint.')+'</div>'+
+  sect('Settings')+'<div data-tour="m-settings">'+tog('faceId','Sign in with Face ID','Skip typing your password')+tog('paperless','Paperless statements','Get statements online only')+tog('tips','Show tips on new screens','Pop-ups that explain each screen')+tog('autoread','Read tips out loud','Needs sound on your phone')+tog('caps','Captions','Show the words on screen when the voice reads')+tog('free','Practice mode','No pop-ups. Tap Tips for one hint.')+'</div>'+
   sect('Support')+chevRow('shield','Security center','Tips to keep your money safe','data-tour="m-help" data-a="sheet" data-s="security"')+chevRow('help','Help and contact','Chat, call, or find a branch','data-a="soon" data-m="Help is not part of this practice app."')+
   sect('Practice')+chevRow('star','Missions','See your level and your missions','data-a="missions"')+chevRow('star','Final challenges','Dinner Challenge and Scam Test','data-a="chhub"')+chevRow('check','My progress','Your score and results','data-a="progress"')+chevRow('help','Show all tips again','Replay the tips on every screen','data-a="replayall"')+
   '<div style="height:16px"></div><button class="row" data-tour="m-signout" data-a="signout"><span class="chev" style="color:var(--acc)">'+ico(P.out,22)+'</span><span class="n" style="color:var(--acc);font-weight:700">Sign out</span></button>'+
@@ -855,7 +832,7 @@ function render(resetScroll){
     case 'chhub':h=vChhub();break; case 'chintro':h=vChintro();break; case 'sctest':h=vSct();break; case 'progress':h=vProgress();break;
   }
   if(v.name!=='signin'&&TOURS[tourKey()]){h=h.replace('</header>',tipsBtn(v.name==='accounts'?'s1':(v.name==='detail'?'s2':''))+'</header>')}
-  document.getElementById('app').innerHTML=h+vSheet()+vCelebrate()+vChalDone()+vHint()+vTour()+vMbar()+vCbar()+(UI.toast?'<div class="toast" role="status">'+esc(UI.toast)+'</div>':'');
+  document.getElementById('app').innerHTML=h+vSheet()+vCelebrate()+vChalDone()+vHint()+'<div id="tourlayer">'+vTour()+'</div>'+vMbar()+vCbar()+vCap()+(UI.toast?'<div class="toast" role="status">'+esc(UI.toast)+'</div>':'');
   var ns=document.querySelector('.scroll'); if(ns)ns.scrollTop=resetScroll?0:top;
   placeTour(); fixBars();
   var f=document.getElementById('celebok')||document.getElementById('tnext'); if(f&&!UI.toast)f.focus({preventScroll:true});
@@ -905,7 +882,7 @@ var ACT={
  lock:function(d,e){S.locked=e.target.checked;save();render()},
  toggle:function(d,e){S[d.k]=e.target.checked;if(d.k==='free'){logEv('practice','Practice mode '+(S.free?'ON':'OFF'))}if(d.k==='free'&&S.free){S.freeUsed=true;UI.tour=null}save();if(d.k==='tips'&&!S.tips)UI.tour=null;if(d.k==='free')render()},
  signout:function(){UI.hist=[];UI.view={name:'signin'};UI.err='';render(true)},
- reset:function(){var keep={};['done','seen','tips','autoread','user','sc','qz','ch','log','doneAt','free','freeUsed','nick'].forEach(function(k){keep[k]=S[k]});S=seed();for(var k in keep)S[k]=keep[k];ensure();save();UI.dep=null;toast('The money is reset.')},
+ reset:function(){var keep={};['done','seen','tp','caps','tips','autoread','user','sc','qz','ch','log','doneAt','free','freeUsed','nick'].forEach(function(k){keep[k]=S[k]});S=seed();for(var k in keep)S[k]=keep[k];ensure();save();UI.dep=null;toast('The money is reset.')},
  pw:function(){UI.showPw=!UI.showPw;render()},
  face:function(){complete('signin');root('accounts')},
  soon:function(d){toast(d.m||'Not part of this demo.')}
@@ -914,13 +891,46 @@ var ACT={
 ACT.tnext=function(){
   var t=UI.tour; if(!t)return;
   var steps=TOURS[t.key];
-  if(t.i>=steps.length-1){S.seen[t.key]=true;save();UI.tour=null;render();return}
-  t.i++;
-  if(steps[t.i][0]==='try'){S.seen[t.key]=true;save()}
+  if(t.i>=steps.length-1){S.seen[t.key]=true;S.tp[t.key]=steps.length;save();UI.tour=null;render();return}
+  t.i++;S.tp[t.key]=t.i;save();
   render();
 };
-ACT.tskip=function(){if(UI.tour){S.seen[UI.tour.key]=true;save()}UI.tour=null;render()};
-ACT.tips=function(){var k=tourKey();if(S.free||UI.chal){S.tipsUsed=(S.tipsUsed||0)+1;logEv('tip','Used a tip on '+k+(UI.chal?' (challenge)':' (practice mode)'));UI.sheet=null;UI.tour=null;UI.hint=hintText();render();return}if(!TOURS[k]){toast('There are no tips for this screen.');return}UI.sheet=null;UI.tour={key:k,i:0};render()};
+function refreshTour(){
+  var l=document.getElementById('tourlayer'); if(!l)return;
+  l.innerHTML=vTour(); placeTour(); fixBars();
+  if(S.autoread&&UI.tour&&!UI.celebrate){var k=UI.tour.key+':'+UI.tour.i;if(UI.spoken!==k){UI.spoken=k;speak(stepText(TOURS[UI.tour.key][UI.tour.i]),true)}}
+}
+function tourAdvance(){
+  var t=UI.tour; if(!t)return;
+  var steps=TOURS[t.key]; t.i++;
+  if(t.i>=steps.length){S.seen[t.key]=true;S.tp[t.key]=steps.length;UI.tour=null}
+  else S.tp[t.key]=t.i;
+  save(); refreshTour();
+}
+function tryHit(e){
+  var t=UI.tour; if(!t)return;
+  var st=TOURS[t.key][t.i]; if(!st||st[0]!=='try')return;
+  var el=document.querySelector(st[1]); if(!el||!e.target||!el.contains(e.target))return;
+  var tg=e.target, field=(tg.matches&&tg.matches('input,select,textarea'))?tg:null;
+  var inner=el.querySelector('input,select,textarea')||(el.matches('input,select,textarea')?el:null);
+  if(e.type==='click'){
+    if(inner&&inner.tagName!=='SELECT')return;   /* text boxes and checkboxes finish on change */
+    if(inner&&inner.tagName==='SELECT'){tourAdvance();return}
+    tourAdvance();return;
+  }
+  if(e.type==='change'){
+    if(!inner)return;
+    if(inner.type==='checkbox'){tourAdvance();return}
+    if(String(field?field.value:inner.value).trim()==='')return;
+    tourAdvance();
+  }
+}
+document.addEventListener('click',tryHit,true);
+document.addEventListener('change',tryHit,true);
+ACT.tskipstep=function(){tourAdvance()};
+ACT.capx=function(){hideCap()};
+ACT.tskip=function(){if(UI.tour){S.seen[UI.tour.key]=true;S.tp[UI.tour.key]=TOURS[UI.tour.key].length;save()}UI.tour=null;render()};
+ACT.tips=function(){var k=tourKey();if(S.free||UI.chal){S.tipsUsed=(S.tipsUsed||0)+1;logEv('tip','Used a tip on '+k+(UI.chal?' (challenge)':' (practice mode)'));UI.sheet=null;UI.tour=null;UI.hint=hintText();render();return}if(!TOURS[k]){toast('There are no tips for this screen.');return}UI.sheet=null;S.tp[k]=0;UI.tour={key:k,i:0};render()};
 ACT.speak=function(){
   if(UI.celebrate){speak('Mission complete! '+UI.celebrate.title);return}
   if(UI.hint){speak(UI.hint);return}
@@ -947,7 +957,7 @@ ACT.sans=function(d){var sc=UI.scam,q=QUIZ[sc.i];if(sc.ans!==null)return;sc.ans=
 ACT.snext=function(){var sc=UI.scam;if(sc.i>=QUIZ.length-1){sc.stage='done';S.qz.tries++;S.qz.last=sc.score;S.qz.best=Math.max(S.qz.best,sc.score);logEv('quiz','Scam Watch quiz '+sc.score+' of '+QUIZ.length);save()}else{sc.i++;sc.ans=null}render(true)};
 ACT.sretry=function(){UI.scam={stage:'quiz',i:0,ans:null,score:0};render(true)};
 ACT.sfinish=function(){complete('scam');UI.scam=null;root('accounts')};
-ACT.replayall=function(){S.seen={};save();toast('Tips will show again on each screen.')};
+ACT.replayall=function(){S.seen={};S.tp={};save();toast('Tips will show again on each screen.')};
 ACT.startover=function(){var keepP=S.pid,keepN=S.nick;S=seed();ensure();S.pid=keepP;S.nick=keepN||'';logEv('restart','Started over');save();UI.chal=null;UI.chalDone=null;UI.hint=null;UI.sct=null;UI.mission=null;UI.celebrate=null;UI.dep=null;UI.flow=null;UI.scam=null;UI.u='';UI.pwv='';UI.hist=[];UI.view={name:'signin'};UI.tour=null;render(true)};
 
 /* ---------- progress, challenges, practice mode ---------- */
@@ -1130,7 +1140,7 @@ function shareSheetHtml(){
   '<div style="padding:8px 16px 0"><button class="btn s sm" data-a="repcopy">Copy my results</button></div>'+(canShare?'<div style="padding:8px 16px 0"><button class="btn s sm" data-a="repshare">Share another way</button></div>':'');
 }
 function ensure(){
-  if(!S.done)S.done={};if(!S.seen)S.seen={};if(S.tips===undefined)S.tips=true;if(S.autoread===undefined)S.autoread=false;
+  if(!S.done)S.done={};if(!S.seen)S.seen={};if(!S.tp)S.tp={};if(S.caps===undefined)S.caps=true;if(S.tips===undefined)S.tips=true;if(S.autoread===undefined)S.autoread=false;
   if(!S.sc)S.sc={r:0,t:0};if(!S.qz)S.qz={tries:0,best:0,last:0};if(!S.ch)S.ch={};if(!S.log)S.log=[];if(!S.doneAt)S.doneAt={};
   if(S.free===undefined)S.free=false;if(S.nick===undefined)S.nick='';
 }
