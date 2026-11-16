@@ -156,6 +156,12 @@ a{color:inherit}
 .coach .cb .stop{border:none;background:none;color:var(--mute);font-size:15px;font-weight:700;text-decoration:underline;min-height:44px;padding:0 6px}
 .coach .cnext{flex:1;font-size:22px;min-height:56px}
 .coach .cb2{text-align:center;margin-top:2px}
+.typing .coach{top:6px!important;display:flex;align-items:center;gap:8px;padding:6px 8px;border-width:3px;border-radius:16px}
+.typing .coach .ch,.typing .coach .cb2,.typing .coach .cb .ic,.typing .ptr{display:none!important}
+.typing .coach .ctext{flex:1;margin:0;font-size:17px;line-height:1.2}
+.typing .coach .cb{flex:none}
+.typing .coach .cnext{flex:none;min-height:46px;font-size:18px;padding:0 16px}
+.typing .cring{box-shadow:none;border-width:4px}
 .coach.nudge{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 .ring{position:absolute;z-index:41;border:3px solid #ffbf47;border-radius:14px;box-shadow:0 0 0 9999px rgba(11,42,74,.68);pointer-events:none}
