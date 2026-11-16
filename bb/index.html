@@ -125,8 +125,8 @@ a{color:inherit}
 .toast{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 84px);background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:15px;font-weight:600;z-index:30;text-align:center}
 .badge{position:absolute;top:6px;right:6px;min-width:18px;height:18px;border-radius:9px;background:var(--gold);color:var(--txt);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px}
 .up{width:100%;display:flex;gap:10px;padding:12px 16px;background:#fff}
-.up label{flex:1;position:relative;min-height:96px;border:2px dashed #9aa8b6;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:600;color:var(--mute);text-align:center;padding:8px;cursor:pointer}
-.up label.done{border-style:solid;border-color:var(--pos);color:var(--pos)}
+.up label,.up button{flex:1;background:#fff;position:relative;min-height:96px;border:2px dashed #9aa8b6;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:600;color:var(--mute);text-align:center;padding:8px;cursor:pointer}
+.up button.done,.up label.done{border-style:solid;border-color:var(--pos);color:var(--pos)}
 .up input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
 .hdr{position:relative}
 .login-top{position:relative}
@@ -162,6 +162,23 @@ a{color:inherit}
 .typing .coach .cb{flex:none}
 .typing .coach .cnext{flex:none;min-height:46px;font-size:18px;padding:0 16px}
 .typing .cring{box-shadow:none;border-width:4px}
+.coach .cb2{display:flex;justify-content:center;gap:14px}
+.coach.mini{padding:8px 12px}
+.coach.mini .ch,.coach.mini .cb .ic{display:none}
+.coach.mini .ctext{font-size:20px;margin:0 0 4px}
+.coach.mini .cb{margin:0}
+.cring.soft{box-shadow:0 0 0 9999px rgba(11,42,74,.16)}
+.cring{box-shadow:0 0 0 9999px rgba(11,42,74,.5)}
+.coach .ctask{font-size:15px;font-weight:600;color:var(--txt);margin-top:2px;line-height:1.25}
+.tpop.sheet,.tpop.say.sheet{left:10px!important;right:10px;top:auto!important;bottom:84px;width:auto;max-width:none;transform:none;text-align:left;padding:12px 14px;border:4px solid #ffbf47;z-index:46}
+.tpop.sheet>svg,.tpop.say.sheet>svg{float:left;width:44px;height:44px;margin:0 10px 2px 0}
+.tpop.sheet h3{margin:2px 0 4px;font-size:21px}
+.tpop.sheet .tb{clear:both}
+.tipsbtn.mbtn{background:#fff;color:var(--navy);border:3px solid #ffbf47;padding:0 10px;font-size:14px}
+.hdr.big.hasm>div:first-child{font-size:20px!important}
+.hdr.hasm .nav .t{visibility:hidden}
+.up button svg.chk{width:100%;height:auto;display:block;border-radius:6px}
+.up button{cursor:pointer;font-family:inherit}
 .coach.nudge{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 .ring{position:absolute;z-index:41;border:3px solid #ffbf47;border-radius:14px;box-shadow:0 0 0 9999px rgba(11,42,74,.68);pointer-events:none}
@@ -317,9 +334,9 @@ function greet(){var h=new Date().getHours();return h<12?'Good morning':h<18?'Go
 function ini(n){return n.split(/\s+/).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase()}
 
 /* ---------- navigation ---------- */
-function go(view){UI.hint=null;UI.cmsg='';UI.tour=null;UI.sheet=null;UI.hist.push(UI.view);UI.view=view;UI.err='';render(true)}
-function back(){UI.hint=null;UI.cmsg='';UI.tour=null;UI.sheet=null;UI.view=UI.hist.pop()||{name:'accounts'};UI.err='';render(true)}
-function root(name){UI.hint=null;UI.cmsg='';UI.tour=null;UI.sheet=null;UI.hist=[];UI.view={name:name};UI.err='';UI.q='';UI.filter='all';UI.showFilter=false;UI.dtab='activity';render(true)}
+function go(view){flushLeave();UI.hint=null;UI.cmsg='';UI.tour=null;UI.sheet=null;UI.hist.push(UI.view);UI.view=view;UI.err='';render(true)}
+function back(){flushLeave();UI.hint=null;UI.cmsg='';UI.tour=null;UI.sheet=null;UI.view=UI.hist.pop()||{name:'accounts'};UI.err='';render(true)}
+function root(name){flushLeave();UI.hint=null;UI.cmsg='';UI.tour=null;UI.sheet=null;UI.hist=[];UI.view={name:name};UI.err='';UI.q='';UI.filter='all';UI.showFilter=false;UI.dtab='activity';render(true)}
 
 /* ---------- components ---------- */
 function tabbar(active){
@@ -430,8 +447,8 @@ function submit(){
     res={head:'Payment submitted',line:fmt(amt)+' is on its way to '+p.name+'.',rows:[['Paid to',esc(p.name)],['From',esc(from.name)+' ...'+from.mask],['Amount',fmt(amt)],['Date',dlong(new Date().toISOString())]],code:code,again:'bills',againLabel:'Pay another bill'};
   }
   save();
-  complete(f.kind==='transfer'?'transfer':f.kind==='send'?'send':'bill');
-  if(UI.chal&&UI.chal.id==='dinner'&&f.kind==='send')finishDinner();
+  complete(f.kind==='transfer'?(A(f.to).kind==='Credit card'?'card':'transfer'):f.kind==='send'?'send':'bill',true);
+  if(UI.chal)bonusDone();
   UI.hist=[{name:'accounts'}]; UI.view={name:'confirm',r:res}; UI.flow=null; render(true);
 }
 
@@ -449,21 +466,30 @@ var MISSIONS=[
  {id:'send',t:'Send money safely',d:'Send money to a friend. Do the safety check first.',hint:'Tap Send money and pick a person.'},
  {id:'bill',t:'Pay a bill',d:'Pay a bill from your account.',hint:'Tap Pay bills and pick a bill.'},
  {id:'deposit',t:'Deposit a check',d:'Put a check into your account.',hint:'Tap Deposit at the bottom of the screen.'},
+ {id:'card',t:'Learn about credit cards',d:'See what a credit card does. Then pay your card.',hint:'Tap Cards at the bottom of the screen.'},
  {id:'scam',t:'Spot the scams',d:'Learn how to tell a scam from the real thing.',hint:'Tap Scam Watch and answer the questions.'}
 ];
-var RANKS=[['Beginner',0],['Learner',3],['Skilled',5],['Expert',8]];
+var RANKS=[['Beginner',0],['Learner',3],['Skilled',6],['Expert',9]];
 function doneCount(){return MISSIONS.filter(function(m){return S.done[m.id]}).length}
 function rankOf(n){var r=RANKS[0][0];RANKS.forEach(function(x){if(n>=x[1])r=x[0]});return r}
 function nextRank(n){for(var i=0;i<RANKS.length;i++){if(n<RANKS[i][1])return RANKS[i]}return null}
 function mById(id){return MISSIONS.filter(function(m){return m.id===id})[0]}
-function complete(id){
+function complete(id,defer){
   if(S.free&&S.freeUsed){S.pdone=S.pdone||{};if(!S.pdone[id]){S.pdone[id]=new Date().toISOString();logEv('pmission','No-help mission done: '+mById(id).t+' (tips used so far: '+(S.tipsUsed||0)+')');save();toast('You did it with no help!')}}
-  if(S.done[id]){if(UI.mission===id)UI.mission=null;return}
+  if(S.done[id]){if(UI.mission===id){if(defer)UI.pendClear=id;else UI.mission=null}return}
   var before=rankOf(doneCount());
   S.done[id]=true; S.doneAt[id]=new Date().toISOString(); S.freeDone=S.freeDone||{}; logEv('mission','Mission done: '+id+(S.free?' (practice mode)':'')); save();
   var after=rankOf(doneCount());
-  UI.celebrate={id:id,title:mById(id).t,rank:before!==after?after:''};
-  if(UI.mission===id)UI.mission=null;
+  var cel={id:id,title:mById(id).t,rank:before!==after?after:''};
+  if(defer){UI.pending=cel;UI.pendClear=id}
+  else{UI.celebrate=cel;if(UI.mission===id)UI.mission=null}
+}
+function flushLeave(){
+  var v=UI.view;
+  if(v&&v.name==='detail'){if(v.id==='chk')complete('checking');if(v.id==='sav')complete('savings')}
+  if(UI.pending){UI.celebrate=UI.pending;UI.pending=null}
+  if(UI.pendingBonus){UI.chalDone=UI.pendingBonus;UI.pendingBonus=null;UI.chal=null}
+  if(UI.pendClear){if(UI.mission===UI.pendClear)UI.mission=null;UI.pendClear=null}
 }
 
 var TOURS={
@@ -489,8 +515,8 @@ var TOURS={
    ['say','','Your account page','This page shows one account. You can see how much money is in it and what happened.'],
    ['spot','[data-tour=balance]','','This is your balance. It is how much money you can use right now.'],
    ['spot','[data-tour=txlist]','','Each line is one time money moved. A plus (+) means money came in. A minus (-) means money went out.'],
-   ['try','[data-tour=tabs]','','Activity shows money in and out. Details has facts about the account. Tap Details to see.'],
-   ['try','[data-tour=back]','','Tap the arrow to go back to all your accounts.']
+   ['spot','[data-tour=tabs]','','Activity shows money in and out. Details has facts about the account. You can tap them to look.'],
+   ['say','','Now look around','Take your time. Look at the page. When you are done, tap the arrow at the top left to go back.']
   ],
   pay:[
    ['say','','Pay and Transfer','This page is where you move money. Transfer moves money between your own accounts. Send money gives money to a person. Pay bills pays companies. Tap the one you want.']
@@ -517,13 +543,13 @@ var TOURS={
   review:[
    ['say','','Check before you send','This is the most important page. Look at everything before you send. Once money is sent, it can be hard to get back.'],
    ['spot','[data-tour=rv-rows]','','Check the amount, who gets the money, and which account it comes from. Are they all right?'],
-   ['try','[data-tour=safety]','','Read each sentence. Tap the box when it is true for you. If you cannot tap a box, STOP and ask someone you trust.'],
+   ['spot','[data-tour=safety]','','Sending money to a person? Read each sentence. Tap the box when it is true for you. If you cannot tap a box, STOP and ask someone you trust.'],
    ['try','[data-tour=rv-submit]','','Tap Submit only when everything is right. Something wrong? Tap Edit to fix it.']
   ],
   confirm:[
    ['say','','All done!','This page tells you it worked.'],
    ['spot','[data-tour=code]','','This is your confirmation number. It is like a receipt. Save it in case there is a problem.'],
-   ['try','[data-tour=c-done]','','Tap Done to go back home.']
+   ['say','','Look around','Take your time. Look at the page. When you are ready, tap Done at the bottom.']
   ],
   sendpick:[
    ['say','','Send money','First, pick the person you want to send money to. You can type a name to find someone, or pick from the list.'],
@@ -540,8 +566,9 @@ var TOURS={
    ['try','[data-tour=d-submit]','','Step 3. Tap Deposit check.']
   ],
   cards:[
-   ['say','','Cards','This page shows your credit card. A credit card lets you buy now and pay later.'],
+   ['say','','Cards','A credit card lets you buy things now and pay for them later. The bank lends you the money. You must pay it back.'],
    ['spot','[data-tour=c-info]','','Balance is what you owe. Available credit is how much more you can buy. Minimum payment is the least you must pay.'],
+   ['spot','[data-tour=c-pay]','','Tap Make a payment to pay your card. Pay on time so you do not owe extra money.'],
    ['spot','[data-tour=c-lock]','','Lost your card? Lock it. No one can use it while it is locked.']
   ],
  more:[
@@ -549,6 +576,11 @@ var TOURS={
   ['spot','[data-tour=m-settings]','','Settings let you turn things on or off.'],
   ['spot','[data-tour=m-help]','','The Security center has tips to keep your money safe.'],
   ['spot','[data-tour=m-signout]','','Tap Sign out when you are done. Always sign out on a phone that other people use.']
+ ],
+ chhub:[
+  ['say','','Bonus missions','Great work! You finished the missions. Next are Bonus missions. Each one is a real-life story. You try it on your own and earn a star. You can come back to this page any time: tap More, then Bonus missions.'],
+  ['spot','[data-tour=bonus-list]','','These are your Bonus missions. Tap one to read the story. Need help? Tap the Mission button at the top. It will show you where to tap.'],
+  ['spot','[data-tour=bonus-free]','','Ready to do the missions with no help at all? Turn on Practice mode here. There are no pop-ups. Tap Tips if you need one hint.']
  ],
  scam:[
   ['say','','Scam Watch','Scams are tricks that try to steal your money. Let us learn how to spot them.'],
@@ -558,9 +590,9 @@ var TOURS={
 };
 function tourKey(){var v=UI.view;if(v.name==='form'&&UI.flow)return 'form-'+UI.flow.kind;return v.name}
 function maybeStartTour(){
-  if(UI.tour||UI.celebrate||UI.sheet||!S.tips||S.free||UI.chal||UI.chalDone||UI.hint||UI.mintro)return;
+  if(UI.tour||UI.celebrate||UI.sheet||!S.tips||S.free||UI.chal||UI.chalDone||UI.hint||UI.mintro||UI.bintro)return;
   var k=tourKey();
-  if(TOURS[k]&&!S.seen[k]){var i0=(S.tp&&S.tp[k])||0;if(i0>=TOURS[k].length)i0=0;UI.tour={key:k,i:i0}}
+  if(TOURS[k]&&!S.seen[k]){var i0=(S.tp&&S.tp[k])||0;if(i0>=TOURS[k].length)i0=0;UI.tour={key:k,i:i0};var cf=coachFind();if(cf)UI.lseen=cf.key}
 }
 function stepText(st){return (st[2]?st[2]+'. ':'')+st[3]}
 var VOICE=null;
@@ -621,83 +653,163 @@ function minBar(){
   UI.barMin=barKey(); b.classList.add('min');
 }
 
-var TOURS_NAME={signin:'Log in',accounts:'Your home page',missions:'Missions',detail:'Your account','form-transfer':'Move money','form-send':'Send money','form-bill':'Pay a bill',review:'Check before you send',confirm:'All done',sendpick:'Send money',bills:'Pay bills',deposit:'Deposit a check'};
+var TOURS_NAME={signin:'Log in',accounts:'Your home page',missions:'Missions',detail:'Your account','form-transfer':'Move money','form-send':'Send money','form-bill':'Pay a bill',review:'Check before you send',confirm:'All done',sendpick:'Send money',bills:'Pay bills',deposit:'Deposit a check',cards:'Your credit card',chhub:'Bonus missions'};
+var BONUS=[
+ {id:'dinner',t:'Dinner with friends',task:'Send Alex $15 for your meal.',kind:'send',who:'alex',name:'Alex Rivera',amt:15,from:'chk',
+  story:'You went out to eat with friends. Your friend Alex offered to cover the bill on his credit card and asked you to send him money for your meal. You spent $15 on your meal. Send Alex $15 for the meal.'},
+ {id:'rent',t:'Rent is due',task:'Move $200 from Savings to Checking.',kind:'transfer',from:'sav',to:'chk',amt:200,
+  story:'Rent is due and you need to move money from your savings to your checking to make sure you have enough for rent. Transfer $200 from your savings account to your checking account so you are prepared.'},
+ {id:'phonebill',t:'Pay the phone bill',task:'Pay the Phone Company bill from Checking.',kind:'bill',payee:'phone',from:'chk',amt:40,
+  story:'Your phone bill is due in 6 days and you do not want to be late. Pay the Phone Company bill from your Everyday Checking account.'},
+ {id:'giftcheck',t:'Birthday check',task:'Deposit the $50 check into Checking.',kind:'deposit',acct:'chk',amt:50,
+  story:'Your aunt mailed you a $50 birthday check. Put the check into your Everyday Checking account. Add a picture of the front and a picture of the back of the check.'},
+ {id:'cardpay',t:'Pay your credit card',task:'Pay off your credit card.',kind:'card',from:'chk',amt:null,
+  story:'You used your credit card earlier this week to buy groceries and it is time to pay your credit card off. Pay the full balance from your Everyday Checking account.'}
+];
+function bonusById(id){return BONUS.filter(function(b){return b.id===id})[0]}
+function bonusStars(){return BONUS.filter(function(b){return S.ch[b.id]&&S.ch[b.id].done}).length}
+function noAmt(){return !UI.flow||!String(UI.flow.amount||'').trim()}
 var COACH={
- checking:[['accounts','[data-tour=row-chk]','Tap Everyday Checking.']],
- savings:[['accounts','[data-tour=row-sav]','Tap Premier Savings.']],
+ checking:[
+  ['accounts','[data-tour=row-chk]','Tap Everyday Checking.'],
+  ['detail','[data-tour=back]','Look at your balance. When you are done, tap the arrow to go back.',null,true,'Checking is money you spend. This page shows how much is in it. Tap Next, then look around.']],
+ savings:[
+  ['accounts','[data-tour=row-sav]','Tap Premier Savings.'],
+  ['detail','[data-tour=back]','Look at your balance. When you are done, tap the arrow to go back.',null,true,'Savings is money you keep for later. It grows a little each month. Tap Next, then look around.']],
  transfer:[
   ['accounts','[data-tour=qa-transfer]','Tap Transfer.'],
-  ['form-transfer','[data-tour=f-amount]','Type 50 in the box.',function(){return !UI.flow||!String(UI.flow.amount||'').trim()}],
+  ['form-transfer','[data-tour=f-amount]','Type 50 in the box.',noAmt],
   ['form-transfer','[data-tour=f-continue]','Tap Continue.'],
-  ['review','[data-tour=rv-submit]','Tap Submit to move the money.']],
+  ['review','[data-tour=rv-submit]','Look it over. Then tap Submit at the bottom to move the money.'],
+  ['confirm','[data-tour=c-done]','It worked! Look at the page. Then tap Done.',null,true]],
  send:[
   ['accounts','[data-tour=qa-send]','Tap Send money.'],
   ['sendpick','[data-a=startsend][data-id=jordan]','Tap Jordan. Only send money to people you know.'],
-  ['form-send','[data-tour=f-amount]','Type 10 in the box.',function(){return !UI.flow||!String(UI.flow.amount||'').trim()}],
+  ['form-send','[data-tour=f-amount]','Type 10 in the box.',noAmt],
   ['form-send','[data-tour=f-continue]','Tap Continue.'],
-  ['review','[data-tour=safety]','Read each line. Tap the box when it is true.',function(){return !(UI.safety||[]).every(function(x){return x})}],
-  ['review','[data-tour=rv-submit]','Tap Submit.']],
+  ['review','[data-tour=rv-submit]','Read the 3 lines. Tap each box. Then tap Submit at the bottom to send.'],
+  ['confirm','[data-tour=c-done]','It worked! Look at the page. Then tap Done.',null,true]],
  bill:[
   ['accounts','[data-tour=qa-bills]','Tap Pay bills.'],
   ['bills','[data-a=startbill]','Tap a bill to pay it.'],
-  ['form-bill','[data-tour=f-continue]','Tap Continue.'],
-  ['review','[data-tour=rv-submit]','Tap Submit.']],
+  ['form-bill','[data-tour=f-continue]','Tap Continue at the bottom.'],
+  ['review','[data-tour=rv-submit]','Look it over. Then tap Submit at the bottom to pay.'],
+  ['confirm','[data-tour=c-done]','It worked! Look at the page. Then tap Done.',null,true]],
  deposit:[
   ['accounts','.tabbar [data-t=deposit]','Tap Deposit at the bottom.'],
   ['deposit','[data-tour=d-amount]','Type 100. That is the number on the check.',function(){return !UI.dep||!String(UI.dep.amount||'').trim()}],
-  ['deposit','[data-tour=d-submit]','Tap Deposit check.']],
+  ['deposit','[data-tour=d-photos] button:nth-child(1)','Tap this box to take a picture of the FRONT of the check.',function(){return !UI.dep||!UI.dep.front}],
+  ['deposit','[data-tour=d-photos] button:nth-child(2)','Now tap this box to take a picture of the BACK of the check.',function(){return !UI.dep||!UI.dep.back}],
+  ['deposit','[data-tour=d-submit]','Tap Deposit check at the bottom.'],
+  ['confirm','[data-tour=c-done]','It worked! Look at the page. Then tap Done.',null,true]],
+ card:[
+  ['accounts','.tabbar [data-t=cards]','Tap Cards at the bottom.'],
+  ['cards','[data-tour=c-pay]','Look at how much you owe. Then tap Make a payment.'],
+  ['form-transfer','[data-tour=f-amount]','Type 25. That is the least you must pay.',noAmt],
+  ['form-transfer','[data-tour=f-continue]','Tap Continue.'],
+  ['review','[data-tour=rv-submit]','Look it over. Then tap Submit at the bottom to pay your card.'],
+  ['confirm','[data-tour=c-done]','Your card is paid! Look at the page. Then tap Done.',null,true]],
  scam:[
-  ['accounts','[data-tour=scamcard]','Tap Scam Watch.'],
-  ['scam','[data-a=stest]','Read about scams. Then tap Test yourself.',function(){return !UI.scam||UI.scam.stage==='lesson'}],
-  ['scam','.foot','Read the message. Is it real or a scam? Tap your answer.',function(){return UI.scam&&UI.scam.stage==='quiz'&&UI.scam.ans===null}],
-  ['scam','[data-a=snext]','Tap Next.',function(){return UI.scam&&UI.scam.stage==='quiz'&&UI.scam.ans!==null}],
-  ['scam','[data-a=sfinish]','Tap Finish mission.',function(){return UI.scam&&UI.scam.stage==='done'}]]
+  ['scam','[data-a=stest]','Read about scams. When you are ready, tap Test yourself.',function(){return !UI.scam||UI.scam.stage==='lesson'},true],
+  ['scam','.foot','Read the message. Is it real or a scam? Tap your answer at the bottom.',function(){return UI.scam&&UI.scam.stage==='quiz'&&UI.scam.ans===null},true],
+  ['scam','[data-a=snext]','Read why. Then tap Next.',function(){return UI.scam&&UI.scam.stage==='quiz'&&UI.scam.ans!==null},true],
+  ['scam','[data-a=sfinish]','Look at your score. Then tap Finish mission.',function(){return UI.scam&&UI.scam.stage==='done'},true]]
 };
+function bonusSteps(b){
+  var fc=function(v){return [v,'[data-tour=f-continue]','Tap Continue at the bottom.']};
+  var done=['confirm','[data-tour=c-done]','Look at the page. Then tap Done.'];
+  var amt=function(v,n){return [v,'[data-tour=f-amount]','Type '+n+' in the box.',noAmt]};
+  if(b.kind==='send')return [['accounts','[data-tour=qa-send]','Tap Send money.'],['sendpick','[data-a=startsend][data-id='+b.who+']','Tap '+b.name.split(' ')[0]+'. '+b.name.split(' ')[0]+' paid the bill.'],amt('form-send',b.amt),fc('form-send'),['review','[data-tour=rv-submit]','Read the 3 lines. Tap each box. Then tap Submit at the bottom.'],done];
+  if(b.kind==='transfer')return [['accounts','[data-tour=qa-transfer]','Tap Transfer.'],
+    ['form-transfer','[data-tour=f-from]','Tap here. Pick Premier Savings. That is where the money comes FROM.',function(){return !UI.flow||UI.flow.from!==b.from}],
+    ['form-transfer','[data-tour=f-to]','Tap here. Pick Everyday Checking. That is where the money goes TO.',function(){return !UI.flow||UI.flow.to!==b.to}],
+    amt('form-transfer',b.amt),fc('form-transfer'),['review','[data-tour=rv-submit]','Look it over. Then tap Submit at the bottom.'],done];
+  if(b.kind==='bill')return [['accounts','[data-tour=qa-bills]','Tap Pay bills.'],['bills','[data-a=startbill][data-id='+b.payee+']','Tap Phone Company.'],fc('form-bill'),['review','[data-tour=rv-submit]','Look it over. Then tap Submit at the bottom.'],done];
+  if(b.kind==='deposit')return [['accounts','.tabbar [data-t=deposit]','Tap Deposit at the bottom.'],
+    ['deposit','[data-tour=d-amount]','Type '+b.amt+'. That is the number on the check.',function(){return !UI.dep||!String(UI.dep.amount||'').trim()}],
+    ['deposit','[data-tour=d-photos] button:nth-child(1)','Tap here to add the FRONT of the check.',function(){return !UI.dep||!UI.dep.front}],
+    ['deposit','[data-tour=d-photos] button:nth-child(2)','Tap here to add the BACK of the check.',function(){return !UI.dep||!UI.dep.back}],
+    ['deposit','[data-tour=d-submit]','Tap Deposit check at the bottom.'],done];
+  return [['accounts','.tabbar [data-t=cards]','Tap Cards at the bottom.'],['cards','[data-tour=c-pay]','Tap Make a payment.'],amt('form-transfer',UI.chal&&UI.chal.amt?UI.chal.amt:'the full amount'),fc('form-transfer'),['review','[data-tour=rv-submit]','Look it over. Then tap Submit at the bottom.'],done];
+}
 function nextMissionId(){var m=MISSIONS.filter(function(x){return !S.done[x.id]})[0];return m?m.id:'checking'}
 function resolveSel(sel){return sel?sel.replace('{next}',nextMissionId()):sel}
+function activeSteps(){
+  if(S.free)return null;
+  if(UI.chal){var b=bonusById(UI.chal.id),bi=BONUS.indexOf(b)+1;return {steps:bonusSteps(b),label:'Bonus mission '+bi+' of '+BONUS.length+': '+b.t,task:b.task,bonus:true}}
+  if(UI.mission&&COACH[UI.mission]){var m=mById(UI.mission);return {steps:COACH[UI.mission],label:'Mission '+(MISSIONS.indexOf(m)+1)+' of '+MISSIONS.length+': '+m.t}}
+  return null;
+}
+function coachFind(){
+  var A=activeSteps(); if(!A)return null;
+  var key=tourKey(),list=A.steps;
+  for(var i=0;i<list.length;i++){var it=list[i];
+    if(it[0]===key&&(!it[3]||it[3]())){
+      return {i:i,n:list.length,sel:it[1],text:it[2],look:!!it[4]||!!A.bonus,desc:it[5],A:A,key:(UI.chal?UI.chal.id:UI.mission)+':'+i+':'+(UI.view.id||'')+':'+key}}}
+  return null;
+}
+var TABVIEWS={detail:1,pay:1,deposit:1,cards:1,more:1};
 function coachNow(){
-  if(!UI.mission||S.free||UI.tour||UI.celebrate||UI.chal||UI.chalDone||UI.hint||UI.sheet||UI.mintro)return null;
-  var list=COACH[UI.mission]; if(!list)return null;
-  var key=tourKey();
-  for(var i=0;i<list.length;i++){var it=list[i];if(it[0]===key&&(!it[3]||it[3]()))return {i:i,n:list.length,sel:it[1],text:it[2]}}
+  if(UI.tour||UI.celebrate||UI.chalDone||UI.hint||UI.sheet||UI.mintro||UI.bintro)return null;
+  var c=coachFind();
+  if(c){if(UI.chide===c.key)return null;if(c.look&&UI.cask!==c.key)return null;return c}
+  var A=activeSteps(),fk='fb:'+tourKey()+(UI.view.id||'');
+  if(A&&UI.cask===fk&&UI.chide!==fk){
+    var v=UI.view.name;
+    return {fb:true,key:fk,A:A,i:0,n:0,
+      sel:TABVIEWS[v]?'.tabbar [data-t=accounts]':(v==='confirm'?'[data-tour=c-done]':'[data-a=back]'),
+      text:TABVIEWS[v]?'This is not the next step. Tap Accounts to go home. Then tap Mission again.':(v==='confirm'?'Tap Done.':'This is not the next step. Tap the arrow or Back. Then tap Mission again.')};
+  }
   return null;
 }
 var ARROW='<svg viewBox="0 0 48 48" width="60" height="60" aria-hidden="true"><path d="M24 45 L5 23 H17 V3 H31 V23 H43 Z" fill="#ffbf47" stroke="#0b2a4a" stroke-width="3" stroke-linejoin="round"/></svg>';
 function isInputSel(sel){return /pname|username|password|f-amount|d-amount/.test(sel||'')}
+function isActionSel(sel){return /signinbtn|rv-submit|f-continue|qa-|row-|d-submit|c-done|\[data-a=|scamcard|missions\]/.test(sel||'')}
 function coachHtml(o){
-  var b='<div class="blk" data-a="coachnudge"></div><div class="blk" data-a="coachnudge"></div><div class="blk" data-a="coachnudge"></div><div class="blk" data-a="coachnudge"></div>';
   var lab=o.label?'<div class="clabel">'+esc(o.label)+'</div>':'';
   var st=o.step?'<div class="cstep">'+esc(o.step)+'</div>':'';
-  var nx=isInputSel(o.sel)?'<button class="tbtn cnext" data-a="tnext">Next &rsaquo;</button>':'';
-  return b+'<div class="cring" id="tring"></div><div class="ptr" id="tptr">'+ARROW+'</div>'+
-   '<div class="coach" id="coach" role="dialog" aria-label="What to do next" data-sel="'+esc(o.sel||'')+'"><div class="ch">'+buddyFace(44)+'<div>'+lab+st+'</div></div>'+
-   '<div class="ctext">'+esc(o.text)+'</div><div class="cb"><button class="tbtn o ic" data-a="speak" aria-label="Read this out loud">'+ico(P.speaker,22)+'</button>'+nx+'</div><div class="cb2">'+(o.skip?'<button class="stop" data-a="tskipstep">Skip this step</button>':'<button class="stop" data-a="mcancel">Stop mission</button>')+'</div></div>';
+  var tk=o.task?'<div class="ctask">'+esc(o.task)+'</div>':'';
+  var nx=o.next?'<button class="tbtn cnext" data-a="tnext">Next &rsaquo;</button>':'';
+  var links=o.skip?'<button class="stop" data-a="tskipstep">Skip this step</button>':'<button class="stop" data-a="chide">Hide</button><button class="stop" data-a="'+(o.stopA||'mcancel')+'">'+(o.stopL||'Stop mission')+'</button>';
+  return '<div class="cring" id="tring"></div><div class="ptr" id="tptr">'+ARROW+'</div>'+
+   '<div class="coach" id="coach" role="dialog" aria-label="What to do next" data-sel="'+esc(o.sel||'')+'"><div class="ch">'+buddyFace(44)+'<div>'+lab+st+tk+'</div></div>'+
+   '<div class="ctext">'+esc(o.text)+'</div><div class="cb"><button class="tbtn o ic" data-a="speak" aria-label="Read this out loud">'+ico(P.speaker,22)+'</button>'+nx+'</div><div class="cb2">'+links+'</div></div>';
 }
 function vCoach(){
   var c=coachNow(); if(!c)return '';
-  var m=mById(UI.mission), n=MISSIONS.indexOf(m)+1;
-  return coachHtml({label:'Mission '+n+' of '+MISSIONS.length+': '+m.t,step:'Step '+(c.i+1)+' of '+c.n,text:c.text,sel:c.sel,skip:false});
+  var A=c.A;
+  return coachHtml({label:A.label,task:A.bonus?A.task:'',step:c.fb?'':'Step '+(c.i+1)+' of '+c.n,text:c.text,sel:c.sel,skip:false,next:!c.fb&&isInputSel(c.sel),stopA:A.bonus?'chstop':'mcancel',stopL:A.bonus?'Stop this bonus':'Stop mission'});
 }
-function placeCoach(){
+function lookKey(c){return c.key}
+function vLook(){
+  if(UI.tour||UI.celebrate||UI.chalDone||UI.hint||UI.sheet||UI.mintro||UI.bintro||UI.chal)return '';
+  var c=coachFind(); if(!c||!c.desc||UI.lseen===lookKey(c))return '';
+  return '<div class="tpop say sheet" role="dialog" aria-label="About this page">'+buddyFace(44)+'<h3>'+esc(c.A.label)+'</h3><p>'+esc(c.desc)+'</p><div class="tb" style="justify-content:flex-end"><button class="tbtn o ic" data-a="speak" aria-label="Read this out loud">'+ico(P.speaker,22)+'</button><button class="tbtn" id="lookok" data-a="lookok">Next</button></div></div>';
+}
+function placeCoach(noFix){
   var c=document.getElementById('coach'); if(!c)return;
-  var tl=document.getElementById('tourlayer'),ae=document.activeElement;if(tl&&!(ae&&ae.matches&&ae.matches('input,select,textarea')))tl.classList.remove('typing');
+  var tl=document.getElementById('tourlayer'),ae=document.activeElement;
+  if(tl&&!(ae&&ae.matches&&ae.matches('input,select,textarea')))tl.classList.remove('typing');
   var app=document.getElementById('app'),ring=document.getElementById('tring'),ptr=document.getElementById('tptr');
-  var blks=document.querySelectorAll('#tourlayer .blk');
   var sel=resolveSel(c.getAttribute('data-sel')),el=sel?document.querySelector(sel):null;
-  var ar=app.getBoundingClientRect(),ah=ar.height,aw=ar.width,ph=c.offsetHeight;
-  function hideAll(){ring.style.display='none';ptr.style.display='none';for(var i=0;i<blks.length;i++)blks[i].style.display='none'}
-  if(!el){hideAll();c.style.top=Math.max(8,ah-ph-10)+'px';return}
-  var pos=ringTo(el,true); if(!pos){hideAll();return}
+  var ar=app.getBoundingClientRect(),ah=ar.height,aw=ar.width;
+  var foot=!!(el&&el.closest('.foot'));
+  if(foot)c.classList.add('mini');
+  ring.classList.toggle('soft',foot);
+  var ph=c.offsetHeight;
+  function hideAll(){ring.style.display='none';ptr.style.display='none'}
+  if(!el){hideAll();c.style.top=Math.max(8,ah-ph-90)+'px';return}
+  var pos=ringTo(el,!noFix); if(!pos){hideAll();return}
   ring.style.display='';
+  var sc=el.closest('.scroll');
+  if(sc&&!sc._cw){sc._cw=1;sc.addEventListener('scroll',function(){if(document.getElementById('coach'))placeCoach(true)},{passive:true})}
   var rl=parseFloat(ring.style.left),rt=parseFloat(ring.style.top),rw=parseFloat(ring.style.width),rh=parseFloat(ring.style.height);
-  var big=rh>ah*0.5;
-  var geo=[[0,0,aw,rt],[0,rt+rh,aw,ah-(rt+rh)],[0,rt,rl,rh],[rl+rw,rt,aw-(rl+rw),rh]];
-  for(var i=0;i<blks.length;i++){var g=geo[i];blks[i].style.display='';blks[i].style.left=g[0]+'px';blks[i].style.top=g[1]+'px';blks[i].style.width=Math.max(0,g[2])+'px';blks[i].style.height=Math.max(0,g[3])+'px'}
-  var below=ah-(rt+rh)-10, above=rt-10, y, arrowUp=false;
-  if(big){ptr.style.display='none';y=(below>=above)?(rt+rh+12):(rt-ph-12);if(y+ph>ah-8)y=ah-ph-8;if(y<8)y=8}
-  else if(below>=ph+70){y=rt+rh+66;arrowUp=true;ptr.style.display='';ptr.className='ptr up';ptr.style.top=(rt+rh+4)+'px'}
+  var big=rh>ah*0.5, below=ah-(rt+rh)-10, above=rt-10, y;
+  ptr.style.display='none';
+  if(big){y=(below>=above)?(rt+rh+12):(rt-ph-12);if(y+ph>ah-8)y=ah-ph-8;if(y<8)y=8}
+  else if(below>=ph+70){y=rt+rh+66;ptr.style.display='';ptr.className='ptr up';ptr.style.top=(rt+rh+4)+'px'}
   else if(above>=ph+70){y=rt-ph-66;ptr.style.display='';ptr.className='ptr';ptr.style.top=(rt-62)+'px'}
-  else {y=(below>above)?ah-ph-8:8;ptr.style.display='none'}
+  else {y=(below>above)?ah-ph-8:8}
   if(ptr.style.display!=='none')ptr.style.left=Math.max(4,Math.min(aw-64,rl+rw/2-30))+'px';
   c.style.top=Math.max(8,y)+'px';
 }
@@ -707,7 +819,7 @@ function vTour(){
   var listen='<button class="tbtn o ic" data-a="speak" aria-label="Read this out loud">'+ico(P.speaker,22)+'</button>';
   if(st[0]==='try'){
     var ti=0,tt=0;steps.forEach(function(x,j){if(x[0]==='try'){tt++;if(j<=t.i)ti++}});
-    return coachHtml({label:(TOURS_NAME[t.key]||'Let us practice'),step:'Step '+ti+' of '+tt,text:st[3].replace(/^Step \d+\.\s*/,''),sel:st[1],skip:true});
+    return coachHtml({label:(TOURS_NAME[t.key]||'Let us practice'),step:'Step '+ti+' of '+tt,text:st[3].replace(/^Step \d+\.\s*/,''),sel:st[1],skip:true,next:!isActionSel(st[1])||isInputSel(st[1])});
   }
   if(false){
     return '<div class="ring pulse" id="tring"></div><div class="trybar'+(UI.barMin===barKey()?' min':'')+'" data-a="barmax" role="status">'+buddyFace(32)+'<span class="t">'+esc(st[3])+'</span>'+listen+'<button class="mini" data-a="tskipstep" aria-label="Skip this step">Skip</button></div>';
@@ -715,8 +827,9 @@ function vTour(){
   var last=(t.i>=n-1)||(steps[t.i+1][0]==='try'&&false);
   var nextLabel=(t.i>=n-1)?'Got it':'Next';
   var head=st[2]?'<h3>'+esc(st[2])+'</h3>':'';
-  var pop='<div class="tpop'+(st[0]==='say'?' say':'')+'" id="tpop" role="dialog" aria-modal="true" aria-label="Tip">'+(st[0]==='say'?buddyFace(72):'')+head+'<p>'+esc(st[3])+'</p><div class="tb"><span class="cnt">'+(t.i+1)+' of '+n+'</span><button class="skip" data-a="tskip">Skip tips</button>'+listen+'<button class="tbtn" id="tnext" data-a="tnext">'+nextLabel+'</button></div></div>';
-  if(st[0]==='say')return '<div class="tourblock dim"></div>'+pop;
+  var sheet=(st[0]==='say'&&t.key!=='signin');
+  var pop='<div class="tpop'+(st[0]==='say'?' say':'')+(sheet?' sheet':'')+'" id="tpop" role="dialog" aria-modal="true" aria-label="Tip">'+(st[0]==='say'?buddyFace(72):'')+head+'<p>'+esc(st[3])+'</p><div class="tb"><span class="cnt">'+(t.i+1)+' of '+n+'</span><button class="skip" data-a="tskip">Skip tips</button>'+listen+'<button class="tbtn" id="tnext" data-a="tnext">'+nextLabel+'</button></div></div>';
+  if(st[0]==='say')return (sheet?'':'<div class="tourblock dim"></div>')+pop;
   return '<div class="tourblock"></div><div class="ring" id="tring"></div>'+pop;
 }
 function ringTo(el,fix){
@@ -749,20 +862,14 @@ function placeTour(){
 function vCelebrate(){
   var c=UI.celebrate; if(!c)return '';
   var n=doneCount(),tot=MISSIONS.length,stars='';
-  for(var i=0;i<tot;i++){stars+='<svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true" fill="'+(i<n?'#e8a317':'none')+'" stroke="#8a6a00" stroke-width="1.6" stroke-linejoin="round">'+P.star+'</svg>'}
-  var rk=c.rank?'<p style="margin-top:12px;font-weight:800;font-size:20px;color:var(--navy)">'+(c.rank==='Expert'?'You are a Bank Buddy Expert! You finished every mission.':'You moved up! You are now a '+esc(c.rank)+'.')+'</p>':'';
-  return '<div class="tourblock dim"></div><div class="tpop say" role="dialog" aria-modal="true" aria-label="Mission complete">'+buddyFace(72)+'<h3>Mission complete!</h3><p>'+esc(c.title)+'</p><div class="stars" style="margin:12px 0 4px">'+stars+'</div><p style="font-size:16px;color:var(--mute);font-weight:600">'+n+' of '+tot+' missions done</p>'+rk+'<div class="tb" style="justify-content:center"><button class="tbtn" id="celebok" data-a="celebrate">Keep going</button>'+(c.rank==='Expert'?'<button class="tbtn o" data-a="celebpractice">Next: try it with no help</button>':'')+'</div></div>';
+  for(var i=0;i<tot;i++){stars+='<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" fill="'+(i<n?'#e8a317':'none')+'" stroke="#8a6a00" stroke-width="1.6" stroke-linejoin="round">'+P.star+'</svg>'}
+  var rk=c.rank?'<p style="margin-top:12px;font-weight:800;font-size:20px;color:var(--navy)">'+(c.rank==='Expert'?'You are a Bank Buddy Expert! You finished every mission. Next, I will show you the Bonus missions.':'You moved up! You are now a '+esc(c.rank)+'.')+'</p>':'';
+  return '<div class="tourblock dim"></div><div class="tpop say" role="dialog" aria-modal="true" aria-label="Mission complete">'+buddyFace(72)+'<h3>Mission complete!</h3><p>'+esc(c.title)+'</p><div class="stars" style="margin:12px 0 4px">'+stars+'</div><p style="font-size:16px;color:var(--mute);font-weight:600">'+n+' of '+tot+' missions done</p>'+rk+'<div class="tb" style="justify-content:center"><button class="tbtn" id="celebok" data-a="'+(c.rank==='Expert'?'celebchal':'celebrate')+'">'+(c.rank==='Expert'?'Show me what is next':'Keep going')+'</button>'+(c.rank==='Expert'?'<button class="tbtn o" data-a="celebpractice">Skip: try it with no help</button>':'')+'</div></div>';
 }
 function vMintro(){
   var id=UI.mintro; if(!id||UI.celebrate||UI.tour)return '';
   var m=mById(id),n=MISSIONS.indexOf(m)+1;
   return '<div class="tourblock dim" style="z-index:55"></div><div class="tpop say" style="z-index:56" role="dialog" aria-modal="true" aria-label="Mission">'+buddyFace(72)+'<div style="font-size:14px;font-weight:800;letter-spacing:.05em;color:var(--navy);margin-top:6px">MISSION '+n+' OF '+MISSIONS.length+'</div><h3 style="font-size:26px;margin:4px 0 8px">'+esc(m.t)+'</h3><p>'+esc(m.d)+'</p><p style="margin-top:10px">I will show you where to tap.</p><div class="tb" style="justify-content:center"><button class="tbtn ic" data-a="speak" aria-label="Read this out loud" style="background:#fff;color:var(--acc);border:2px solid var(--acc)">'+ico(P.speaker,22)+'</button><button class="tbtn" id="mgo" data-a="mgo">Let us go!</button></div></div>';
-}
-function vMbar(){
-  if(!UI.mission||UI.tour||UI.celebrate||UI.chal||UI.chalDone||UI.hint||UI.mintro||coachNow())return '';
-  var nm=UI.view.name; if(nm==='signin'||nm==='missions'||nm==='confirm')return '';
-  var m=mById(UI.mission), i=MISSIONS.indexOf(m)+1;
-  return '<div class="trybar mbar'+(UI.barMin===barKey()?' min':'')+'" data-a="barmax" role="status">'+buddyFace(30)+'<span class="t">Mission '+i+': '+esc(m.t)+'. '+(S.free?'Tap Tips if you need help.':esc(m.hint))+'</span><button class="mini" data-a="barmin" aria-label="Hide this box">Hide</button><button class="skip" data-a="mcancel">Stop</button></div>';
 }
 function missionsCard(){
   var n=doneCount(),tot=MISSIONS.length;
@@ -836,7 +943,7 @@ function vAccounts(){
   '<button data-tour="bell" data-a="bell" aria-label="Notifications'+(S.alerts?', '+S.alerts+' new':'')+'" style="position:relative;width:48px;height:48px;border-radius:24px;border:none;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center">'+ico(P.bell,26)+(S.alerts?'<span class="badge">'+S.alerts+'</span>':'')+'</button></header>'+
   '<div class="scroll">'+missionsCard()+'<div class="qa" style="margin-top:12px">'+qa('transfer','Transfer','newtransfer','','qa-transfer')+qa('bills','Pay bills','bills','','qa-bills')+qa('deposit','Deposit','tab','data-t="deposit"','qa-deposit')+qa('person','Send money','sendpick','','qa-send')+'</div>'+
   sect('Deposit accounts',fmt(total),'total')+dep.map(ar).join('')+sect('Credit cards')+ar(A('cc'))+
-  '<button class="promo" data-tour="scamcard" data-a="scamopen"><span style="flex:1"><span style="display:block;font-size:16px;font-weight:700">Scam Watch</span><span style="display:block;font-size:14px;color:var(--mute);margin-top:2px">Learn how to spot tricks that try to steal your money.</span></span><span style="color:var(--acc);font-weight:700;font-size:15px">Open</span></button>'+'<button class="promo" style="margin-top:0" data-a="chhub"><span style="flex:1"><span style="display:block;font-size:16px;font-weight:700">Final challenges</span><span style="display:block;font-size:14px;color:var(--mute);margin-top:2px">Try real-life tasks on your own. See your progress.</span></span><span style="color:var(--acc);font-weight:700;font-size:15px">Open</span></button></div>'+tabbar('accounts');
+  '<button class="promo" data-tour="scamcard" data-a="scamopen"><span style="flex:1"><span style="display:block;font-size:16px;font-weight:700">Scam Watch</span><span style="display:block;font-size:14px;color:var(--mute);margin-top:2px">Learn how to spot tricks that try to steal your money.</span></span><span style="color:var(--acc);font-weight:700;font-size:15px">Open</span></button>'+'<button class="promo" style="margin-top:0" data-a="chhub"><span style="flex:1"><span style="display:block;font-size:16px;font-weight:700">Bonus missions</span><span style="display:block;font-size:14px;color:var(--mute);margin-top:2px">Try real-life stories on your own for extra stars.</span></span><span style="color:var(--acc);font-weight:700;font-size:15px">Open</span></button></div>'+tabbar('accounts');
 }
 function vPay(){
   var recent=S.txs.filter(function(t){return !t.p&&(t.c==='Transfer'||t.c==='Bills'||t.c==='Payment'||/^Sent/.test(t.n))&&t.amt<0}).sort(function(x,y){return new Date(y.d)-new Date(x.d)}).slice(0,4);
@@ -907,16 +1014,33 @@ function vSendPick(){
 function vBills(){
   return nav('Pay bills',nb('back','Cancel'))+'<div class="scroll">'+sect('Your payees')+'<div data-tour="b-list">'+PAYEES.map(function(p){return '<button class="row" data-a="startbill" data-id="'+p.id+'"><span class="m"><span class="n" style="display:block">'+esc(p.name)+'</span><span class="s" style="display:block">'+p.sub+'</span></span><span class="a"><span class="amt" style="display:block;font-size:17px">'+fmt(p.amt)+'</span><span class="s" style="display:block;font-size:13px">Amount due</span></span><span class="chev">'+ico(P.chev,20)+'</span></button>'}).join('')+'</div><div class="note">This practice app pays any bill in full from the account you pick.</div></div>';
 }
+function checkSvg(side,amt){
+  var a=parseAmt(amt),at=isNaN(a)?'100.00':a.toFixed(2),nm=esc(S.nick||'Your Name');
+  var sig='<path d="M150 88 C158 70 166 98 172 80 C176 70 182 92 190 78 C196 70 202 90 214 82" fill="none" stroke="#1d3b6e" stroke-width="1.6" stroke-linecap="round"/>';
+  if(side==='front')return '<svg class="chk" viewBox="0 0 240 120" role="img" aria-label="Front of a check"><rect x="1" y="1" width="238" height="118" rx="7" fill="#eef6e8" stroke="#8aa17c" stroke-width="2"/><rect x="1" y="1" width="238" height="12" rx="6" fill="#cfe2c1"/>'+
+   '<text x="10" y="28" font-size="10" font-weight="700" fill="#2a3a2a">Pat Rivera</text><text x="10" y="39" font-size="7" fill="#4a5a4a">123 Palm Avenue, Phoenix AZ</text>'+
+   '<text x="226" y="28" font-size="11" font-weight="700" text-anchor="end" fill="#2a3a2a">1042</text><text x="226" y="39" font-size="7" text-anchor="end" fill="#4a5a4a">Date 11/16/2026</text>'+
+   '<text x="10" y="58" font-size="7" fill="#4a5a4a">Pay to the order of</text><text x="62" y="58" font-size="11" font-style="italic" fill="#1d3b6e">'+nm+'</text><line x1="10" y1="61" x2="172" y2="61" stroke="#7a8a7a" stroke-width=".8"/>'+
+   '<rect x="178" y="46" width="52" height="18" rx="2" fill="#fff" stroke="#7a8a7a"/><text x="204" y="59" font-size="10" font-weight="700" text-anchor="middle" fill="#1d3b6e">$'+at+'</text>'+
+   '<text x="10" y="78" font-size="8" fill="#1d3b6e">***'+at+' and no/100 Dollars</text><line x1="10" y1="81" x2="172" y2="81" stroke="#7a8a7a" stroke-width=".8"/>'+
+   '<text x="10" y="98" font-size="7" fill="#4a5a4a">Memo: Birthday gift</text><line x1="145" y1="92" x2="228" y2="92" stroke="#7a8a7a" stroke-width=".8"/>'+sig+
+   '<text x="10" y="113" font-size="8" font-family="monospace" fill="#2a3a2a">|:122000661|: 4567890|| 1042</text></svg>';
+  return '<svg class="chk" viewBox="0 0 240 120" role="img" aria-label="Back of a check"><rect x="1" y="1" width="238" height="118" rx="7" fill="#eef6e8" stroke="#8aa17c" stroke-width="2"/>'+
+   '<text x="10" y="20" font-size="8" font-weight="700" fill="#4a5a4a">ENDORSE HERE</text><line x1="10" y1="24" x2="150" y2="24" stroke="#7a8a7a" stroke-width=".8"/>'+
+   '<path d="M14 50 C22 30 30 58 38 40 C44 30 50 52 60 42 C68 34 74 54 88 44" fill="none" stroke="#1d3b6e" stroke-width="1.6" stroke-linecap="round"/><text x="14" y="66" font-size="9" fill="#1d3b6e">'+nm+'</text>'+
+   '<line x1="10" y1="72" x2="150" y2="72" stroke="#7a8a7a" stroke-width=".8"/><text x="10" y="90" font-size="7" fill="#4a5a4a">For mobile deposit only at Bank Buddy</text>'+
+   '<text x="10" y="104" font-size="6" fill="#7a8a7a">Do not write below this line</text><rect x="170" y="10" width="60" height="100" fill="none" stroke="#b9c7ad" stroke-dasharray="3 3"/></svg>';
+}
 function vDeposit(){
   var d=UI.dep||(UI.dep={acct:'chk',amount:'',front:'',back:''});
   var deps=S.accts.filter(function(a){return a.kind!=='Credit card'});
-  function up(id,label,key){return '<label class="'+(d[key]?'done':'')+'" for="'+id+'">'+ico(d[key]?P.check:P.deposit,28)+'<span>'+(d[key]?esc(d[key]):label)+'</span><input id="'+id+'" type="file" accept="image/*" data-file="'+key+'"></label>'}
+  function up(label,key){var on=!!d[key];return '<button type="button" class="'+(on?'done':'')+'" data-a="fakechk" data-k="'+key+'" aria-label="'+label+(on?' added':'')+'">'+(on?checkSvg(key,d.amount)+'<span>'+label+' added</span>':ico(P.deposit,28)+'<span>Tap to add the<br>'+label.toLowerCase()+'</span>')+'</button>'}
   return '<header class="hdr big"><div style="font-size:26px;font-weight:700">Deposit a check</div></header><div class="scroll"><div style="height:16px"></div>'+
   fieldSel('Deposit to','da','dep.acct',acctOpts(deps,d.acct),d.acct,avail(A(d.acct)),'d-to')+
   '<div style="height:16px"></div><div class="amt-box" data-tour="d-amount"><label class="lab" for="dm" style="display:block;font-size:13px;font-weight:600;color:var(--mute)">Check amount</label><div class="in"><span>$</span><input id="dm" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" value="'+esc(d.amount)+'" data-in="dep.amount"></div></div>'+
   (UI.err?'<div class="err" role="alert">'+ico(P.warn,20)+'<span>'+esc(UI.err)+'</span></div>':'')+
-  '<div class="lbl" style="padding-top:16px">Photos of your check</div><div class="up" data-tour="d-photos">'+up('df','Front of check','front')+up('db','Back of check','back')+'</div>'+
-  '<div class="note">Photos are optional in this practice app and stay on your phone. Funds from a real check deposit can take a business day to clear.</div></div><div class="foot"><button class="btn" data-tour="d-submit" data-a="depsubmit">Deposit check</button></div>'+tabbar('deposit');
+  '<div class="lbl" style="padding-top:16px">Photos of your check</div><div class="up" data-tour="d-photos">'+up('Front of check','front')+up('Back of check','back')+'</div>'+
+  '<div class="note">In this practice app, tapping a box adds a pretend picture of a check. Funds from a real check deposit can take a business day to clear.</div></div><div class="foot"><button class="btn" data-tour="d-submit" data-a="depsubmit">Deposit check</button></div>'+tabbar('deposit');
 }
 function vCards(){
   var a=A('cc'), recent=S.txs.filter(function(t){return t.a==='cc'}).sort(function(x,y){return new Date(y.d)-new Date(x.d)}).slice(0,4);
@@ -933,7 +1057,7 @@ function vMore(){
   return '<header class="hdr big" style="display:flex;align-items:center;gap:14px"><span class="av" style="width:56px;height:56px;border-radius:28px;background:#dbe8f6;font-size:20px">'+esc((S.user||'G').charAt(0).toUpperCase())+'</span><div><div style="font-size:14px;color:#b9cbe0">Username</div><div style="font-size:22px;font-weight:700;word-break:break-all">'+esc(S.user||'Guest')+'</div></div></header><div class="scroll">'+
   sect('Settings')+'<div data-tour="m-settings">'+tog('faceId','Sign in with Face ID','Skip typing your password')+tog('paperless','Paperless statements','Get statements online only')+tog('tips','Show tips on new screens','Pop-ups that explain each screen')+tog('autoread','Read tips out loud','Needs sound on your phone')+tog('caps','Captions','Show the words on screen when the voice reads')+tog('free','Practice mode','No pop-ups. Tap Tips for one hint.')+'</div>'+
   sect('Support')+chevRow('shield','Security center','Tips to keep your money safe','data-tour="m-help" data-a="sheet" data-s="security"')+chevRow('help','Help and contact','Chat, call, or find a branch','data-a="soon" data-m="Help is not part of this practice app."')+
-  sect('Practice')+chevRow('star','Missions','See your level and your missions','data-a="missions"')+chevRow('star','Final challenges','Dinner Challenge and Scam Test','data-a="chhub"')+chevRow('check','My progress','Your score and results','data-a="progress"')+chevRow('help','Show all tips again','Replay the tips on every screen','data-a="replayall"')+
+  sect('Practice')+chevRow('star','Missions','See your level and your missions','data-a="missions"')+chevRow('star','Bonus missions','Real-life stories for extra stars','data-a="chhub"')+chevRow('check','My progress','Your score and results','data-a="progress"')+chevRow('help','Show all tips again','Replay the tips on every screen','data-a="replayall"')+
   '<div style="height:16px"></div><button class="row" data-tour="m-signout" data-a="signout"><span class="chev" style="color:var(--acc)">'+ico(P.out,22)+'</span><span class="n" style="color:var(--acc);font-weight:700">Sign out</span></button>'+
   '<div style="padding:16px 16px 4px"><button class="btn s sm" data-a="reset">Reset the money</button></div><div style="padding:6px 16px 4px"><button class="btn s sm" data-a="startover">Start over (new student)</button></div><div class="note" style="text-align:center">Bank Buddy practice app. Pretend money only.</div></div>'+tabbar('more');
 }
@@ -946,14 +1070,20 @@ function render(resetScroll){
     case 'pay':h=vPay();break; case 'form':h=vForm();break; case 'review':h=vReview();break; case 'confirm':h=vConfirm();break;
     case 'sendpick':h=vSendPick();break; case 'bills':h=vBills();break; case 'deposit':h=vDeposit();break; case 'cards':h=vCards();break; case 'more':h=vMore();break;
     case 'missions':h=vMissions();break; case 'scam':h=vScam();break;
-    case 'chhub':h=vChhub();break; case 'chintro':h=vChintro();break; case 'sctest':h=vSct();break; case 'progress':h=vProgress();break;
+    case 'chhub':h=vChhub();break; case 'sctest':h=vSct();break; case 'progress':h=vProgress();break;
   }
-  if(v.name!=='signin'&&TOURS[tourKey()]){h=h.replace('</header>',tipsBtn(v.name==='accounts'?'s1':(v.name==='detail'?'s2':''))+'</header>')}
-  document.getElementById('app').innerHTML=h+vSheet()+vCelebrate()+vChalDone()+vHint()+'<div id="tourlayer">'+(vTour()||vCoach())+'</div>'+vMintro()+vMbar()+vCbar()+vCap()+(UI.toast?'<div class="toast" role="status">'+esc(UI.toast)+'</div>':'');
+  if(v.name!=='signin'&&TOURS[tourKey()]){
+    var showM=(UI.mission||UI.chal)&&!S.free&&['missions','chhub','progress'].indexOf(v.name)<0;
+    h=h.replace('</header>',(showM?'<button class="tipsbtn mbtn" data-a="mhelp" aria-label="Show me what to do next">Mission</button>':'')+tipsBtn(v.name==='accounts'?'s1':(v.name==='detail'?'s2':''))+'</header>');
+    if(showM)h=h.replace('<header class="hdr','<header class="hdr hasm');
+  }
+  document.getElementById('app').innerHTML=h+vSheet()+vCelebrate()+vChalDone()+vHint()+'<div id="tourlayer">'+(vTour()||vCoach())+'</div>'+vLook()+vMintro()+vBintro()+vCap()+(UI.toast?'<div class="toast" role="status">'+esc(UI.toast)+'</div>':'');
   var ns=document.querySelector('.scroll'); if(ns)ns.scrollTop=resetScroll?0:top;
   placeTour(); fixBars();
+  var mb=document.querySelector('.mbtn'),tb2=document.querySelector('.tipsbtn:not(.mbtn)');
+  if(mb&&tb2)mb.style.right=(parseFloat(getComputedStyle(tb2).right)+tb2.offsetWidth+8)+'px';
   if(S.autoread&&!UI.tour){var cc=coachNow();if(cc){var ck='c:'+UI.mission+':'+cc.i;if(UI.spoken!==ck){UI.spoken=ck;speak(cc.text,true)}}}
-  var f=document.getElementById('celebok')||document.getElementById('mgo')||document.getElementById('tnext'); if(f&&!UI.toast)f.focus({preventScroll:true});
+  var f=document.getElementById('celebok')||document.getElementById('mgo')||document.getElementById('bgo')||document.getElementById('lookok')||document.getElementById('tnext'); if(f&&!UI.toast)f.focus({preventScroll:true});
   else if(UI.sheet){var b=document.getElementById('sheetclose');if(b)b.focus()}
   if(S.autoread&&UI.tour&&!UI.celebrate){var k=UI.tour.key+':'+UI.tour.i;if(UI.spoken!==k){UI.spoken=k;speak(stepText(TOURS[UI.tour.key][UI.tour.i]),true)}}
 }
@@ -963,7 +1093,7 @@ var ACT={
  barmin:function(d,e){if(e)e.stopPropagation();minBar()},
  barmax:function(d,e){var b=document.querySelector('.trybar');if(b&&b.classList.contains('min')){UI.barMin='';b.classList.remove('min')}},
  tab:function(d){UI.dep=null;root(d.t)},
- acct:function(d){if(d.id==='chk')complete('checking');if(d.id==='sav')complete('savings');UI.q='';UI.filter='all';UI.showFilter=false;UI.dtab='activity';go({name:'detail',id:d.id})},
+ acct:function(d){UI.q='';UI.filter='all';UI.showFilter=false;UI.dtab='activity';go({name:'detail',id:d.id})},
  back:function(){back()},
  dtab:function(d){UI.dtab=d.t;render()},
  filtertoggle:function(){UI.showFilter=!UI.showFilter;render()},
@@ -981,25 +1111,26 @@ var ACT={
  fsubmit:function(){
   var f=UI.flow;
   if(f.kind==='send'&&!UI.safety.every(function(x){return x})){toast('Tap all three boxes first.');return}
-  if(UI.chal&&UI.chal.id==='dinner'&&f.kind==='send'){
-    var msg='';
-    if(f.contact!==DINNER.who)msg='That is not the friend who paid. Who paid the bill?';
-    else if(f.amt!==DINNER.amt)msg='That is not the right amount. Your part of dinner is '+fmt(DINNER.amt)+'.';
-    else if(f.from!==DINNER.from)msg='Use your Everyday Checking account.';
-    if(msg){UI.chal.mistakes++;logEv('dinnermiss','Dinner mistake: '+msg);UI.cmsg=msg;render();return}
-  }
+  if(UI.chal){var msg=bonusCheck(f);if(msg){UI.chal.mistakes++;logEv('bonusmiss','Mistake in '+bonusById(UI.chal.id).t+': '+msg);UI.cmsg=msg;render();return}}
   submit()},
  done:function(){root('accounts')},
  depsubmit:function(){
    var d=UI.dep, amt=parseAmt(d.amount);
    if(isNaN(amt)||amt<=0){UI.err='Enter the amount written on the check, like 150.00.';render();return}
    if(amt>10000){UI.err='Mobile deposits are limited to $10,000 per check.';render();return}
+   if(UI.chal){var bb=bonusById(UI.chal.id),dm='';
+     if(bb.kind!=='deposit')dm='That is not the job for this bonus mission. Tap Mission at the top if you need help.';
+     else if(d.acct!==bb.acct)dm='Deposit into Everyday Checking.';
+     else if(amt!==bb.amt)dm='Look at the check. It says '+fmt(bb.amt)+'.';
+     if(dm){UI.chal.mistakes++;logEv('bonusmiss','Mistake in '+bb.t+': '+dm);UI.err=dm;render();return}
+     if(!d.front||!d.back){UI.err='Add a picture of the front and the back of the check first.';render();return}}
    var a=A(d.acct); a.bal=r2(a.bal+amt); addTx(a.id,'Mobile check deposit','Deposit',amt,true); save();
-   complete('deposit');UI.hist=[{name:'accounts'}]; UI.view={name:'confirm',r:{head:'Deposit received',line:fmt(amt)+' was added to '+a.name+'. A real deposit can take a business day to clear.',rows:[['Deposit to',esc(a.name)+' ...'+a.mask],['Amount',fmt(amt)],['Date',dlong(new Date().toISOString())]],code:conf(),again:'',againLabel:''}}; UI.dep=null; UI.err=''; render(true);
+   complete('deposit',true);if(UI.chal)bonusDone();UI.hist=[{name:'accounts'}]; UI.view={name:'confirm',r:{head:'Deposit received',line:fmt(amt)+' was added to '+a.name+'. A real deposit can take a business day to clear.',rows:[['Deposit to',esc(a.name)+' ...'+a.mask],['Amount',fmt(amt)],['Date',dlong(new Date().toISOString())]],code:conf(),again:'',againLabel:''}}; UI.dep=null; UI.err=''; render(true);
  },
+ fakechk:function(d){var dp=UI.dep||(UI.dep={acct:'chk',amount:'',front:'',back:''});dp[d.k]='added';render()},
  lock:function(d,e){S.locked=e.target.checked;save();render()},
  toggle:function(d,e){S[d.k]=e.target.checked;if(d.k==='free'){logEv('practice','Practice mode '+(S.free?'ON':'OFF'))}if(d.k==='free'&&S.free){S.freeUsed=true;UI.tour=null}save();if(d.k==='tips'&&!S.tips)UI.tour=null;if(d.k==='free')render()},
- signout:function(){UI.hist=[];UI.view={name:'signin'};UI.err='';render(true)},
+ signout:function(){UI.pending=null;UI.pendingBonus=null;UI.pendClear=null;UI.hist=[];UI.view={name:'signin'};UI.err='';render(true)},
  reset:function(){var keep={};['done','seen','tp','caps','tips','autoread','user','sc','qz','ch','log','doneAt','free','freeUsed','nick'].forEach(function(k){keep[k]=S[k]});S=seed();for(var k in keep)S[k]=keep[k];ensure();save();UI.dep=null;toast('The money is reset.')},
  pw:function(){UI.showPw=!UI.showPw;render()},
  face:function(){complete('signin');root('accounts')},
@@ -1058,14 +1189,25 @@ ACT.tnext=function(){
   if(UI.tour&&UI.tour.key===bk&&UI.tour.i===before){tourAdvance();return}
   refreshTour();
 };
+ACT.lookok=function(){var c=coachFind();if(c)UI.lseen=lookKey(c);render()};
+ACT.mhelp=function(){
+  if(UI.tour){S.seen[UI.tour.key]=true;S.tp[UI.tour.key]=TOURS[UI.tour.key].length;UI.tour=null}
+  UI.chide=null;
+  var c=coachFind();UI.cask=c?c.key:('fb:'+tourKey()+(UI.view.id||''));
+  if(UI.chal){UI.chal.help=(UI.chal.help||0)+1;var o=S.ch[UI.chal.id]||(S.ch[UI.chal.id]={tries:1});o.help=(o.help||0)+1;logEv('bonushelp','Asked for help in bonus mission: '+bonusById(UI.chal.id).t+' (on '+tourKey()+')');save()}
+  render();
+};
+ACT.chide=function(){var c=coachFind();if(c&&UI.chide!==c.key&&!(c.look&&UI.cask!==c.key))UI.chide=c.key;else UI.chide=UI.cask||(c&&c.key);UI.cask=null;render()};
 ACT.capx=function(){hideCap()};
-ACT.coachnudge=function(){var c=document.getElementById('coach');if(c){c.classList.remove('nudge');void c.offsetWidth;c.classList.add('nudge')}toast('Tap the glowing box.')};
 ACT.tskip=function(){if(UI.tour){S.seen[UI.tour.key]=true;S.tp[UI.tour.key]=TOURS[UI.tour.key].length;save()}UI.tour=null;render()};
 ACT.tips=function(){var k=tourKey();if(S.free||UI.chal){S.tipsUsed=(S.tipsUsed||0)+1;logEv('tip','Used a tip on '+k+(UI.chal?' (challenge)':' (practice mode)'));UI.sheet=null;UI.tour=null;UI.hint=hintText();render();return}if(!TOURS[k]){toast('There are no tips for this screen.');return}UI.sheet=null;S.tp[k]=0;UI.tour={key:k,i:0};render()};
 ACT.speak=function(){
   if(UI.celebrate){speak('Mission complete! '+UI.celebrate.title);return}
   if(UI.hint){speak(UI.hint);return}
   if(UI.chalDone){speak('Challenge complete!');return}
+  if(UI.bintro){var bb=bonusById(UI.bintro);speak(bb.t+'. '+bb.story);return}
+  if(UI.chalDone){speak('Bonus mission complete! You earned a star.');return}
+  var lk=coachFind();if(lk&&lk.desc&&UI.lseen!==lk.key&&!UI.chal){speak(lk.desc);return}
   if(UI.mintro){var mm=mById(UI.mintro);speak(mm.t+'. '+mm.d+' I will show you where to tap.');return}
   if(UI.tour){var sx=TOURS[UI.tour.key][UI.tour.i];speak(sx[0]==='try'?sx[3].replace(/^Step \d+\.\s*/,''):stepText(sx));return}
   var cn=coachNow();if(cn)speak(cn.text);
@@ -1079,12 +1221,12 @@ ACT.mgo=function(){UI.mintro=null;render()};
 ACT.mission=function(d){
   var m=mById(d.id);
   if(S.done[d.id]&&d.id==='signin'){toast('You already did this one. Nice work!');return}
-  UI.mission=d.id;UI.mintro=S.free?null:d.id;
+  UI.mission=d.id;UI.mintro=S.free?null:d.id;UI.chal=null;UI.cask=null;UI.chide=null;
   if(d.id==='deposit'){UI.dep=null;root('deposit')}
   else if(d.id==='scam'){UI.hist=[{name:'accounts'}];UI.scam=null;UI.tour=null;UI.view={name:'scam'};render(true)}
   else root('accounts');
 };
-ACT.mcancel=function(){UI.mission=null;UI.mintro=null;render()};
+ACT.mcancel=function(){UI.mission=null;UI.mintro=null;UI.cask=null;render()};
 ACT.scamopen=function(){UI.scam=null;go({name:'scam'})};
 ACT.stest=function(){UI.scam={stage:'quiz',i:0,ans:null,score:0};render(true)};
 ACT.sans=function(d){var sc=UI.scam,q=QUIZ[sc.i];if(sc.ans!==null)return;sc.ans=d.v;S.sc.t++;var okq=(d.v==='scam')===q.scam;if(okq){sc.score++;S.sc.r++}logEv('quizq','Scam Watch question '+(sc.i+1)+': '+(okq?'right':'WRONG')+' (said '+d.v+')');save();render()};
@@ -1102,19 +1244,19 @@ var TRACK_KEY='bankbuddy-2026';
 function pidOf(){if(!S.pid)S.pid='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);return S.pid}
 function PM(){return MISSIONS.filter(function(m){return m.id!=='signin'})}
 function stageText(){
-  var n=doneCount(),tot=MISSIONS.length,d=S.ch.dinner||{},sc=S.ch.scam||{};
+  var n=doneCount(),tot=MISSIONS.length,sc=S.ch.scam||{},bn=bonusStars();
   var pn=PM().filter(function(m){return S.pdone&&S.pdone[m.id]}).length,ptot=PM().length;
   if(!S.startedAt&&!n)return 'Not started';
   if(n<tot){var nx=MISSIONS.filter(function(m){return !S.done[m.id]})[0];return 'STEP 1 Guided missions: '+n+' of '+tot+' done. On: '+nx.t}
   if(!S.freeUsed)return 'STEP 2 No-help practice: guided done, has not started practice';
   if(pn<ptot){var np=PM().filter(function(m){return !(S.pdone&&S.pdone[m.id])})[0];return 'STEP 2 No-help practice: '+pn+' of '+ptot+' done. On: '+np.t}
-  if(!d.done)return 'STEP 3 Challenges: Dinner Challenge not finished'+(d.tries?' ('+d.tries+(d.tries===1?' try':' tries')+')':' (not started)');
+  if(bn<BONUS.length){var nb2=BONUS.filter(function(b){return !(S.ch[b.id]&&S.ch[b.id].done)})[0];return 'STEP 3 Bonus missions: '+bn+' of '+BONUS.length+' done. On: '+nb2.t}
   if(!sc.passed)return 'STEP 3 Challenges: Scam Test not passed'+(sc.tries?' (best '+sc.bestScore+' of '+SCEN.length+', '+sc.tries+(sc.tries===1?' try':' tries')+')':' (not started)');
   return 'ALL COMPLETE';
 }
 function snapshot(){
-  var n=doneCount(),d=S.ch.dinner||{},sc=S.ch.scam||{},q=S.qz,p=scamPct(),tr=S.tr||{},lg=S.log[S.log.length-1];
-  var done=n>=MISSIONS.length&&!!d.done&&!!sc.passed;
+  var n=doneCount(),sc=S.ch.scam||{},q=S.qz,p=scamPct(),tr=S.tr||{},lg=S.log[S.log.length-1];
+  var done=n>=MISSIONS.length&&bonusStars()>=BONUS.length&&!!sc.passed;
   return {name:S.nick||'',
     cols:[
       ['Name',S.nick||''],
@@ -1124,9 +1266,10 @@ function snapshot(){
       ['Guided missions',n+' of '+MISSIONS.length],
       ['Mission detail',MISSIONS.map(function(m){return (S.done[m.id]?'Y ':'- ')+m.t}).join(' | ')],
       ['No-help missions',PM().filter(function(m){return S.pdone&&S.pdone[m.id]}).length+' of '+PM().length],
-      ['Dinner Challenge',d.done?'Done, fewest mistakes '+d.best:(d.tries?'Not finished':'Not started')],
-      ['Dinner tries',d.tries||0],
-      ['Dinner mistakes (total)',tr.d||0],
+      ['Bonus missions',bonusStars()+' of '+BONUS.length],
+      ['Bonus detail',BONUS.map(function(b){var o=S.ch[b.id]||{};return b.t+': '+(o.done?'done, '+o.best+' mistakes, '+(o.help||0)+' help taps':(o.tries?'not finished':'not started'))}).join(' | ')],
+      ['Bonus mistakes (total)',tr.d||0],
+      ['Bonus help taps (total)',tr.h||0],
       ['Scam Test',sc.tries?'Best '+sc.bestScore+' of '+SCEN.length+(sc.passed?' (passed)':' (not passed)'):'Not started'],
       ['Scam Test tries',sc.tries||0],
       ['Scam Test wrong answers (total)',tr.s||0],
@@ -1147,7 +1290,6 @@ function sendNow(){
     fetch(TRACK_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:body,keepalive:true}).catch(function(){});
   }catch(e){}
 }
-var DINNER={who:'alex',name:'Alex Rivera',amt:22.5,from:'chk'};
 var SCEN=[
  {src:'Text message',msg:'"Your bank account is locked. Tap this link and type your password to open it."',opts:[['Tap the link and type my password',0],['Do not tap it. Delete the message.',1],['Reply with my password',0]],why:'Banks never ask for your password in a text. A link that scares you is a trick. Delete it. If you are worried, call the number on your bank card.'},
  {src:'At dinner with friends',msg:'Your friend Alex is sitting next to you. Alex says: "I paid the whole bill. Please send me your part, $22.50."',opts:[['Send Alex $22.50 in the app',1],['Give Alex my password so Alex can do it',0],['Never send money to anyone, ever',0]],why:'You know Alex and Alex is right there. Sending your part is safe. But never give your password to anyone, even a friend.'},
@@ -1176,12 +1318,7 @@ var HINTS={
 };
 function hintText(){
   var k=tourKey();
-  if(UI.chal&&UI.chal.id==='dinner'){
-    if(k==='review')return 'Check: is it '+DINNER.name+'? Is it '+fmt(DINNER.amt)+'? Tap all 3 safety boxes. Then tap Submit.';
-    if(k==='form-send')return 'Type '+DINNER.amt.toFixed(2)+' and use Everyday Checking. Then tap Continue.';
-    if(k==='sendpick')return 'Tap '+DINNER.name+'. Alex paid the bill.';
-    return 'Your job: send '+DINNER.name+' '+fmt(DINNER.amt)+' for dinner. Tap Send money.';
-  }
+  if(UI.chal){var cf=coachFind();return cf?cf.text:bonusById(UI.chal.id).task}
   if(UI.mission&&mById(UI.mission))return mById(UI.mission).hint;
   return HINTS[k]||'Look at the screen. Tap the thing you want to do.';
 }
@@ -1189,16 +1326,42 @@ function vHint(){
   if(!UI.hint)return '';
   return '<div class="tourblock dim"></div><div class="tpop say" role="dialog" aria-modal="true" aria-label="Tip">'+buddyFace(60)+'<h3>Your tip</h3><p>'+esc(UI.hint)+'</p><div class="tb" style="justify-content:center"><button class="tbtn o ic" data-a="speak" aria-label="Read this out loud">'+ico(P.speaker,22)+'</button><button class="tbtn" id="hintok" data-a="hintclose">Got it</button></div></div>';
 }
-function vCbar(){
-  if(!UI.chal||UI.tour||UI.celebrate||UI.chalDone||UI.hint)return '';
-  var nm=UI.view.name; if(nm==='signin'||nm==='confirm')return '';
-  return '<div class="trybar mbar cbar'+(UI.barMin===barKey()?' min':'')+'" data-a="barmax" role="status">'+buddyFace(30)+'<span class="t">Challenge: Send '+esc(DINNER.name)+' '+fmt(DINNER.amt)+' for your part of dinner.</span><button class="mini" data-a="barmin" aria-label="Hide this box">Hide</button><button class="skip" data-a="chstop">Stop</button></div>';
-}
 function vChalDone(){
   var c=UI.chalDone; if(!c||UI.celebrate)return '';
-  var n=c.mistakes===0?3:c.mistakes===1?2:1, stars='';
-  for(var i=0;i<3;i++)stars+='<svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" fill="'+(i<n?'#e8a317':'none')+'" stroke="#8a6a00" stroke-width="1.6" stroke-linejoin="round">'+P.star+'</svg>';
-  return '<div class="tourblock dim"></div><div class="tpop say" role="dialog" aria-modal="true" aria-label="Challenge complete">'+buddyFace(72)+'<h3>Challenge complete!</h3><p>You paid '+esc(DINNER.name)+' '+fmt(DINNER.amt)+' for dinner.</p><div class="stars" style="margin:12px 0 4px">'+stars+'</div><p style="font-size:16px;color:var(--mute);font-weight:600">'+(c.mistakes===0?'No mistakes!':c.mistakes+(c.mistakes===1?' mistake':' mistakes')+' along the way')+'</p><div class="tb" style="justify-content:center"><button class="tbtn" id="chalok" data-a="chalok">Keep going</button></div></div>';
+  var b=bonusById(c.id), n=bonusStars(), all=n>=BONUS.length;
+  var more=BONUS.filter(function(x){return !(S.ch[x.id]&&S.ch[x.id].done)}).length;
+  return '<div class="tourblock dim"></div><div class="tpop say" role="dialog" aria-modal="true" aria-label="Bonus mission complete">'+buddyFace(72)+'<h3>Bonus mission complete!</h3><p>'+esc(b.t)+'</p><div class="stars" style="margin:12px 0 4px">'+starRow(n,BONUS.length,30)+'</div><p style="font-size:20px;font-weight:800;color:var(--navy);margin-top:6px">You earned a star! Great job!</p><p style="font-size:16px;color:var(--mute);font-weight:600;margin-top:6px">'+n+' of '+BONUS.length+' bonus stars</p>'+(all?'<p style="margin-top:10px;font-weight:800;color:var(--navy)">You finished every bonus mission! You are a Bank Buddy Pro!</p>':'')+'<div class="tb" style="justify-content:center"><button class="tbtn" id="celebok" data-a="'+(more?'chnext':'chalok')+'">'+(more?'Next bonus mission':'Keep going')+'</button>'+(more?'<button class="tbtn o" data-a="chalok">Not now</button>':'')+'</div></div>';
+}
+function bonusCheck(f){
+  var b=bonusById(UI.chal.id), fk=f.kind==='transfer'&&A(f.to).kind==='Credit card'?'card':f.kind;
+  if(fk!==b.kind)return 'That is not the job for this bonus mission. Tap Mission at the top if you need help.';
+  if(b.kind==='send'){
+    if(f.contact!==b.who)return 'That is not the friend who paid. Who paid the bill?';
+    if(f.amt!==b.amt)return 'That is not the right amount. Your meal cost '+fmt(b.amt)+'.';
+    if(f.from!==b.from)return 'Use your Everyday Checking account.';
+  } else if(b.kind==='transfer'){
+    if(f.from!==b.from)return 'The money should come FROM Premier Savings.';
+    if(f.to!==b.to)return 'The money should go TO Everyday Checking.';
+    if(f.amt!==b.amt)return 'That is not the right amount. You need to move '+fmt(b.amt)+'.';
+  } else if(b.kind==='bill'){
+    if(f.payee!==b.payee)return 'That is not the right bill. Pay the Phone Company.';
+    if(f.from!==b.from)return 'Use your Everyday Checking account.';
+  } else {
+    if(f.from!==b.from)return 'Use your Everyday Checking account.';
+    if(f.amt!==UI.chal.amt)return 'To pay it all off, pay the full balance: '+fmt(UI.chal.amt)+'.';
+  }
+  return '';
+}
+function bonusDone(){
+  var b=bonusById(UI.chal.id), m=UI.chal.mistakes, o=S.ch[b.id]||(S.ch[b.id]={tries:1});
+  o.done=true;o.last=m;o.best=(o.best===undefined)?m:Math.min(o.best,m);o.at=new Date().toISOString();
+  logEv('bonus','Bonus mission done: '+b.t+' ('+m+' mistakes, '+(UI.chal.help||0)+' help taps)');save();
+  UI.pendingBonus={id:b.id,mistakes:m};
+}
+function vBintro(){
+  var id=UI.bintro; if(!id||UI.celebrate||UI.chalDone)return '';
+  var b=bonusById(id),n=BONUS.indexOf(b)+1;
+  return '<div class="tourblock dim" style="z-index:55"></div><div class="tpop say" style="z-index:56" role="dialog" aria-modal="true" aria-label="Bonus mission">'+buddyFace(64)+'<div style="font-size:14px;font-weight:800;letter-spacing:.05em;color:var(--navy);margin-top:6px">BONUS MISSION '+n+' OF '+BONUS.length+'</div><h3 style="font-size:24px;margin:4px 0 8px">'+esc(b.t)+'</h3><p style="font-size:19px">'+esc(b.story)+'</p><p style="margin-top:10px;font-size:16px;color:var(--mute)">You do this one on your own. Need help? Tap the Mission button at the top.</p><div class="tb" style="justify-content:center"><button class="tbtn o ic" data-a="speak" aria-label="Read this out loud">'+ico(P.speaker,22)+'</button><button class="tbtn" id="bgo" data-a="bgo">Let us go!</button><button class="tbtn o" data-a="bcancel">Not now</button></div></div>';
 }
 function scamPct(){return S.sc.t?Math.round(S.sc.r/S.sc.t*100):null}
 function scamLabel(p){return p===null?'Not started yet':p>=90?'Scam Smart!':p>=70?'Getting good':'Keep practicing'}
@@ -1206,17 +1369,17 @@ function starRow(n,tot,sz){var s='';for(var i=0;i<tot;i++)s+='<svg width="'+sz+'
 function chalRow(icon,title,sub,status,done,a){
   return '<button class="row" data-a="'+a+'"><span class="av" style="'+(done?'background:var(--pos);color:#fff':'')+'">'+ico(done?P.check:icon,22)+'</span><span class="m"><span class="n" style="display:block;font-size:17px">'+title+'</span><span class="s" style="display:block">'+sub+'</span></span><span class="chip2'+(done?' dn':'')+'">'+status+'</span></button>';
 }
+function bonusRow(b,i){
+  var o=S.ch[b.id]||{},d=!!o.done;
+  return '<button class="row" data-a="bstart" data-id="'+b.id+'"><span class="av" style="'+(d?'background:var(--pos);color:#fff':'')+'">'+ico(d?P.check:P.star,22)+'</span><span class="m"><span class="n" style="display:block;font-size:17px">'+(i+1)+'. '+esc(b.t)+'</span><span class="s" style="display:block">'+esc(b.task)+'</span></span><span class="chip2'+(d?' dn':'')+'">'+(d?'Star!':'Start')+'</span></button>';
+}
 function vChhub(){
-  var d=S.ch.dinner||{}, s=S.ch.scam||{};
-  var free='<div class="fld"><div class="fm"><div class="val">Practice mode</div><div class="sub">No pop-ups. Tap Tips for one hint.</div></div><label class="sw"><input type="checkbox" data-a="toggle" data-k="free" aria-label="Practice mode"'+(S.free?' checked':'')+'><i></i></label></div>';
-  return nav('Challenges',nb('back','Back','back'))+'<div class="scroll"><div class="hero" style="padding:20px 18px"><div style="color:var(--navy);display:flex;justify-content:center">'+ico(P.star,48)+'</div><h1 style="margin:8px 0 4px;font-size:24px">Real-life challenges</h1><div style="font-size:16px;color:var(--mute);line-height:1.45">Try these on your own after the missions. There are no pop-ups. Do your best!</div></div><div style="height:12px"></div>'+
-  chalRow(P.person,'Dinner Challenge','Pay your friend back for dinner.',d.done?'Done':(d.tries?'Try again':'Start'),!!d.done,'chintro')+
-  chalRow(P.shield,'Scam Test','6 real-life stories. What would you do?',s.done?(s.last+' of '+SCEN.length):'Start',!!s.passed,'sctstart')+
+  var s=S.ch.scam||{}, n=bonusStars();
+  var free='<div class="fld" data-tour="bonus-free"><div class="fm"><div class="val">Practice mode</div><div class="sub">No pop-ups. Tap Tips for one hint.</div></div><label class="sw"><input type="checkbox" data-a="toggle" data-k="free" aria-label="Practice mode"'+(S.free?' checked':'')+'><i></i></label></div>';
+  return nav('Bonus missions',nb('back','Back','back'))+'<div class="scroll"><div class="hero" style="padding:20px 18px"><div style="display:flex;justify-content:center">'+starRow(n,BONUS.length,30)+'</div><h1 style="margin:8px 0 4px;font-size:24px">Bonus missions</h1><div style="font-size:16px;color:var(--mute);line-height:1.45">Real-life stories. Try them on your own and earn a star for each one. Need help? Tap the Mission button at the top.</div></div>'+
+  '<div data-tour="bonus-list">'+BONUS.map(bonusRow).join('')+chalRow(P.shield,'Scam Test','6 real-life stories. What would you do?',s.done?(s.last+' of '+SCEN.length):'Start',!!s.passed,'sctstart')+'</div>'+
   '<div style="height:12px"></div>'+free+
   '<div style="padding:12px 16px 0"><button class="btn s sm" data-a="progress">See my progress</button></div><div style="height:20px"></div></div>';
-}
-function vChintro(){
-  return nav('Dinner Challenge',nb('back','Back','back'))+'<div class="scroll"><div class="hero" style="padding:24px 18px"><div style="display:flex;justify-content:center">'+buddyFace(72)+'</div><h1 style="margin:10px 0 8px;font-size:24px">Dinner with friends</h1><div style="font-size:18px;line-height:1.5;color:var(--txt);text-align:left">You went out to dinner with friends. <b>'+esc(DINNER.name)+'</b> paid the whole bill.<br><br>Your part is <b>'+fmt(DINNER.amt)+'</b>.<br><br>Send '+esc(DINNER.name.split(' ')[0])+' your part from your <b>Everyday Checking</b>.</div></div><div class="note">There are no pop-ups in this challenge. If you get stuck, tap Tips for one hint.</div></div><div class="foot"><button class="btn" data-a="chstart">Start the challenge</button></div>';
 }
 function shuf(n){var a=[],i,j,t;for(i=0;i<n;i++)a.push(i);for(i=n-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=a[i];a[i]=a[j];a[j]=t}return a}
 function vSct(){
@@ -1239,28 +1402,27 @@ function vSct(){
   return nav('Scam Test',nb('back','Back','back'))+'<div class="scroll">'+body+'</div>'+foot;
 }
 function vProgress(){
-  var n=doneCount(),tot=MISSIONS.length,p=scamPct(),d=S.ch.dinner||{},s=S.ch.scam||{},q=S.qz;
+  var n=doneCount(),tot=MISSIONS.length,p=scamPct(),s=S.ch.scam||{},q=S.qz;
   function card(h,inner){return '<div class="rankcard" style="margin-top:12px"><div style="font-size:14px;font-weight:700;color:var(--mute)">'+h+'</div>'+inner+'</div>'}
-  var dtxt=d.done?'Done. Fewest mistakes: '+d.best:(d.tries?'Not finished yet':'Not started yet');
   var stxt=s.tries?'Best score: '+s.bestScore+' of '+SCEN.length+(s.passed?'. Passed!':'. Not passed yet'):'Not started yet';
   return nav('My progress',nb('back','Back','back'))+'<div class="scroll">'+
   card('Your level','<div style="font-size:32px;font-weight:800;color:var(--navy)">'+rankOf(n)+'</div><span class="bar" aria-hidden="true"><i style="width:'+Math.round(n/tot*100)+'%"></i></span><div style="font-size:16px;font-weight:600">'+n+' of '+tot+' missions done</div>')+
   card('Scam Score','<div style="font-size:40px;font-weight:800;color:var(--navy)">'+(p===null?'--':p+'%')+'</div><div style="font-size:17px;font-weight:700">'+scamLabel(p)+'</div><div style="font-size:15px;color:var(--mute);margin-top:4px">'+(S.sc.t?S.sc.r+' of '+S.sc.t+' scam answers right.':'Answer Scam Watch questions to get a score.')+'</div>')+
   '<div style="height:12px"></div>'+
   '<div class="kv"><span class="k">Scam Watch quiz</span><span class="v">'+(q.tries?'Best '+q.best+' of '+QUIZ.length:'Not tried')+'</span></div>'+
-  '<div class="kv"><span class="k">Dinner Challenge</span><span class="v" style="text-align:right">'+dtxt+'</span></div>'+
+  BONUS.map(function(b){var o=S.ch[b.id]||{};return '<div class="kv"><span class="k">Bonus: '+esc(b.t)+'</span><span class="v" style="text-align:right">'+(o.done?'Star earned':(o.tries?'Not finished':'Not started'))+'</span></div>'}).join('')+
   '<div class="kv"><span class="k">Scam Test</span><span class="v" style="text-align:right">'+stxt+'</span></div>'+
   '<div class="kv"><span class="k">Practice mode</span><span class="v">'+(S.free?'On':(S.freeUsed?'Tried it':'Not yet'))+'</span></div>'+
-  '<div style="padding:16px 16px 4px"><button class="btn" data-a="sharesheet">Share my results</button></div><div style="padding:6px 16px 4px"><button class="btn s sm" data-a="chhub">Go to challenges</button></div>'+
+  '<div style="padding:16px 16px 4px"><button class="btn" data-a="sharesheet">Share my results</button></div><div style="padding:6px 16px 4px"><button class="btn s sm" data-a="chhub">Go to bonus missions</button></div>'+
   '<div class="note">'+(TRACK_URL?'Your name and results are sent to Hug Your Head so they can see how you are doing.':'Your results stay on this phone. Nothing is sent unless you tap Share.')+'</div></div>';
 }
 function reportText(){
-  var n=doneCount(), d=S.ch.dinner||{}, s=S.ch.scam||{}, q=S.qz, p=scamPct();
+  var n=doneCount(), s=S.ch.scam||{}, q=S.qz, p=scamPct();
   var L=['Bank Buddy progress report','Hug Your Head Foundation','','Name: '+(S.nick||'(not entered)'),'Username: '+(S.user||'(none)'),'Date: '+dlong(new Date().toISOString()),'','Level: '+rankOf(n)+' ('+n+' of '+MISSIONS.length+' missions)'];
   MISSIONS.forEach(function(m){L.push((S.done[m.id]?'  [done] ':'  [ ] ')+m.t)});
   L.push('','Scam Score: '+(p===null?'not started':p+'% ('+S.sc.r+' of '+S.sc.t+' answers right)'));
   L.push('Scam Watch quiz: '+(q.tries?'best '+q.best+' of '+QUIZ.length+' in '+q.tries+(q.tries===1?' try':' tries'):'not tried'));
-  L.push('Dinner Challenge: '+(d.done?'done, fewest mistakes '+d.best+', '+d.tries+(d.tries===1?' try':' tries'):(d.tries?'not finished, '+d.tries+' tries':'not tried')));
+  BONUS.forEach(function(b){var o=S.ch[b.id]||{};L.push('Bonus - '+b.t+': '+(o.done?'done, '+o.best+' mistakes, '+(o.help||0)+' help taps':(o.tries?'not finished':'not tried')))});
   L.push('Scam Test: '+(s.tries?'best '+s.bestScore+' of '+SCEN.length+(s.passed?' (passed)':' (not passed yet)')+', '+s.tries+(s.tries===1?' try':' tries'):'not tried'));
   L.push('Practice mode (no guides): '+(S.free?'on':(S.freeUsed?'tried it':'not yet')));
   return L.join('\n');
@@ -1278,21 +1440,20 @@ function ensure(){
   if(!S.sc)S.sc={r:0,t:0};if(!S.qz)S.qz={tries:0,best:0,last:0};if(!S.ch)S.ch={};if(!S.log)S.log=[];if(!S.doneAt)S.doneAt={};
   if(S.free===undefined)S.free=false;if(S.nick===undefined)S.nick='';
 }
-function logEv(k,m){S.tr=S.tr||{d:0,q:0,s:0};if(k==='dinnermiss')S.tr.d++;if(k==='quizq'&&/WRONG/.test(m))S.tr.q++;if(k==='scq'&&/WRONG/.test(m))S.tr.s++;S.evn=(S.evn||0)+1;S.log.push({id:S.evn,k:k,m:m,at:new Date().toISOString()});if(S.log.length>80)S.log=S.log.slice(-80);track()}
-function finishDinner(){
-  var d=S.ch.dinner||(S.ch.dinner={tries:1}), m=UI.chal.mistakes;
-  d.done=true;d.last=m;d.best=(d.best===undefined)?m:Math.min(d.best,m);d.at=new Date().toISOString();
-  logEv('dinner','Dinner Challenge done with '+m+' mistakes');save();
-  UI.chalDone={mistakes:m};UI.chal=null;
-}
+function logEv(k,m){S.tr=S.tr||{d:0,q:0,s:0};if(k==='bonusmiss')S.tr.d++;if(k==='bonushelp')S.tr.h=(S.tr.h||0)+1;if(k==='quizq'&&/WRONG/.test(m))S.tr.q++;if(k==='scq'&&/WRONG/.test(m))S.tr.s++;S.evn=(S.evn||0)+1;S.log.push({id:S.evn,k:k,m:m,at:new Date().toISOString()});if(S.log.length>80)S.log=S.log.slice(-80);track()}
 ACT.chhub=function(){go({name:'chhub'})};
 ACT.progress=function(){go({name:'progress'})};
-ACT.chintro=function(){go({name:'chintro'})};
-ACT.chstart=function(){
-  var d=S.ch.dinner||(S.ch.dinner={tries:0});d.tries++;save();
-  UI.chal={id:'dinner',mistakes:0};UI.mission=null;UI.cmsg='';UI.flow=null;root('accounts');
+ACT.bstart=function(d){UI.bintro=d.id;render()};
+ACT.bcancel=function(){UI.bintro=null;render()};
+ACT.bgo=function(){
+  var id=UI.bintro,b=bonusById(id);if(!b)return;
+  var o=S.ch[id]||(S.ch[id]={tries:0});o.tries=(o.tries||0)+1;
+  UI.chal={id:id,mistakes:0,help:0,amt:b.amt};
+  if(b.kind==='card'){var cc=A('cc');if(cc.bal<30){var g=62.4;cc.bal=r2(cc.bal+g);addTx('cc','Desert Grocery Market','Groceries',-g)}UI.chal.amt=A('cc').bal}
+  UI.bintro=null;UI.mission=null;UI.cmsg='';UI.flow=null;UI.dep=null;UI.cask=null;UI.chide=null;logEv('bonusstart','Started bonus mission: '+b.t);save();root('accounts');
 };
-ACT.chstop=function(){UI.chal=null;UI.cmsg='';render()};
+ACT.chnext=function(){UI.chalDone=null;go({name:'chhub'})};
+ACT.chstop=function(){UI.chal=null;UI.cmsg='';UI.cask=null;render()};
 ACT.chalok=function(){UI.chalDone=null;render()};
 ACT.hintclose=function(){UI.hint=null;render()};
 ACT.sctstart=function(){
